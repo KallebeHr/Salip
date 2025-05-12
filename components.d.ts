@@ -10,7 +10,11 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     Conect: typeof import('./src/components/conect.vue')['default']
+    copy: typeof import('./src/components/datas copy.vue')['default']
     Datas: typeof import('./src/components/datas.vue')['default']
+    DatasFotos: typeof import('./src/components/datasFotos.vue')['default']
+    DatasInf: typeof import('./src/components/datasInf.vue')['default']
+    DatasOficina: typeof import('./src/components/datasOficina.vue')['default']
     Footer: typeof import('./src/components/footer.vue')['default']
     FormAdd: typeof import('./src/components/formAdd.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']

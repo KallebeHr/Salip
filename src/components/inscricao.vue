@@ -2,8 +2,8 @@
   <div class="container">
     <header>
       <div class="data">
-        <h2>13 a 16 | Maio</h2>
-        <p>Espaço Cláudia Eventos</p>
+        <h2>22 a 24 | Maio</h2>
+        <p>Locais abaixo</p>
       </div>
       <div class="title">
         <h1>INSCRIÇÕES</h1>

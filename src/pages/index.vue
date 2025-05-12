@@ -3,6 +3,8 @@
     <Slide/>
     <inscricao />
     <datas />
+    <datasInf />
+    <DatasFotos />
     <Local />
     <Conect />
   </div>
@@ -16,5 +18,6 @@
   display:flex;
   justify-content: center;
   flex-direction: column;
+  height: auto;
   }
 </style>

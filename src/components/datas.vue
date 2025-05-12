@@ -17,7 +17,7 @@
 const eventosOf = [
   {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 18h30min",
-    descricao: "Solenidade Oficial de Abertura do 3º SaLiP2 - Salão do Livro de Pedro II Discursos de autoridades e homenageados. | Local: Espaço Educacional de Eventos Manoel Nogueira Filho  ",
+    descricao: "Solenidade Oficial de Abertura do 3º SaLiP2 - Salão do Livro de Pedro II Discursos de autoridades e homenageados. | Local: Espaço Educacional de Eventos Manoel Nogueira Filho",
   },
    {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 19h",
@@ -53,7 +53,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 18h30min",
-    descricao: "Acolhida:  Leo Sorato | Local: Auditório Padre Norberto ",
+    descricao: "Acolhida:  Leo Sorato | Local: Praça Domingos Mourão ",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 19h",
@@ -65,7 +65,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 8h",
-    descricao: "Acolhida: Marcus Aurélio | Local: Auditório Padre Norberto | Local: Auditório Padre Norberto ",
+    descricao: "Acolhida: Marcus Aurélio | Local: Auditório Padre Norberto ",
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ  | 8h30min",
@@ -81,11 +81,11 @@ const eventosOf = [
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | TARDE  | 14h30min",
-    descricao: "Palestra: Poesia, Música e Sala de Aula Palestrantes: Adriano Lobão Aragão (PI) e Vagner Ribeiro (PI) Apresentação/Mediação: ",
+    descricao: "Palestra: Poesia, Música e Sala de Aula Palestrantes: Adriano Lobão Aragão (PI) e Vagner Ribeiro (PI) Apresentação/Mediação: | Local: Auditório Padre Norberto",
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | TARDE  | 16h30min",
-    descricao: "Acolhida: Grupo da Apae  | Local: Auditório Padre Norberto ",
+    descricao: "Roda de Conversa: Presença da Mulher na Literatura de Pedro II Convidadas: Marina Campelo (PI), Adeodata dos Anjos (PI), Aldenira Martins (PI), Dayse Benício (PI) e Margarete Gomes (PI). Apresentação/Mediação: Ernani Getirana (PI) | Local: Auditório Padre Norberto",
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | NOITE  | 20h ",
