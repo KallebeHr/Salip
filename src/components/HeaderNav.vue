@@ -1,9 +1,15 @@
 <template>
   <div class="container">
     <header>
-      <!-- ESQUERDA -->
+      <!-- ESQUERDA DESKTOP -->
       <ul class="menu-esquerda desktop-only">
-        <li><img src="/IMG/iconInsta.png" class="icons" alt="InstagramIcon"> INSTAGRAM</li>
+         <router-link to="/midiasalipi" class="no-style-link">
+        <li><img src="/IMG/Camera.png" class="icons" alt="InstagramIcon"> MIDIA SALIPI</li>
+        </router-link>
+
+         <router-link to="/homenageados" class="no-style-link">
+        <li><img src="/IMG/home.png" class="icons" alt="InstagramIcon"> HOMENAGEADOS</li>
+        </router-link>
         <router-link to="/quemSomos" class="no-style-link">
           <li><img src="/IMG/iconSomos.png" class="icons" alt="QuemSomos"> QUEM SOMOS?</li>
         </router-link>
@@ -14,49 +20,70 @@
         <img src="/IMG/LOGONAMEPRIMARIO.png" alt="Logo" class="logoIMG" />
       </a>
 
-      <!-- DIREITA -->
+      <!-- DIREITA DESKTOP -->
       <ul class="menu-direita desktop-only">
-        <li>
-          <img src="/IMG/iconWhats.png" class="icons" alt="WhatsApp Icon" />
-          <a href="https://wa.link/sg68qw" target="_blank" rel="noopener noreferrer">
-            SUPORTE DE INSCRIÇÃO
-          </a>
-        </li>
         <router-link to="/addUser" class="no-style-link">
           <li>
             <img src="/IMG/iconAdd.png" class="icons" alt="AddIcon" />
             FAZER INSCRIÇÃO
           </li>
         </router-link>
+        <a href="https://www.instagram.com/salaodolivrodepii/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer">
+        <li><img src="/IMG/iconInsta.png" class="icons" alt="InstagramIcon"> INSTAGRAM</li>
+        </a>
+ <a href="https://wa.link/sg68qw" target="_blank" rel="noopener noreferrer">
+        <li>
+          <img src="/IMG/iconWhats.png" class="icons" alt="WhatsApp Icon" />
+            SUPORTE DE INSCRIÇÃO
+          </li>
+          </a>
       </ul>
 
-      <!-- HAMBÚRGUER MOBILE -->
-      <input type="checkbox" id="menuToggle" v-model="menuAberto" class="hamburger-checkbox mobile-only" />
-      <label for="menuToggle" class="hamburger-icon mobile-only">
-        <span></span>
-        <span></span>
-        <span></span>
-      </label>
+      <!-- ÍCONE DE MENU NO MOBILE -->
+      <img
+        src="/IMG/menu.png"
+        class="menu-icon mobile-only"
+        alt="Menu"
+        @click="menuAberto = !menuAberto"
+      />
     </header>
 
-    <!-- MENU MOBILE SOBREPOSTO -->
-    <div v-if="menuAberto" class="menu-mobile mobile-only">
-      <ul>
-        <li @click="menuAberto = false">
-          <img src="/IMG/iconInsta.png" class="icons" alt="InstagramIcon"> INSTAGRAM
-        </li>
-        <router-link to="/quemSomos" class="no-style-link" @click="menuAberto = false">
-          <li><img src="/IMG/iconSomos.png" class="icons" alt="QuemSomos"> QUEM SOMOS?</li>
-        </router-link>
-        <li @click="menuAberto = false">
-          <img src="/IMG/iconWhats.png" class="icons" alt="WhatsApp Icon" />
-          <a href="https://wa.link/sg68qw" target="_blank" rel="noopener noreferrer">SUPORTE DE INSCRIÇÃO</a>
-        </li>
-        <router-link to="/addUser" class="no-style-link" @click="menuAberto = false">
-          <li><img src="/IMG/iconAdd.png" class="icons" alt="AddIcon" /> FAZER INSCRIÇÃO</li>
-        </router-link>
-      </ul>
-    </div>
+    <!-- OVERLAY -->
+    <transition name="fade">
+      <div v-if="menuAberto" class="overlay" @click="menuAberto = false"></div>
+    </transition>
+
+    <!-- MENU MOBILE -->
+    <transition name="slide-down">
+      <div v-if="menuAberto" class="menu-mobile mobile-only">
+        <ul>
+          <router-link to="/midiasalipi" class="no-style-link">
+          <li @click="menuAberto = false">
+            <img src="/IMG/iconInsta.png" class="icons" alt="CameraIcon"> MIDIA SALIPI
+          </li>
+          </router-link>
+          <router-link to="/homenageados" class="no-style-link">
+          <li @click="menuAberto = false">
+            <img src="/IMG/iconInsta.png" class="icons" alt="HomenIcon"> HOMENAGEADOS
+          </li>
+          </router-link>
+           <a href="https://www.instagram.com/salaodolivrodepii/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer">
+          <li @click="menuAberto = false">
+            <img src="/IMG/iconInsta.png" class="icons" alt="InstagramIcon"> INSTAGRAM
+          </li></a>
+          <router-link to="/quemSomos" class="no-style-link" @click="menuAberto = false">
+            <li><img src="/IMG/iconSomos.png" class="icons" alt="QuemSomos"> QUEM SOMOS?</li>
+          </router-link>
+          <li @click="menuAberto = false">
+            <img src="/IMG/iconWhats.png" class="icons" alt="WhatsApp Icon" />
+            <a href="https://wa.link/sg68qw" target="_blank" rel="noopener noreferrer">SUPORTE DE INSCRIÇÃO</a>
+          </li>
+          <router-link to="/addUser" class="no-style-link" @click="menuAberto = false">
+            <li><img src="/IMG/iconAdd.png" class="icons" alt="AddIcon" /> FAZER INSCRIÇÃO</li>
+          </router-link>
+        </ul>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -71,6 +98,7 @@ const menuAberto = ref(false)
   color: black;
 }
 
+/* HEADER */
 header {
   display: flex;
   align-items: center;
@@ -79,8 +107,8 @@ header {
   width: 100%;
   background-color: #fdfffb;
   box-shadow: 0 10px 18px rgba(39, 53, 175, 0.279);
-  z-index: 1000;
   position: relative;
+  z-index: 1000;
 }
 
 /* MENU */
@@ -90,7 +118,6 @@ ul {
   flex-direction: column;
   margin: 0 2rem;
   font-family: "Inter", sans-serif;
-  font-weight: 300;
   font-size: 0.8rem;
   gap: 8px;
   padding: 0;
@@ -99,15 +126,14 @@ ul {
 li {
   display: flex;
   align-items: center;
-  border-bottom: solid 1px #2734af;
+  border-bottom: 1px solid #2734af;
   padding: 7px;
   border-radius: 10px;
-  width: 14rem;
+  width: 16rem;
   cursor: pointer;
 }
-
 li:hover {
-  border-bottom: solid 2px #2734af;
+  border-bottom: 2px solid #2734af;
 }
 
 .icons {
@@ -118,7 +144,6 @@ li:hover {
 a {
   all: unset;
   cursor: pointer;
-  text-decoration: none;
 }
 
 .logoIMG {
@@ -131,58 +156,81 @@ a {
   align-items: center;
 }
 
-/* HAMBÚRGUER */
-.hamburger-checkbox {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  width: 0;
-  height: 0;
-}
-
-.hamburger-icon {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
+/* ÍCONE DE MENU NO MOBILE */
+.menu-icon {
+  height: 30px;
   width: 30px;
-  height: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  position: absolute;
+  top: 2rem;
+  right: 1.5rem;
   cursor: pointer;
   z-index: 1001;
 }
 
-.hamburger-icon span {
-  display: block;
-  height: 4px;
-  width: 100%;
-  background-color: #2734AF;
-  border-radius: 3px;
-  transition: 0.3s;
-}
-
-#menuToggle:checked + .hamburger-icon span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-#menuToggle:checked + .hamburger-icon span:nth-child(2) {
-  opacity: 0;
-}
-#menuToggle:checked + .hamburger-icon span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
-
+/* MENU MOBILE */
 .menu-mobile {
   position: fixed;
-  top: 100px; /* ajusta para não cobrir o header */
+  top: 0;
   left: 0;
   width: 100%;
   background: #fdfffb;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 1rem;
-  z-index: 9999;
+  z-index: 1002;
+  border-top: 1px solid #e0e0e0;
 }
 
+.menu-mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+.menu-mobile li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #2734af;
+  border-radius: 10px;
+  width: 15rem;
+  cursor: pointer;
+}
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(1px);
+  z-index: 1000;
+}
+
+/* TRANSIÇÕES */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+.slide-down-enter-active {
+  animation: slideDown 0.3s ease-out forwards;
+}
+.slide-down-leave-active {
+  animation: slideUp 0.3s ease-in forwards;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0px); opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(0px); opacity: 1; }
+  to { transform: translateY(-20px); opacity: 0; }
+}
 
 /* RESPONSIVO */
 @media (max-width: 800px) {

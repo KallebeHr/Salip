@@ -10,11 +10,15 @@
 
 <style scoped>
 .container{
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    justify-items: center;
-    height: auto;
-    background: rgb(28, 26, 26) ;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1.5rem;
+  min-height: 100vh;
+  height: auto;
+  background-image: url('/IMG/backCadastro.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
     }
 </style>

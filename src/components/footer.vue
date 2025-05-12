@@ -1,11 +1,10 @@
 <template>
-  <div class='container'>
-  </div>
+  
+
+    <div>
+      {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+    </div>
 </template>
-
 <script setup>
-</script>
 
-<style scoped>
-.container{display:flex;}
-</style>
+</script>

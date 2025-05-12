@@ -1,23 +1,17 @@
-/**
- * main.js
- *
- * Bootstraps Vuetify and other plugins then mounts the App`
- */
-
-// Plugins
-import { registerPlugins } from '@/plugins'
-
-// Components
-import App from './App.vue'
-
-// Composables
 import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+import vuetify from './plugins/vuetify' // ⬅️ ADICIONE ISSO
+import { auth } from './firebase'
+import { onAuthStateChanged } from 'firebase/auth'
 
-// Styles
-import 'unfonts.css'
+let app
 
-const app = createApp(App)
-
-registerPlugins(app)
-
-app.mount('#app')
+onAuthStateChanged(auth, () => {
+  if (!app) {
+    app = createApp(App)
+    app.use(router)
+    app.use(vuetify) 
+    app.mount('#app')
+  }
+})

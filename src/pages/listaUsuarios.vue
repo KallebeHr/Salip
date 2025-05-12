@@ -1,6 +1,6 @@
 <template>
   <div class='container'>
-    <nosPage />
+    <listUsers />
   </div>
 </template>
 
@@ -9,12 +9,12 @@
 
 <style scoped>
 .container{
-    display:flex;
+     display:flex;
     align-items: center;
     justify-content: center;
     justify-items: center;
     height: auto;
-  background-color: #f8f9fb;
+    background-color: #f8f9fb;
 
     }
 </style>

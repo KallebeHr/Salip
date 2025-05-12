@@ -12,8 +12,8 @@
     </header>
 
     <p class="description">
-      Participar dos eventos do SALIP2 é simples, rápido e gratuito!  
-      Clique no botão abaixo e garanta sua vaga nas palestras, oficinas, mesas-redondas  
+      Participar dos eventos do SALIP2 é simples, rápido e gratuito.<br />
+      Clique no botão abaixo e garanta sua vaga nas palestras, oficinas, mesas-redondas<br />
       e demais atrações do Salão do Livro de Pedro II.
     </p>
 
@@ -26,102 +26,109 @@
   </div>
 </template>
 
-<script setup>
-</script>
-
 <style scoped>
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem 1rem;
-  background-color: #fdfffb;
-  color: black;
-  font-family: "Roboto", sans-serif;
+  padding: 4rem 2rem;
+  background-color: #f8f9fb;
+  color: #222;
+  font-family: 'Inter', sans-serif;
   text-align: center;
 }
 
-/* HEADER */
 header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
   width: 100%;
 }
 
-header .data h2 {
-  font-size: 1.6rem;
-  color: #2734AF;
+.data h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2734af;
   margin: 0;
+  letter-spacing: 1px;
 }
 
-header .data p {
-  font-size: 1rem;
+.data p {
+  font-size: 0.95rem;
   margin: 0;
   color: #666;
 }
 
-.title  .titles {
-  font-size: 20rem;
-  line-height: 1.1;
-  color: #111;
+.title h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
   margin: 0;
+  color: #1c1c1e;
+  letter-spacing: 2px;
+  line-height: 1.2;
 }
 
-/* DESCRIÇÃO */
+/* Descrição */
 .description {
-  font-size: 1.1rem;
-  max-width: 700px;
-  line-height: 1.6;
-  color: #555;
-  margin-bottom: 2rem;
+  font-size: 1.05rem;
+  max-width: 720px;
+  line-height: 1.7;
+  color: #444;
+  margin-bottom: 2.5rem;
 }
 
-/* BOTÃO */
+/* Botão */
 .btn-link {
   text-decoration: none;
 }
 
 .pAdd {
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  font-weight: bold;
+  gap: 0.6rem;
+  font-weight: 600;
   font-size: 1rem;
-  color: #2734AF;
-  border: 2px solid #2734AF;
-  padding: 10px 20px;
-  border-radius: 10px;
+  color: #2734af;
+  border: 2px solid #2734af;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
-  background-color: transparent;
 }
 
 .pAdd:hover {
   background-color: #2734af10;
-  transform: scale(1.03);
+  transform: scale(1.04);
+  box-shadow: 0 6px 16px rgba(39, 52, 175, 0.2);
 }
 
 .icons {
-  height: 1.2rem;
+  height: 1.1rem;
 }
 
-/* RESPONSIVO */
+/* Responsivo */
 @media (min-width: 768px) {
   header {
     flex-direction: row;
     justify-content: space-between;
-    padding: 0 2rem;
+    width: 100%;
+    max-width: 1000px;
   }
 
-  header .title h1 {
-    font-size: 2.5rem;
+  .title h1 {
+    font-size: 3rem;
+    text-align: right;
   }
 
-  header .data {
+  .data {
     text-align: left;
+  }
+
+  .description {
+    font-size: 1.1rem;
   }
 }
 </style>

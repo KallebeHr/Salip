@@ -47,6 +47,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  background-color: #f8f9fb;
+
   }
   
   header {

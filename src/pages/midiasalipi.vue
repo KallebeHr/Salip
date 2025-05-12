@@ -1,6 +1,6 @@
 <template>
   <div class='container'>
-    <nosPage />
+    <salipMidia />
   </div>
 </template>
 

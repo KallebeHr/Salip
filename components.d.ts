@@ -16,11 +16,17 @@ declare module 'vue' {
     Header: typeof import('./src/components/Header.vue')['default']
     HeaderNav: typeof import('./src/components/HeaderNav.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Homen: typeof import('./src/components/homen.vue')['default']
     Inscricao: typeof import('./src/components/inscricao.vue')['default']
+    ListUsers: typeof import('./src/components/listUsers.vue')['default']
     Local: typeof import('./src/components/local.vue')['default']
+    MidiaSa: typeof import('./src/components/midiaSa.vue')['default']
     Navbar: typeof import('./src/components/Navbar.vue')['default']
+    NosPage: typeof import('./src/components/nosPage.vue')['default']
+    QuemSomos: typeof import('./src/components/quemSomos.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SalipMidia: typeof import('./src/components/salipMidia.vue')['default']
     Slide: typeof import('./src/components/slide.vue')['default']
   }
 }
