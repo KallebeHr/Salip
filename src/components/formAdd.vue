@@ -39,6 +39,30 @@
         <input type="text" v-model="form.localTrabalho" required placeholder="Local de trabalho" />
       </div>
 
+      <!-- NOVO CAMPO: EVENTO -->
+      <div class="form-group">
+        <select v-model="form.evento">
+          <option value="" disabled selected>Selecione um evento (opcional)</option>
+          <option value="Oficina de Escrita Criativa">Oficina de Escrita Criativa</option>
+          <option value="Roda de Conversa com Ilustradores">Roda de Conversa com Ilustradores</option>
+          <option value="Mesa Redonda: Literatura e o Nordeste">Mesa Redonda: Literatura e o Nordeste</option>
+          <option value="Contação de Histórias para Crianças">Contação de Histórias para Crianças</option>
+          <option value="Lançamento de Livros Independentes">Lançamento de Livros Independentes</option>
+          <option value="Sarau Poético com Música ao Vivo">Sarau Poético com Música ao Vivo</option>
+          <option value="Encontro com Autores Infantojuvenis">Encontro com Autores Infantojuvenis</option>
+          <option value="palestra">Palestra</option>
+        </select>
+
+        <input v-if="form.evento" type="tel" v-model="form.telefone" required placeholder="Telefone para contato" />
+
+        <select v-if="form.evento === 'palestra'" v-model="form.palestraSelecionada" required>
+          <option value="" disabled selected>Selecione a palestra</option>
+          <option value="14/08 - 11h - A Leitura na Era Digital">14/08 - 11h - A Leitura na Era Digital</option>
+          <option value="10/08 - 14h - Escrita Criativa para Jovens">10/08 - 14h - Escrita Criativa para Jovens</option>
+          <option value="12/08 - 09h - Literatura e Inclusão">12/08 - 09h - Literatura e Inclusão</option>
+        </select>
+      </div>
+
       <div class="form-group checkbox-group">
         <label>
           <input type="checkbox" v-model="aceitaTermos" required />
@@ -50,9 +74,6 @@
     </form>
   </div>
 </template>
-
-
-
 
 <script setup>
 import { ref, reactive } from 'vue'
@@ -81,7 +102,10 @@ const form = reactive({
   uf: '',
   dataNascimento: '',
   escola: '',
-  localTrabalho: ''
+  localTrabalho: '',
+  evento: '',
+  telefone: '',
+  palestraSelecionada: ''
 })
 
 const handleSubmit = async (e) => {
@@ -100,13 +124,15 @@ const handleSubmit = async (e) => {
     dataNascimento: form.dataNascimento,
     escola: tipoParticipante.value === 'aluno' ? form.escola : null,
     localTrabalho: tipoParticipante.value === 'funcionario' ? form.localTrabalho : null,
+    evento: form.evento || null,
+    telefone: form.evento ? form.telefone : null,
+    palestraSelecionada: form.evento === 'palestra' ? form.palestraSelecionada : null,
     timestamp: new Date()
   }
 
   try {
     await addDoc(collection(db, 'inscricoes'), dados)
 
-    // Resetar
     tipoParticipante.value = 'aluno'
     aceitaTermos.value = false
     Object.keys(form).forEach((key) => {
@@ -120,9 +146,8 @@ const handleSubmit = async (e) => {
   }
 }
 </script>
-
-
-    <style scoped>
+2
+<style scoped>
     .form-wrapper {
       display: flex;
       justify-content: center;

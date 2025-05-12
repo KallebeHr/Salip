@@ -1,10 +1,28 @@
 <template>
   <div class="container">
-    <h1 class="title">Lista de Inscritos {{ usuariosOrdenados.length }}</h1>
+    <!-- HEADER COM DADOS GERAIS E FILTROS -->
+    <div class="dashboard-header">
+      <div class="stat-box" @click="filtroAtual = 'todos'">
+        <strong class="bntSerch">Total:</strong>
+        <span>{{ usuariosOrdenados.length }}</span>
+      </div>
+      <div class="stat-box" @click="filtroAtual = 'aluno'">
+        <strong class="bntSerch">Alunos:</strong>
+        <span>{{ totalAlunos }}</span>
+      </div>
+      <div class="stat-box" @click="filtroAtual = 'funcionario'">
+        <strong class="bntSerch">Funcionários:</strong>
+        <span>{{ totalFuncionarios }}</span>
+      </div>
+      <div class="stat-box" @click="filtroAtual = 'visitante'">
+        <strong class="bntSerch">Visitantes:</strong>
+        <span>{{ totalVisitantes }}</span>
+      </div>
+    </div>
 
     <ul class="lista">
       <li
-        v-for="(usuario, index) in usuariosOrdenados"
+        v-for="(usuario, index) in usuariosFiltrados"
         :key="usuario.id"
         :class="{ cinza: index % 2 === 1 }"
         @click="abrirDialog(usuario)"
@@ -29,27 +47,36 @@
             <p v-if="usuarioSelecionado.localTrabalho"><strong>Trabalho:</strong> {{ usuarioSelecionado.localTrabalho }}</p>
             <p><strong>Data de Nascimento:</strong> {{ usuarioSelecionado.dataNascimento }}</p>
             <p><strong>Tipo:</strong> {{ usuarioSelecionado.tipoParticipante }}</p>
+            <p v-if="usuarioSelecionado.evento"><strong>Evento:</strong> {{ usuarioSelecionado.evento }}</p>
+            <p v-if="usuarioSelecionado.palestraSelecionada"><strong>Palestra:</strong> {{ usuarioSelecionado.palestraSelecionada }}</p>
+            <p v-if="usuarioSelecionado.telefone"><strong>Telefone:</strong> {{ usuarioSelecionado.telefone }}</p>
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn class="dialog-btn" text="Fechar" @click="dialogAberto = false"></v-btn>
+            <v-spacer></v-spacer>
+            <v-btn class="dialog-btn" text="Fechar" @click="dialogAberto = false"></v-btn>
+            <v-spacer></v-spacer>
+            
         </v-card-actions>
-      </v-card>
-    </v-dialog>
+    </v-card>
+</v-dialog>
+<v-btn class="download" text="Baixar Lista no EXECEL" @click="baixarExcel"></v-btn>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
 import { auth, db } from '@/firebase'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 
 const usuariosOrdenados = ref([])
 const usuarioSelecionado = ref(null)
 const dialogAberto = ref(false)
+const filtroAtual = ref('todos')
 const router = useRouter()
 
 onMounted(async () => {
@@ -67,6 +94,39 @@ onMounted(async () => {
   }
 })
 
+const totalAlunos = computed(() => usuariosOrdenados.value.filter(u => u.tipoParticipante === 'aluno').length)
+const totalFuncionarios = computed(() => usuariosOrdenados.value.filter(u => u.tipoParticipante === 'funcionario').length)
+const totalVisitantes = computed(() => usuariosOrdenados.value.filter(u => u.tipoParticipante === 'visitante').length)
+
+const usuariosFiltrados = computed(() => {
+  if (filtroAtual.value === 'todos') return usuariosOrdenados.value
+  return usuariosOrdenados.value.filter(u => u.tipoParticipante === filtroAtual.value)
+})
+const baixarExcel = () => {
+  const dadosParaExportar = usuariosFiltrados.value.map((u) => ({
+    Nome: u.nomeCompleto,
+    Cidade: u.cidade,
+    UF: u.uf,
+    Tipo: u.tipoParticipante,
+    Escola: u.escola || '',
+    Trabalho: u.localTrabalho || '',
+    Evento: u.evento || '',
+    Palestra: u.palestraSelecionada || '',
+    Telefone: u.telefone || '',
+    DataNascimento: u.dataNascimento || '',
+  }))
+
+  const ws = XLSX.utils.json_to_sheet(dadosParaExportar)
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, 'Inscritos')
+
+  const filtro = filtroAtual.value === 'todos' ? 'geral' : filtroAtual.value
+  const nomeArquivo = `inscritos_${filtro}.xlsx`
+  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
+
+  saveAs(blob, nomeArquivo)
+}
 const logout = async () => {
   try {
     await signOut(auth)
@@ -82,6 +142,7 @@ const abrirDialog = (usuario) => {
 }
 </script>
 
+
 <style scoped>
 .container {
   max-width: 800px;
@@ -90,9 +151,42 @@ const abrirDialog = (usuario) => {
   font-family: 'Inter', sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
+.dashboard-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-around;
+  background: #f4f4f4;
+  padding: 1rem;
+  font-size: 0.95rem;
+  border: 1px solid #ddd;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  color: #2734AF;
+}
+.bntSerch{
+    cursor: pointer;
+    padding: 5px;
+    transition: .2s ease-in;
+    margin: 5px;
+    border-radius: 5px;
+    
+}
+.bntSerch:hover{
+    background: #5f5f5f5f;
+    transition: .2s ease-in-out;
+    transform: scale(1.1);
+
+
+}
 .title {
   font-size: 1.8rem;
   font-weight: 600;
@@ -118,6 +212,21 @@ const abrirDialog = (usuario) => {
 
 .lista li:hover {
   background-color: #ececec;
+}
+.download {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: #198754;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  align-self: center;
+  transition: background 0.3s;
+}
+
+.download:hover {
+  background-color: #157347;
 }
 
 .lista li.cinza {
@@ -165,6 +274,10 @@ const abrirDialog = (usuario) => {
 }
 
 @media (max-width: 600px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: center;
+  }
   .dialog-card {
     padding: 0.75rem;
   }
