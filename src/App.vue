@@ -17,7 +17,7 @@
 import { ref, onMounted } from 'vue';
 
 import HeaderNav  from "./components/HeaderNav.vue";
-import Footer     from "./components/Footer.vue";
+import Footer     from "./components/footer.vue";
 
 const isLoaded = ref(false);
 
