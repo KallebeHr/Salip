@@ -16,41 +16,45 @@
     </div>
   </template>
   
-  <script setup>
-  import { onMounted } from 'vue'
-  import L from 'leaflet'
-  import 'leaflet/dist/leaflet.css'
-  
-onMounted(() => {
-  // inicializa o mapa com controles de zoom (já ativo por padrão)...
-  const map = L.map('map', {
-    zoomControl: true,     // garante que o controle de zoom apareça
-  })
-    .setView([-4.4286, -41.4659], 15) // Pedro II – PI
+<script setup>
+import { onMounted } from 'vue'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
 
-  // camada de azulejos
+onMounted(() => {
+  // Coordenadas do evento
+  const eventoLatLng = [-4.425311683306984, -41.45828694109339]
+
+  // Inicializa o mapa centralizado no evento
+  const map = L.map('map', {
+    zoomControl: true,
+    scrollWheelZoom: false,
+  }).setView(eventoLatLng, 18)
+
+  // Camada do mapa
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 22,
-    attribution: '&copy; MaxDev contributors'
+    attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map)
 
-  // marcador fixo
+  // Ícone personalizado do evento
   const customIcon = L.icon({
-    iconUrl: '/IMG/livro-de-direito.png',
+    iconUrl: '/IMG/iconMap.svg',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
   })
-  L.marker([-4.425311683306984, -41.45828694109339], { icon: customIcon })
+
+  // Marcador fixo do evento com popup já aberto
+  L.marker(eventoLatLng, { icon: customIcon })
     .addTo(map)
-    .bindPopup('Rua tertuliano filho - Pedro II - PI')
+    .bindPopup('Rua Tertuliano B Filho, 467 – Pedro II - PI')
+    .openPopup()
 
-  // tenta localizar o usuário e jogar o mapa pra lá
-  map.locate({ setView: true, maxZoom: 16, watch: false })
+  // Localiza o usuário, mas não muda a centralização do mapa
+  map.locate({ setView: false, maxZoom: 16 })
 
-  // quando a localização é encontrada
   map.on('locationfound', e => {
-    // adiciona marcador onde o usuário está
     L.circleMarker(e.latlng, {
       radius: 8,
       fillColor: '#136AEC',
@@ -61,16 +65,14 @@ onMounted(() => {
     })
       .addTo(map)
       .bindPopup('Você está aqui!')
-      .openPopup()
   })
 
-  // se der erro (usuário negou permissão, por ex.)
   map.on('locationerror', err => {
-    console.warn('Não foi possível obter localização:', err.message)
-    // opcional: informar com toast ou outro alerta
+    console.warn('Localização do usuário não permitida:', err.message)
   })
 })
-  </script>
+</script>
+
   
   <style scoped>
   .container {

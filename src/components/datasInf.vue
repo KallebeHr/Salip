@@ -17,21 +17,21 @@
 const eventosOf = [
   {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 9h",
-    descricao: "Contação de Histórias / Teatro de Bonecos. Apresentação: Chagas Vale e Talitha do Monte | Local: Praça Domingos Mourão",
+    descricao: "Contação de Histórias / Teatro de Bonecos. Apresentação: Chagas Vale e Talitha do Monte | Local: Praça Domingos Mourão Filho",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 10h",
-    descricao: "Lenda da Sereia do Pirapora. Apresentação: Grupo Urutau | Local: Praça Domingos Mourão",
+    descricao: "Lenda da Sereia do Pirapora. Apresentação: Grupo Urutau | Local: Praça Domingos Mourão Filho",
   }
   ,
    {
     titulo: "🗓️ DIA 23/05/2025 | SÁBADO | MANHÃ | 9h",
-    descricao: "Contação de Histórias / Teatro de Bonecos. Apresentação: Chagas Vale e Talitha do Monte | Praça Domingos Mourão",
+    descricao: "Contação de Histórias / Teatro de Bonecos. Apresentação: Chagas Vale e Talitha do Monte | Praça Domingos Mourão Filho",
   }
   ,
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 10h",
-    descricao: "Sítio do Pica-Pau Amarelo. Apresentação: Grupo Urutau | Local: 	Praça Domingos Mourão",
+    descricao: "Sítio do Pica-Pau Amarelo. Apresentação: Grupo Urutau | Local: 	Praça Domingos Mourão Filho",
   }
 ]
 </script>

@@ -89,11 +89,11 @@ const eventosOf = [
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | NOITE  | 20h ",
-    descricao: "Encerramento do 3º SaLiP2 com Show de Humor da Selma de Nieta | Local: Praça Domingos Mourão ",
+    descricao: "Encerramento do 3º SaLiP2 com Show de Humor da Selma de Nieta | Local: Praça Domingos Mourão Filho",
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | NOITE  | 21h ",
-    descricao: "Show de encerramento com Gonzaga Lu e Trio Asa Branca | Local: Praça Domingos Mourão ",
+    descricao: "Show de encerramento com Gonzaga Lu e Trio Asa Branca | Local: Praça Domingos Mourão Filho",
   }
 
 

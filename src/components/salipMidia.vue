@@ -9,7 +9,7 @@
       :modules="modules"
       :loop="true"
       :navigation="true"
-      :autoplay="{ delay: 500, disableOnInteraction: true }"
+      :autoplay="{ delay: 2000, disableOnInteraction: true }"
       class="mySwiper" 
     >
       <swiper-slide v-for="(item, index) in fotos" :key="index">
