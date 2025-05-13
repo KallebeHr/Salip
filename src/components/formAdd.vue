@@ -1,6 +1,6 @@
 <template>
   <div class="form-wrapper">
-    <form @submit="handleSubmit" class="form-container">
+    <form class="form-container">
       <h2 class="form-title">Inscreva-se</h2>
 
       <!-- TIPO PARTICIPANTE -->
@@ -13,57 +13,75 @@
 
       <!-- CAMPOS BÁSICOS -->
       <div class="form-group">
-        <input type="text" v-model="form.nomeCompleto" required placeholder="Nome completo" />
-        <input type="text" v-model="form.cidade" required placeholder="Cidade" />
-        <input type="text" v-model="form.uf" maxlength="2" required placeholder="UF (ex: PI)" />
-        <input type="date" v-model="form.dataNascimento" required />
+        <input type="text" v-model="form.nomeCompleto" placeholder="Nome completo" />
+        <input type="text" v-model="form.cidade" placeholder="Cidade" />
+        <input type="text" v-model="form.uf" maxlength="2" placeholder="UF (ex: PI)" />
+        <input type="date" v-model="form.dataNascimento" />
       </div>
 
       <!-- CAMPOS CONDICIONAIS -->
       <div class="form-group" v-if="tipoParticipante === 'aluno'">
-        <select v-model="form.escola" required>
-          <option value="" disabled selected>Selecione sua escola</option>
+        <select v-model="form.escola">
+          <option value="" disabled>Selecione sua escola</option>
           <option v-for="escola in escolas" :key="escola" :value="escola">{{ escola }}</option>
         </select>
       </div>
 
       <div class="form-group" v-if="tipoParticipante === 'funcionario'">
-        <input type="text" v-model="form.localTrabalho" required placeholder="Local de trabalho" />
+        <input type="text" v-model="form.localTrabalho" placeholder="Local de trabalho" />
       </div>
 
       <!-- EVENTO -->
-<div class="form-group">
-  <select v-model="form.evento" required>
-    <option value="" disabled selected>Selecione um evento (opcional)</option>
-    <option v-for="evento in eventos" :key="evento.value" :value="evento.value">
-      {{ evento.label }}
-    </option>
-  </select>
-
-  <input v-if="form.evento" type="tel" v-model="form.telefone" required placeholder="Telefone para contato" />
-
-  <!-- exeposicao -->
-  <select v-if="form.evento === 'EXPOSIÇÃO FOTOGRÁFICA'" v-model="form.exposicaoSelecionada" required>
-    <option value="" disabled selected>Selecione a Exposição</option>
-    <option v-for="exposicao in exposicaos" :key="exposicao" :value="exposicao">{{ exposicao }}</option>
-  </select>
-
-  <!-- OFICINA -->
-  <select v-if="form.evento === 'oficina'" v-model="form.oficinaSelecionada" required>
-    <option value="" disabled selected>Selecione a oficina</option>
-    <option v-for="oficina in oficinas" :key="oficina" :value="oficina">{{ oficina }}</option>
-  </select>
-</div>
+      <div class="form-group">
+        <select v-model="form.evento">
+          <option value="" disabled>Selecione um evento (opcional)</option>
+          <option v-for="evento in eventos" :key="evento.value" :value="evento.value">
+            {{ evento.label }}
+          </option>
+        </select>
+        <input
+          v-if="form.evento"
+          type="tel"
+          v-model="form.telefone"
+          placeholder="Telefone para contato"
+        />
+        <select
+          v-if="form.evento === 'EXPOSIÇÃO FOTOGRÁFICA'"
+          v-model="form.exposicaoSelecionada"
+        >
+          <option value="" disabled>Selecione a Exposição</option>
+          <option v-for="exposicao in exposicaos" :key="exposicao" :value="exposicao">
+            {{ exposicao }}
+          </option>
+        </select>
+        <select
+          v-if="form.evento === 'oficina'"
+          v-model="form.oficinaSelecionada"
+        >
+          <option value="" disabled>Selecione a oficina</option>
+          <option v-for="oficina in oficinas" :key="oficina" :value="oficina">
+            {{ oficina }}
+          </option>
+        </select>
+      </div>
 
       <!-- TERMOS -->
       <div class="form-group checkbox-group">
         <label>
-          <input type="checkbox" v-model="aceitaTermos" required />
+          <input type="checkbox" v-model="aceitaTermos" />
           <span>Li e aceito os termos da inscrição</span>
         </label>
       </div>
 
-      <button type="submit" class="form-button">Enviar inscrição</button>
+      <!-- BOTÃO ENVIAR -->
+      <button
+        type="button"
+        class="form-button"
+        :disabled="isSubmitting"
+        @click="handleSubmit"
+      >
+        {{ isSubmitting ? 'Enviando...' : 'Enviar inscrição' }}
+      </button>
     </form>
   </div>
 </template>
@@ -72,7 +90,15 @@
 import { ref, reactive } from 'vue'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
+import { useToast } from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-default.css'
 
+
+
+
+
+const $toast = useToast();
+// Estado
 // Firebase (não precisa mudar, está funcional)
 const firebaseConfig = {
   apiKey: "AIzaSyBtHvQv2ePdKzE8tVfWbADQ-Codvtu9g1E",
@@ -151,7 +177,7 @@ const escolas = [
   'Grupo Esc Felipe Gomes de Melo',
   'Esc Mul Prof José Soares da Silva',
   'Esc  Mul  Antonio Gomes',
-  'Outra',
+  'Outra, pois a minha não está na lista!',
 ]
 
 const eventos = [
@@ -163,11 +189,11 @@ const exposicaos = [
   '23/05 - 10h -	Exposição Fotográfica Reviver Pedro II ',
   '23/05 - 14h30min - Exposição Fotográfica Reviver Pedro II ',
   '23/05 - 16h30min - Exposição Fotográfica Reviver Pedro II ',
-  '23/05 - 14h30min - Exposição Fotográfica Reviver Pedro II ',
-  '23/05 - 16h30min - Apresentação e Curadoria: Historiador Afonso Celso ',
   '24/05 - 9h - Exposição Fotográfica Reviver Pedro II ',
   '24/05 - 10h - Exposição Fotográfica Reviver Pedro II ',
-]
+  '24/05 - 14h30min - Exposição Fotográfica Reviver Pedro II ',
+  '24/05 - 16h30min - Exposição Fotográfica Reviver Pedro II ',
+] 
 
 const oficinas = [
   '23/05 - 9h - Oficina de Literatura de Cordel ',
@@ -175,7 +201,11 @@ const oficinas = [
   '24/05 - 9h - Oficina de Literatura de Cordel ',
   '24/05 - 9h - Oficina de Fanzine ',
 ]
-
+function teste() {
+  let instance = $toast.warning('inscrição enviada com sucesso!', {
+    position: 'top-right'
+  });
+}
 const form = reactive({
   nomeCompleto: '',
   cidade: '',
@@ -192,15 +222,58 @@ const form = reactive({
 // Refs e reactive
 const tipoParticipante = ref('aluno')
 const aceitaTermos = ref(false)
+const isSubmitting = ref(false)
 
-// Envio
-const handleSubmit = async (e) => {
-  e.preventDefault()
-
-  if (!aceitaTermos.value) {
-    alert("Você precisa aceitar os termos para continuar.")
-    return
+// Validação de campos obrigatórios
+function checkFields() {
+  if (!form.nomeCompleto) {
+    $toast.warning('Preencha o Nome completo.', { position: 'top-right' })
+    return false
   }
+  if (!form.cidade) {
+    $toast.warning('Preencha a Cidade.', { position: 'top-right' })
+    return false
+  }
+  if (!form.uf) {
+    $toast.warning('Preencha a UF.', { position: 'top-right' })
+    return false
+  }
+  if (!form.dataNascimento) {
+    $toast.warning('Preencha a Data de nascimento.', { position: 'top-right' })
+    return false
+  }
+  if (tipoParticipante.value === 'aluno' && !form.escola) {
+    $toast.warning('Selecione a Escola.', { position: 'top-right' })
+    return false
+  }
+  if (tipoParticipante.value === 'funcionario' && !form.localTrabalho) {
+    $toast.warning('Preencha o Local de trabalho.', { position: 'top-right' })
+    return false
+  }
+  if (form.evento && !form.telefone) {
+    $toast.warning('Preencha o Telefone para contato.', { position: 'top-right' })
+    return false
+  }
+  if (form.evento === 'oficina' && !form.oficinaSelecionada) {
+    $toast.warning('Selecione a Oficina.', { position: 'top-right' })
+    return false
+  }
+  if (form.evento === 'EXPOSIÇÃO FOTOGRÁFICA' && !form.exposicaoSelecionada) {
+    $toast.warning('Selecione a Exposição.', { position: 'top-right' })
+    return false
+  }
+  if (!aceitaTermos.value) {
+    $toast.warning('Você precisa aceitar os termos.', { position: 'top-right' })
+    return false
+  }
+  return true
+}
+
+// Envio seguro
+const handleSubmit = async () => {
+  if (isSubmitting.value) return
+  if (!checkFields()) return
+  isSubmitting.value = true
 
   const dados = {
     tipoParticipante: tipoParticipante.value,
@@ -213,134 +286,128 @@ const handleSubmit = async (e) => {
     evento: form.evento || null,
     telefone: form.evento ? form.telefone : null,
     oficinaSelecionada: form.evento === 'oficina' ? form.oficinaSelecionada : null,
-    exeposicaoSelecionada: form.evento === 'exposicao' ? form.exeposicaoSelecionada : null,
+    exposicaoSelecionada: form.evento === 'EXPOSIÇÃO FOTOGRÁFICA' ? form.exposicaoSelecionada : null,
     timestamp: new Date()
   }
 
   try {
     await addDoc(collection(db, 'inscricoes'), dados)
-
+    Object.keys(form).forEach(key => form[key] = '')
     tipoParticipante.value = 'aluno'
     aceitaTermos.value = false
-    Object.keys(form).forEach((key) => {
-      form[key] = ''
-    })
-
-    alert('Inscrição enviada com sucesso!')
+    $toast.success('Inscrição enviada com sucesso!', { position: 'top-right' })
   } catch (error) {
-    console.error('Erro ao enviar inscrição:', error)
-    alert('Erro ao enviar inscrição. Tente novamente.')
+    console.error(error)
+    $toast.error('Erro ao enviar inscrição. Tente novamente.', { position: 'top-right' })
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>
 
 
 <style scoped>
-    .form-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 4rem 1.5rem;
-      min-height: 100vh;
-    }
-    
-    .form-container {
-      width: 100%;
-      max-width: 520px;
-        background-color: #f8f9fb;
-      padding: 3rem 2rem;
-      border-radius: 14px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-      font-family: 'Inter', sans-serif;
-      color: #1c1c1e;
-    }
-    
-    .form-title {
-      font-size: 1.75rem;
-      text-align: center;
-      font-weight: 600;
-      margin-bottom: 2.5rem;
-      color: #2b2b2e;
-    }
-    
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      margin-bottom: 2rem;
-    }
-    
-    .form-group input,
-    .form-group select {
-      padding: 0.85rem 1.2rem;
-      border: 1px solid #dcdfe6;
-      border-radius: 8px;
-      font-size: 1rem;
-      background-color: #fefefe;
-      transition: 0.2s ease;
-      color: #333;
-    }
-    
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: #4caf50;
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
-    }
-    
-    .radio-group {
-      flex-direction: row;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    
-    .radio-group label,
-    .checkbox-group label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      color: #333;
-    }
-    
-    .radio-group input[type="radio"],
-    .checkbox-group input[type="checkbox"] {
-      accent-color: #4caf50;
-    }
-    
-    .form-button {
-      width: 100%;
-      padding: 0.9rem;
-      font-size: 1rem;
-      background-color: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s ease-in-out;
-    }
-    
-    .form-button:hover {
-      background-color: #43a047;
-      box-shadow: 0 4px 14px rgba(76, 175, 80, 0.2);
-    }
-    
-    @media (max-width: 480px) {
-      .radio-group {
-        flex-direction: column;
-        gap: 1rem;
-      }
-    
-      .form-container {
-        padding: 2rem 1.5rem;
-      }
-    
-      .form-title {
-        font-size: 1.5rem;
-      }
-    }
+   .form-wrapper {
+  background-color: #fff;
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radio-group,
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-group label,
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  color: #999;
+
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  color: #999;
+  
+}
+
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  color: #999;
+}
+
+button.form-button {
+  background-color: #2b72ff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button.form-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+@media (max-width: 500px) {
+  .form-wrapper {
+    padding: 15px;
+  }
+
+  .form-container {
+    gap: 14px;
+  }
+
+  .radio-group,
+  .checkbox-group {
+    gap: 8px;
+  }
+
+  .form-title {
+    font-size: 1.25rem;
+  }
+}
+
     </style>

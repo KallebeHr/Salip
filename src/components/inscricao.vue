@@ -13,7 +13,7 @@
 
     <p class="description">
       Participar dos eventos do SALIP2 é simples, rápido e gratuito.<br />
-      Clique no botão abaixo e garanta sua vaga nas palestras, oficinas, mesas-redondas<br />
+      Clique no botão abaixo e garanta sua vaga nas palestras, oficinas<br />
       e demais atrações do Salão do Livro de Pedro II.
     </p>
 

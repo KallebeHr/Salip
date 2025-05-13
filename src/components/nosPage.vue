@@ -3,15 +3,16 @@
     <div class="content">
       <h1 class="title">QUEM SOMOS</h1>
       <p class="paragraph">
-        O <strong>SALIPI - Salão do Livro de Pedro II</strong> é um evento literário e cultural que celebra a leitura, a arte e a educação. Fundado em 2010, o evento reúne escritores, artistas, educadores e leitores de todas as idades para uma programação gratuita e inclusiva.
+        O <strong>SALIP2 - Salão do Livro de Pedro II</strong> 
+        é um evento literário e cultural que celebra a leitura e a educação.
       </p>
 
       <p class="paragraph">
-        A cada edição, o SALIPI promove palestras, oficinas, lançamentos de livros, saraus, contação de histórias, música e muito mais. É uma oportunidade única para vivenciar o poder transformador da literatura em uma das cidades mais encantadoras do Piauí.
+        Em Pedro II, o evento tem origem em 2022, com o projeto "Cara alegre do Piauí", que reuniu artistas e intelectuais em nossa cidade e plantou a semente deste salão. O desafio lançado pelo professor Cineas Santos naquele momento foi abraçado anos depois, e assim nasceu a primeira edição do salip2 em 2016, homenageando o escritor Ernâni Getirana.
       </p>
 
       <p class="paragraph">
-        Com o apoio de instituições públicas e privadas, o Salão do Livro se consolida como um dos maiores encontros literários do interior nordestino. Em Pedro II, a cultura é celebrada em cada página virada.
+      
       </p>
 
       <p class="highlight">

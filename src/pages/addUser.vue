@@ -12,6 +12,7 @@
 .container{
   display: flex;
   justify-content: center;
+  justify-items: center;
   align-items: center;
   padding: 4rem 1.5rem;
   min-height: 100vh;

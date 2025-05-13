@@ -4,7 +4,7 @@
       <!-- ESQUERDA DESKTOP -->
       <ul class="menu-esquerda desktop-only">
          <router-link to="/midiasalipi" class="no-style-link">
-        <li><img src="/IMG/Camera.png" class="icons" alt="InstagramIcon"> MIDIA SALIP2</li>
+        <li><img src="/IMG/Camera.png" class="icons" alt="InstagramIcon"> GALERIA SALIP2</li>
         </router-link>
 
          <router-link to="/homenageados" class="no-style-link">
@@ -59,7 +59,7 @@
         <ul>
           <router-link to="/midiasalipi" class="no-style-link">
           <li @click="menuAberto = false">
-            <img src="/IMG/Camera.png" class="icons" alt="CameraIcon"> MIDIA SALIPI
+            <img src="/IMG/Camera.png" class="icons" alt="CameraIcon"> GALERIA SALIP2
           </li>
           </router-link>
           <router-link to="/homenageados" class="no-style-link">

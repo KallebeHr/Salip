@@ -7,10 +7,10 @@
         <div id="map"></div>
         <div class="endereco">
           <h2>Pedro II - Piauí</h2>
-          <p>Rua das Letras, nº 128</p>
-          <p>Quadra 3, Bairro Centro</p>
+          <p>R. Tertuliano B Filho, 467 </p>
+          <p>Bairro Centro</p>
           <p>CEP: 64255-000</p>
-          <p>Evento: 25 a 30 de Julho</p>
+          <p>Evento: 22 a 24 de maio</p>
         </div>
       </div>
     </div>
@@ -21,25 +21,55 @@
   import L from 'leaflet'
   import 'leaflet/dist/leaflet.css'
   
-  onMounted(() => {
-    const map = L.map('map').setView([-4.4286, -41.4659], 15) // Coordenadas Pedro II - PI
-  
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map)
-  
-    const customIcon = L.icon({
-      iconUrl: '/IMG/livro-de-direito.png',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    })
-  
-    L.marker([-4.4286, -41.4659], { icon: customIcon })
-      .addTo(map)
-      .bindPopup('Local do Evento - Pedro II - PI')
+onMounted(() => {
+  // inicializa o mapa com controles de zoom (já ativo por padrão)...
+  const map = L.map('map', {
+    zoomControl: true,     // garante que o controle de zoom apareça
   })
+    .setView([-4.4286, -41.4659], 15) // Pedro II – PI
+
+  // camada de azulejos
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 22,
+    attribution: '&copy; MaxDev contributors'
+  }).addTo(map)
+
+  // marcador fixo
+  const customIcon = L.icon({
+    iconUrl: '/IMG/livro-de-direito.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  })
+  L.marker([-4.425311683306984, -41.45828694109339], { icon: customIcon })
+    .addTo(map)
+    .bindPopup('Rua tertuliano filho - Pedro II - PI')
+
+  // tenta localizar o usuário e jogar o mapa pra lá
+  map.locate({ setView: true, maxZoom: 16, watch: false })
+
+  // quando a localização é encontrada
+  map.on('locationfound', e => {
+    // adiciona marcador onde o usuário está
+    L.circleMarker(e.latlng, {
+      radius: 8,
+      fillColor: '#136AEC',
+      color: '#fff',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.8
+    })
+      .addTo(map)
+      .bindPopup('Você está aqui!')
+      .openPopup()
+  })
+
+  // se der erro (usuário negou permissão, por ex.)
+  map.on('locationerror', err => {
+    console.warn('Não foi possível obter localização:', err.message)
+    // opcional: informar com toast ou outro alerta
+  })
+})
   </script>
   
   <style scoped>

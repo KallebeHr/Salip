@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <h1 class="title">HOMENAGEADOS SALIP2 / 2025 </h1>
+      <h1 class="title">HOMENAGEADOS SALIP2 / 2025</h1>
 
       <div class="cards">
         <div class="card" v-for="pessoa in homenageados" :key="pessoa.nome">
@@ -9,14 +9,27 @@
           <div class="info">
             <h2>{{ pessoa.nome }}</h2>
             <p class="bio">{{ pessoa.descricao }}</p>
-            <p class="subTitulo">{{ pessoa.subTitulo }}</p>
             <p class="bio">{{ pessoa.descricao2 }}</p>
             <p class="bio">{{ pessoa.descricao3 }}</p>
-            <p class="subTitulo">{{ pessoa.subTitulo2 }}</p>
+            <p class="subTitulo">{{ pessoa.subTitulo }}</p>
             <p class="bio">{{ pessoa.descricao4 }}</p>
             <p class="bio">{{ pessoa.descricao5 }}</p>
+            <p class="subTitulo">{{ pessoa.subTitulo2 }}</p>
             <p class="bio">{{ pessoa.descricao6 }}</p>
-            <blockquote>“{{ pessoa.frase }}”</blockquote>
+            <p class="subTitulo">{{ pessoa.subTitulo3 }}</p>
+            <p class="bio">{{ pessoa.descricao7 }}</p>
+            <p class="subTitulo">{{ pessoa.subTitulo4 }}</p>
+            <p class="bio">{{ pessoa.descricao8 }}</p>
+            <p class="subTitulo">{{ pessoa.subTitulo5 }}</p>
+            <p class="bio">{{ pessoa.descricao9 }}</p>
+            <p class="subTitulo">{{ pessoa.subTitulo6 }}</p>
+            <p class="bio">{{ pessoa.descricao10 }}</p>
+            <p class="subTitulo">{{ pessoa.subTitulo7 }}</p>
+            <p class="bio">{{ pessoa.descricao11 }}</p>
+            <p class="subTitulo">{{ pessoa.subTitulo8 }}</p>
+            <p class="bio">{{ pessoa.descricao12 }}</p>
+            <p class="subTitulo">{{ pessoa.subTitulo9 }}</p>
+            <p class="bio">{{ pessoa.descricao13 }}</p>
           </div>
         </div>
       </div>
@@ -28,24 +41,38 @@
 const homenageados = [
   {
     nome: "JOSÉ LOURENÇO DE ARAÚJO MOURÃO",
-    descricao: "NASCEU EM 19 DE OUTUBRO DE 1925, NA CIDADE DE PEDRO II, NO ESTADO DO PIAUÍ (PI).  FORMOU-SE BACHAREL EM DIREITO PELA FACULDADE DE DIREITO DO CEARÁ, EM 8 DE DEZEMBRO DE 1950.CASOU-SE EM FORTALEZA, NO DIA 1º DE SETEMBRO DE 1951, COM NONATA PEREZ NOBRE MOURÃO, NASCIDA EM 23 DE JANEIRO DE 1934, EM FOZ DO ENVIRA, MUNICÍPIO DE FEIJÓ, ESTADO DO ACRE (AC).",
-    subTitulo: "TIVERAM CINCO FILHOS:",
-    descricao3: "FERNANDA MARIA PEREZ NOBRE MOURÃO, NASCIDA EM TERESINA (PI) EM 15 DE JUNHO DE 1952.PAULO FERNANDO PEREZ NOBRE MOURÃO E DOMINGOS MOURÃO NETO (GÊMEOS), NASCIDOS EM FORTALEZA (CE) EM 29 DE JULHO DE 1953.CLÁUDIA PEREZ MOURÃO, NASCIDA EM FORTALEZA EM 18 DE NOVEMBRO DE 1954.JOSÉ LOURENÇO MOURÃO JÚNIOR, NASCIDO EM BRASÍLIA (DISTRITO FEDERAL - DF) EM 29 DE JUNHO DE 1963.EXERCEU O CARGO DE DEPUTADO ESTADUAL PELO ESTADO DO PIAUÍ (PI), NOPERÍODO DE: 1952 a 1955 - 1955 a 1960.",
-    subTitulo2: "DÉCADA DE 1960",
-    descricao4: "TRANSFERIDO DO TERRITÓRIO FEDERAL DO ACRE (AC) PARA O MINISTÉRIO PÚBLICO DO DISTRITO FEDERAL E TERRITÓRIOS (MPDFT), SENDO UM DOS SEIS MEMBROS PIONEIROS DO ÓRGÃO.",
-    frase: "A leitura é a ponte que liga o sonho à realidade.",
+    descricao: "Nasceu em 19 de outubro de 1925, na cidade de Pedro II, no estado do Piauí.",
+    descricao2: "Formou-se em Direito pela Faculdade de Direito do Ceará, em 8 de dezembro de 1950.",
+    descricao3: "Casou-se em Fortaleza, no dia 1º de setembro de 1951, com Nonata Perez Nobre Mourão, nascida no estado do Acre.",
+    subTitulo: "Tiveram cinco filhos:",
+    descricao4: "Fernanda Maria Perez Nobre Mourão, nascida em Teresina; Paulo Fernando Perez Nobre Mourão e Domingos Mourão Neto (gêmeos), nascidos em Fortaleza; Cláudia Perez Mourão, nascida em Fortaleza; José Lourenço Mourão Júnior, nascido em Brasília.",
+    descricao5: "Exerceu o cargo de deputado estadual pelo estado do Piauí (PI), no período de 1954 a 1958.",
+    subTitulo2: "Década de 1960",
+    descricao6: "Transferido do território federal do Acre para o Ministério Público do Distrito Federal e Territórios (MPDFT), sendo um dos seis membros pioneiros do órgão.",
+    subTitulo3: "Atuou nas seguintes funções:",
+    descricao7: "Vara de Registro Civil das Pessoas Naturais: 1960, 1961; Vara Criminal do TJDF: 1962; Varas da Fazenda Pública e Cível do TJDF: 1963; Chefia de Gabinete da Procuradoria-Geral de Justiça do MPDFT: 1964–1967.",
+    subTitulo4: "Atuação em turmas do TJDF:",
+    descricao8: "Secretário de Relações Públicas da Associação dos Membros do MPDFT: 1965–1967, 1967–1969; Esteve à disposição do governo do estado do Piauí para chefiar a Secretaria de Planejamento e Coordenação Econômica: 1967; Continuou na Curadoria de Menores: 1971–1972; Assessor Legislativo do TJDF: 1970; Subprocurador-Geral de Justiça do MPDFT: 1974, 1979–1980; Presidente da MPDFT: 1975–1977.",
+    subTitulo5: "Atuação em turma cível do TJDF:",
+    descricao9: "Gabinete da Procuradoria-Geral de Justiça do MPDFT: 1981; Conselheiro do Conselho Superior do MPDFT: 1984–1986; Corregedor-Geral do MPDFT: 1991–1992; Conselho da Magistratura do TJDF: 1994.",
+    subTitulo6: "Aposentadoria e falecimento",
+    descricao10: "Aposentou-se em 10 de março de 1995. Faleceu em Pedro II (PI), no dia 25 de outubro de 1997.",
+    subTitulo7: "Homenagem",
+    descricao11: "Dr. José Lourenço Mourão, se Deus não o tivesse levado tão subitamente do nosso convívio, estaria completando um século de vida e nos dando o privilégio do seu extremado afeto e da sua imensurável bondade espiritual.",
     foto: "/IMG/pessoa1.jpg"
   },
-  {
-    nome: "WILLIAM PALHA DIAS",
-    descricao: "WILLIAM PALHA DIAS NASCEU EM CARACOL - PIAUÍ, EM 17 DE SETEMBRO DE 1918. TEVE INTERESSE PELA LEITURA AINDA JOVEM. SEU PAI ERA MÉDICO E SUA MÃE LEONOR PALHA DIAS FALECEU QUANDO WILLIAM TINHA APENAS 3 ANOS DE IDADE. MOROU EM CARACOL ATÉ OS 20 ANOS, ATÉ SAIR PARA ESTUDAR NA CAPITAL TERESINA. DURANTE MUITOS ANOS NA CAPITAL TRABALHOU NO DEPARTAMENTO DE RODAGEM DO PIAUÍ COMO ASSESSOR TÉCNICO.",
-    descricao2: "SE FORMOU EM DIREITO COM 41 ANOS E ATUOU COMO ADVOGADO MILITANTE ANTES DE TORNAR-SE JUIZ.",
-    descricao3: "EM 1951 CASOU-SE COM A PROFESSORA MARIA DAS GRAÇAS E SILVA PALHA DIAS (QUAL ESCREVERA DOIS LIVROS DIDÁTICOS EM PARCERIA). NESSE PERÍODO TRABALHOU EM CIDADES DO INTERIOR DE PIAUÍ, TAIS   COMO REGENERAÇÃO, OEIRAS, CASTELO DO PIAUÍ, PEDRO II E PICOS, ONDE SE APOSENTOU. NA ÉPOCA, ERA OBRIGADO COMO JUIZ A ENSINAR EDUCAÇÃO MORAL E CÍVICA EM ESCOLAS.",
-    descricao4: "CIDADÃO HONORÁRIO DAS CIDADES DE CRISTINO CASTRO, PEDRO II, REGENERAÇÃO E TERESINA.",
-    descricao5: "VOLTA A MORAR EM TERESINA DEPOIS QUE SE APOSENTA, PORÉM NUNCA PERDERA A LIGAÇÃO COM SUA CIDADE NATAL, CARACOL, QUE FORA FUNDADA PELO SEU AVÔ, E SEMPRE RETORNAVA A CIDADE PARA VISITAR FAMILIARES.",
-    descricao6: "JÁ APOSENTADO, USAVA SEU TEMPO PARA ESCREVER, ESCREVEU PARA JORNAIS E AJUDOU A FUNDAR A ANTIGA ASSOCIAÇÃO PROFISSIONAL DE JORNALISTAS DO PIAUÍ, QUE POSTERIORMENTE FORA TRANSFORMADA EM UM SINDICATO DE CLASSE.",
-    frase: "A palavra é minha arma, e a cultura, minha trincheira.",
-    foto: "/IMG/pessoa2s.jpg"
+    {
+    nome: "William Palha Dias",
+    descricao: "William Palha Dias nasceu em Caracol - Piauí, em 17 de setembro de 1918. Morou em Caracol até os 20 anos, até sair para estudar em Teresina. Durante muitos anos na capital.",
+    descricao2: "Formou-se em Direito aos 41 anos e atuou como advogado militante antes de tornar-se juiz.",
+    descricao3: "Em 1951 casou-se com a professora Maria das Graças e Silva Palha Dias. Nesse período trabalhou em cidades do interior de Piauí, tais   como Regeneração, Oeiras, Castelo do Piauí, II e Picos, onde se aposentou.",
+    descricao4: "Cidadão honorário das cidades de Cristino Castro, Pedro ii, Regeneração e Teresina.",
+    descricao5: "Volta a morar em Teresina depois que se aposenta, porém nunca perdera a ligação com sua cidade natal, caracol, que fora fundada pelo seu avô, e sempre retornava a cidade para visitar familiares.",
+    descricao6: "Já aposentado, usava seu tempo para escrever, escreveu para jornais e ajudou a fundar a antiga associação profissional de jornalistas do Piauí, que posteriormente fora transformada em um sindicato de classe.",
+    descricao7: "Escreveu diversas obras de diversos gêneros literários, desde romances de fundo histórico-sociológico até documentário, crônicas e memórias. Dessas obras destacam-se o Caracol na história do Piauí (1959); flagrantes do quotidiano (1998) e os irmãos quixaba (1979) que, adotado pelos vestibulares do Piauí, ganhou adaptação para o cinema em 2004. Como escritor foi membro da academia piauiense de letras. No total, William Palha Dias tinha 19 obras publicadas.",
+    descricao8: "Além da Academia Piauiense de Letras, o escritor fazia parte do Instituto Histórico e Geográfico do Piauí, Instituto Histórico de Oeiras e a União Brasileira de Escritores do Piauí.",
+    descricao9: "O escritor faleceu em Teresina, no dia 14 de fevereiro de 2012, aos 93 anos.",
+    foto: "/IMG/pessoa2.jpg"
   }
 ]
 </script>

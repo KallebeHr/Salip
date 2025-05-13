@@ -18,7 +18,7 @@
     >
       <swiper-slide v-for="i in 10" :key="i" class="ticker-slide">
         <img src="/IMG/iconInsta2.png" class="icon" alt="InstagramIcon" />
-        <h1>CONECTE-SE AO SALIPI</h1>
+        <a href="https://www.instagram.com/salaodolivrodepii/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer"><h1>CONECTE-SE AO SALIP2</h1></a>
         <img src="/IMG/iconInsta2.png" class="icon" alt="InstagramIcon" />
       </swiper-slide>
     </swiper>

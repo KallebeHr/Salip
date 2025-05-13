@@ -17,15 +17,15 @@
 const eventosOf = [
   {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 18h30min",
-    descricao: "Solenidade Oficial de Abertura do 3º SaLiP2 - Salão do Livro de Pedro II Discursos de autoridades e homenageados. | Local: Espaço Educacional de Eventos Manoel Nogueira Filho",
+    descricao: "Solenidade Oficial de Abertura do 3º SaLiP2 - Salão do Livro de Pedro II Discursos de autoridades e homenageados. | Local: Centro Educacional de Eventos Dep. Ciro Nogueira",
   },
    {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 19h",
-    descricao: "Palestra de abertura com Fabrício Carpinejar (RS) | Local: Espaço Educacional de Eventos Manoel Nogueira Filho  ",
+    descricao: "Palestra de abertura com Fabrício Carpinejar (RS) | Local: Centro Educacional de Eventos Dep. Ciro Nogueira ",
   },
    {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 21h ",
-    descricao: "Show com Soraya Castelo Branco (PI) | Local: Espaço Educacional de Eventos Manoel Nogueira Filho ",
+    descricao: "Show com Soraya Castelo Branco (PI) | Local: Centro Educacional de Eventos Dep. Ciro Nogueira",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 8h ",
@@ -61,7 +61,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 21h",
-    descricao: "Show com (A DEFINIR) | Local: Praça Domingos Mourão",
+    descricao: "Show com Sonarya | Local: Praça Domingos Mourão",
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 8h",

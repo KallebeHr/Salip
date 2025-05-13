@@ -1,13 +1,16 @@
 <template>
   <div id="app">
-    <h1 class="title">PALESTRAS</h1>
+    <h1 class="title">Galeria SALIP2</h1>
     <swiper
       :slides-per-view="'auto'"
       :centered-slides="true"
       :space-between="20"
       :pagination="{ clickable: true }"
       :modules="modules"
-      class="mySwiper"
+      :loop="true"
+      :navigation="true"
+      :autoplay="{ delay: 500, disableOnInteraction: true }"
+      class="mySwiper" 
     >
       <swiper-slide v-for="(item, index) in fotos" :key="index">
         <div class="slide-content">
@@ -56,9 +59,9 @@ import { ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/pagination'
-import { Pagination } from 'swiper/modules'
+import { Pagination, Autoplay } from 'swiper/modules'
 
-const modules = [Pagination]
+const modules = [Pagination, Autoplay]
 
 const icons = ref({
   persona: '/IMG/persona.svg',
@@ -73,49 +76,96 @@ const icons = ref({
 const fotos = ref([
   {
     url: '/IMG/cardPalestrante.png',
-    titulo: 'HEULLER KALLEBE ALMEIDA',
-    professor: 'Heuller K. Almeida',
-    evento: 'Palestra de Abertura',
-    data: '18/11/2023',
-    hora: '14:00',
-    descricao: 'Autoridades e convidados abriram oficialmente o evento.',
-    mediacao: 'Mediação: Salivapi',
-    local: 'Auditório CETI Santo Antônio'
+    titulo: 'Cineas Santos (PI)',
+    professor: 'Prof. Cineas Santos',
+    evento: 'A lírica do poeta Manuel Bandeira ',
+    data: '24/05/2025 ',
+    hora: '8h30min',
+    descricao: 'Palestra pública',
+    mediacao: 'Mediação: SALIP2',
+    local: 'Auditório Padre Norberto'
   },
   {
-    url: '/IMG/cardPalestrante.png',
-    titulo: 'MARIA FERNANDA',
-    professor: 'Maria Fernanda Silva',
-    evento: 'Oficina Criativa',
-    data: '19/11/2023',
-    hora: '10:00',
-    descricao: 'Jovens participaram de atividades interativas.',
-    mediacao: 'Mediação: Grupo Jovem',
-    local: 'Sala de Oficinas 1'
+    url: '/IMG/cardPalestrante2.png',
+    titulo: 'Luiz Romero Lima (PI)',
+    professor: 'Prof. Luiz Romero Lima',
+    evento: 'O cânone literário o sublime piauiense ',
+    data: '23/05/2025',
+    hora: '14h30min',
+    descricao: 'Palestra pública',
+    mediacao: 'Mediação: SALIP2',
+    local: 'Auditório Padre Norberto'
   },
   {
-    url: '/IMG/cardPalestrante.png',
-    titulo: 'MARIA FERNANDA',
-    professor: 'Maria Fernanda Silva',
-    evento: 'Oficina Criativa',
-    data: '19/11/2023',
-    hora: '10:00',
-    descricao: 'Jovens participaram de atividades interativas.',
-    mediacao: 'Mediação: Grupo Jovem',
-    local: 'Sala de Oficinas 1'
+    url: '/IMG/cardPalestrante3.png',
+    titulo: 'José de Nicola (SP)',
+    professor: 'Prof. José de Nicola',
+    evento: 'A lírica do poeta Manuel Bandeira',
+    data: '24/05/2025',
+    hora: '8h30min',
+    descricao: 'Palestra pública',
+    mediacao: 'Mediação: SALIP2',
+    local: 'Auditório Padre Norberto'
   },
   {
-    url: '/IMG/cardPalestrante.png',
-    titulo: 'MARIA FERNANDA',
-    professor: 'Maria Fernanda Silva',
-    evento: 'Oficina Criativa',
-    data: '19/11/2023',
-    hora: '10:00',
-    descricao: 'Jovens participaram de atividades interativas.',
-    mediacao: 'Mediação: Grupo Jovem',
-    local: 'Sala de Oficinas 1'
+    url: '/IMG/cardPalestrante4.png',
+    titulo: 'Fabrício Carpi Nejar',
+    professor: 'Fabricio Carpinejar',
+    evento: 'Palestra de abertura com Fabrício Carpinejar (RS)',
+    data: '22/05/2025',
+    hora: '19h',
+    descricao: 'Palestra pública',
+    mediacao: 'Mediação: SALIP2',
+    local: 'Centro Educacional de Eventos Dep. Ciro Nogueira'
   }
-  // ... adicione novos cards aqui
+  ,
+  {
+    url: '/IMG/cardPalestrante5.png',
+    titulo: 'Ernâni Getirana de Lima',
+    professor: 'Prof. Ernâni Getirana de Lima',
+    evento: 'A literatura de Pedro II: da pré-história aos dias atuais',
+    data: '23/05/2025 ',
+    hora: '16h30min',
+    descricao: 'Palestra pública',
+    mediacao: 'Mediação: SALIP2',
+    local: 'Auditório Padre Norberto'
+  }
+    ,
+  {
+    url: '/IMG/CardPalestrante6.png',
+    titulo: 'Gonzaga Lu e Trio Asa Branca',
+    professor: 'Gonzaga Lu e Trio Asa Branca',
+    evento: 'Show de encerramento ',
+    data: '24/05/2025 ',
+    hora: '21h',
+    descricao: 'Show público',
+    mediacao: 'Cantor: Gonzaga Lu',
+    local: 'Praça Domingos Mourão'
+  }
+    ,
+  {
+    url: '/IMG/CardPalestrante7.png',
+    titulo: 'Grupo Harém de Teatro (PI)',
+    professor: 'Esperando Godot – Texto: Samuel Becket ',
+    evento: 'Teatro',
+    data: '23/05/2025 ',
+    hora: '19h',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Helany Max ',
+    local: 'Praça Domingos Mourão'
+  },
+      {
+    url: '/IMG/CardPalestrante8.png',
+    titulo: 'Grupo Urutau',
+    professor: 'Sítio do Pica-Pau Amarelo',
+    evento: 'Teatro',
+    data: '23/05/2025 ',
+    hora: '10h',
+    descricao: 'Show Público',
+    mediacao: 'Grupo: Urutau',
+    local: 'Praça Domingos Mourão'
+  }
+  
 ])
 </script>
 
@@ -203,17 +253,36 @@ const fotos = ref([
   color: #333;
   line-height: 1.2;
 }
-
+@media (max-width: 1150px) {
+  .mySwiper {
+    width: 100%;
+    max-width: 900px;
+  }
+}
+@media (max-width: 950px) {
+.mySwiper {
+  width: 100%;
+  max-width: 700px;
+}
+}
 @media (max-width: 768px) {
   .main-img {
     height: 400px;
   }
+  .mySwiper {
+  width: 100%;
+  max-width: 400px;
+}
 }
 
 @media (max-width: 480px) {
   .main-img {
     height: 400px;
   }
+  .mySwiper {
+  width: 100%;
+  max-width: 300px;
+}
   .about-content {
     padding: 0.5rem 0.75rem;
   }
