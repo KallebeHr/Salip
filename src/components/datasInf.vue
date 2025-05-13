@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="titulo">Programação dos Eventos INFANTIL</h1>
+    <h1 class="titulo">Programação INFANTIL</h1>
     <v-expansion-panels class="painel" variant="inset" elevation="1">
       <v-expansion-panel
         v-for="evento in eventosOf"

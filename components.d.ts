@@ -27,6 +27,7 @@ declare module 'vue' {
     MidiaSa: typeof import('./src/components/midiaSa.vue')['default']
     Navbar: typeof import('./src/components/Navbar.vue')['default']
     NosPage: typeof import('./src/components/nosPage.vue')['default']
+    Preloader: typeof import('./src/components/preloader.vue')['default']
     QuemSomos: typeof import('./src/components/quemSomos.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

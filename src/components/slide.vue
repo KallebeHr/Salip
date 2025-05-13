@@ -9,12 +9,13 @@
       :slides-per-view="1"
       class="banner-swiper"
     >
-      <swiper-slide v-for="n in 6" :key="n" class="banner-slide">
-        <img :src="`/IMG/Slide${n % 2 === 0 ? 2 : 1}.png`" :alt="`Foto ${n}`" />
+      <swiper-slide v-for="n in 4" :key="n" class="banner-slide">
+        <img :src="`/IMG/Slide${n}.png`" :alt="`Foto ${n}`" />
       </swiper-slide>
     </swiper>
   </div>
 </template>
+
 
 <script setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'

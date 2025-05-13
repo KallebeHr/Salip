@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="titulo">Programação dos Eventos OFICIAL</h1>
+    <h1 class="titulo">Programação OFICIAL dos eventos</h1>
     <v-expansion-panels class="painel" variant="inset" elevation="1">
       <v-expansion-panel
         v-for="evento in eventosOf"
@@ -33,11 +33,11 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 8h30min ",
-    descricao: "Palestra: A voz de Esperança Garcia  Palestrante: Bernardo Aurélio (PI) e João P. Luiz (PI) Apresentação/Mediação: | Local: Auditório Padre Norberto",
+    descricao: "Palestra: A voz de Esperança Garcia  Palestrante: Bernardo Aurélio (PI) e João P. Luiz (PI) Apresentação/Mediação: Wáleria Rubens | Local: Auditório Padre Norberto",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 10h30min ",
-    descricao: "Palestra/Show: Música e Letra, instrumentos de educação Palestrante: Grupo Cocares Apresentação/Mediação: | Local: Auditório Padre Norberto ",
+    descricao: "Palestra/Show: Música e Letra, instrumentos de educação Palestrante: Grupo Cocares Apresentação/Mediação: Socorrinha Almeida | Local: Auditório Padre Norberto ",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | TARDE  | 14h ",
@@ -45,11 +45,11 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | TARDE  | 14h30min ",
-    descricao: "Palestra:  O cânone literário - o sublime piauiense  Palestrante: Luiz Romero (PI) Apresentação/Mediação  | Local: Auditório Padre Norberto",
+    descricao: "Palestra:  O cânone literário - o sublime piauiense  Palestrante: Luiz Romero (PI) Apresentação/Mediação: Wilson Brandão  | Local: Auditório Padre Norberto",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | TARDE  | 16h30min ",
-    descricao: "Palestra: A literatura de Pedro II: da pré-história aos dias atuais Palestrante: Ernâni Getirana (PI) Apresentação/Mediação:  | Local: Auditório Padre Norberto",
+    descricao: "Palestra: A literatura de Pedro II: da pré-história aos dias atuais Palestrante: Ernâni Getirana (PI) Apresentação/Mediação: Claisse Sales | Local: Auditório Padre Norberto",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 18h30min",
@@ -69,7 +69,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ  | 8h30min",
-    descricao: "Palestra: A lírica do poeta Manuel Bandeira  Palestrantes: José de Nicola (SP) e Cineas Santos (PI) Apresentação/Mediação: | Local: Auditório Padre Norberto ",
+    descricao: "Palestra: A lírica do poeta Manuel Bandeira  Palestrantes: José de Nicola (SP) e Cineas Santos (PI) Apresentação/Mediação: Wilson Brandão | Local: Auditório Padre Norberto ",
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ  | 10h30min",

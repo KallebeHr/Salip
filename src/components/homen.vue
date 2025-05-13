@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <h1 class="title">HOMENAGEADOS DO SALIPII</h1>
+      <h1 class="title">HOMENAGEADOS SALIP2 / 2025 </h1>
 
       <div class="cards">
         <div class="card" v-for="pessoa in homenageados" :key="pessoa.nome">
@@ -45,7 +45,7 @@ const homenageados = [
     descricao5: "VOLTA A MORAR EM TERESINA DEPOIS QUE SE APOSENTA, PORÉM NUNCA PERDERA A LIGAÇÃO COM SUA CIDADE NATAL, CARACOL, QUE FORA FUNDADA PELO SEU AVÔ, E SEMPRE RETORNAVA A CIDADE PARA VISITAR FAMILIARES.",
     descricao6: "JÁ APOSENTADO, USAVA SEU TEMPO PARA ESCREVER, ESCREVEU PARA JORNAIS E AJUDOU A FUNDAR A ANTIGA ASSOCIAÇÃO PROFISSIONAL DE JORNALISTAS DO PIAUÍ, QUE POSTERIORMENTE FORA TRANSFORMADA EM UM SINDICATO DE CLASSE.",
     frase: "A palavra é minha arma, e a cultura, minha trincheira.",
-    foto: "/IMG/pessoa2.jpg"
+    foto: "/IMG/pessoa2s.jpg"
   }
 ]
 </script>

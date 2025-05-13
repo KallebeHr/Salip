@@ -1,20 +1,49 @@
 <template>
   <div id="app">
-    <h1 class="title">MÍDIA SALIPI</h1>
+    <h1 class="title">PALESTRAS</h1>
     <swiper
-      :slidesPerView="'auto'"
-      :centeredSlides="true"
-      :spaceBetween="20"
+      :slides-per-view="'auto'"
+      :centered-slides="true"
+      :space-between="20"
       :pagination="{ clickable: true }"
       :modules="modules"
       class="mySwiper"
     >
       <swiper-slide v-for="(item, index) in fotos" :key="index">
         <div class="slide-content">
-          <img :src="item.url" :alt="item.titulo" />
+          <img class="main-img" :src="item.url" :alt="item.titulo" />
           <div class="text-content">
             <h2>{{ item.titulo }}</h2>
-            <p class="caption">{{ item.legenda }}</p>
+          </div>
+          <div class="about-content">
+            <div class="info-row">
+              <img :src="icons.persona" alt="professor" class="iconSVG" />
+              <span>{{ item.professor }}</span>
+            </div>
+            <div class="info-row">
+              <img :src="icons.evento" alt="evento" class="iconSVG" />
+              <span>{{ item.evento }}</span>
+            </div>
+            <div class="info-row">
+              <img :src="icons.calendario" alt="data" class="iconSVG" />
+              <span>{{ item.data }}</span>
+            </div>
+            <div class="info-row">
+              <img :src="icons.hora" alt="hora" class="iconSVG" />
+              <span>{{ item.hora }}</span>
+            </div>
+            <div class="info-row">
+              <img :src="icons.chat" alt="descrição" class="iconSVG" />
+              <span>{{ item.descricao }}</span>
+            </div>
+            <div class="info-row">
+              <img :src="icons.tipo" alt="mediação" class="iconSVG" />
+              <span>{{ item.mediacao }}</span>
+            </div>
+            <div class="info-row">
+              <img :src="icons.local" alt="local" class="iconSVG" />
+              <span>{{ item.local }}</span>
+            </div>
           </div>
         </div>
       </swiper-slide>
@@ -22,52 +51,72 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { Pagination } from 'swiper/modules'
 
-export default {
-  components: {
-    Swiper,
-    SwiperSlide
-  },
-  setup() {
-    const fotos = [
-      {
-        url: '/IMG/foto1.jpg',
-        titulo: 'Abertura Oficial',
-        legenda: 'Autoridades e convidados abriram oficialmente o evento com celebrações culturais.'
-      },
-      {
-        url: '/IMG/foto2.jpg',
-        titulo: 'Oficina Criativa',
-        legenda: 'Jovens participaram de oficinas interativas de escrita e leitura.'
-      },
-      {
-        url: '/IMG/foto3.jpg',
-        titulo: 'Feira de Livros',
-        legenda: 'Editoras e livrarias regionais ofereceram descontos e novidades literárias.'
-      },
-      {
-        url: '/IMG/foto4.jpg',
-        titulo: 'Contos para Crianças',
-        legenda: 'Atividades de contadores de histórias encantaram o público infantil.'
-      },
-      {
-        url: '/IMG/foto5.jpg',
-        titulo: 'Sarau Poético',
-        legenda: 'Encerramento do dia com apresentações de poesia, música e teatro local.'
-      }
-    ]
+const modules = [Pagination]
 
-    return {
-      fotos,
-      modules: [Pagination]
-    }
+const icons = ref({
+  persona: '/IMG/persona.svg',
+  evento: '/IMG/lista.svg',
+  calendario: '/IMG/calendario.svg',
+  hora: '/IMG/time.svg',
+  chat: '/IMG/chat.svg',
+  tipo: '/IMG/tipo.svg',
+  local: '/IMG/local.svg'
+})
+
+const fotos = ref([
+  {
+    url: '/IMG/cardPalestrante.png',
+    titulo: 'HEULLER KALLEBE ALMEIDA',
+    professor: 'Heuller K. Almeida',
+    evento: 'Palestra de Abertura',
+    data: '18/11/2023',
+    hora: '14:00',
+    descricao: 'Autoridades e convidados abriram oficialmente o evento.',
+    mediacao: 'Mediação: Salivapi',
+    local: 'Auditório CETI Santo Antônio'
+  },
+  {
+    url: '/IMG/cardPalestrante.png',
+    titulo: 'MARIA FERNANDA',
+    professor: 'Maria Fernanda Silva',
+    evento: 'Oficina Criativa',
+    data: '19/11/2023',
+    hora: '10:00',
+    descricao: 'Jovens participaram de atividades interativas.',
+    mediacao: 'Mediação: Grupo Jovem',
+    local: 'Sala de Oficinas 1'
+  },
+  {
+    url: '/IMG/cardPalestrante.png',
+    titulo: 'MARIA FERNANDA',
+    professor: 'Maria Fernanda Silva',
+    evento: 'Oficina Criativa',
+    data: '19/11/2023',
+    hora: '10:00',
+    descricao: 'Jovens participaram de atividades interativas.',
+    mediacao: 'Mediação: Grupo Jovem',
+    local: 'Sala de Oficinas 1'
+  },
+  {
+    url: '/IMG/cardPalestrante.png',
+    titulo: 'MARIA FERNANDA',
+    professor: 'Maria Fernanda Silva',
+    evento: 'Oficina Criativa',
+    data: '19/11/2023',
+    hora: '10:00',
+    descricao: 'Jovens participaram de atividades interativas.',
+    mediacao: 'Mediação: Grupo Jovem',
+    local: 'Sala de Oficinas 1'
   }
-}
+  // ... adicione novos cards aqui
+])
 </script>
 
 <style scoped>
@@ -79,7 +128,6 @@ export default {
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  overflow-x: hidden;
 }
 
 .title {
@@ -90,96 +138,91 @@ export default {
   text-align: center;
 }
 
-.swiper {
+.mySwiper {
   width: 100%;
   max-width: 1100px;
-  padding-bottom: 2rem;
-  box-sizing: border-box;
-  overflow: hidden;
 }
 
+/* slide responsivo sem cortas */
 .swiper-slide {
-  width: 300px !important;
-  max-width: 90vw;
-  background: #ffffff;
+  flex: 0 0 auto;
+  width: 280px;
+  background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
   box-sizing: border-box;
 }
 
 .slide-content {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
 }
 
-.slide-content img {
+.main-img {
   width: 100%;
-  height: 200px;
+  height: 300px;
   object-fit: cover;
-  border-bottom: 1px solid #eee;
-  display: block;
+  border-bottom: 5px solid #d8df52;
 }
 
 .text-content {
   padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  box-sizing: border-box;
+  text-align: center;
 }
 
 .text-content h2 {
   font-size: 1.05rem;
   font-weight: 600;
   color: #2734AF;
-  margin-bottom: 0.5rem;
-  text-align: center;
+  margin: 0;
 }
 
-.caption {
-  font-size: 0.95rem;
-  color: #444;
-  line-height: 1.5;
-  text-align: justify;
+.about-content {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.iconSVG {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.info-row span {
+  font-size: 0.75rem;
+  color: #333;
+  line-height: 1.2;
 }
 
 @media (max-width: 768px) {
-  .swiper-slide {
-    width: 90% !important;
-  }
-
-  .slide-content img {
-    height: 180px;
-  }
-
-  .title {
-    font-size: 1.6rem;
+  .main-img {
+    height: 400px;
   }
 }
 
 @media (max-width: 480px) {
-  .swiper-slide {
-    width: 95% !important;
+  .main-img {
+    height: 400px;
   }
-
-  .slide-content img {
-    height: 160px;
+  .about-content {
+    padding: 0.5rem 0.75rem;
   }
-
-  .text-content h2 {
-    font-size: 1rem;
+  .iconSVG {
+    width: 10px;
+    height: 10px;
   }
-
-  .caption {
-    font-size: 0.9rem;
+  .info-row span {
+    font-size: 0.7rem;
   }
 }
 </style>

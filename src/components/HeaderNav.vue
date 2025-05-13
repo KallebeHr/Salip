@@ -4,7 +4,7 @@
       <!-- ESQUERDA DESKTOP -->
       <ul class="menu-esquerda desktop-only">
          <router-link to="/midiasalipi" class="no-style-link">
-        <li><img src="/IMG/Camera.png" class="icons" alt="InstagramIcon"> MIDIA SALIPI</li>
+        <li><img src="/IMG/Camera.png" class="icons" alt="InstagramIcon"> MIDIA SALIP2</li>
         </router-link>
 
          <router-link to="/homenageados" class="no-style-link">
@@ -39,7 +39,7 @@
           </a>
       </ul>
 
-      <!-- ÍCONE DE MENU NO MOBILE -->
+ 
       <img
         src="/IMG/menu.png"
         class="menu-icon mobile-only"
@@ -59,12 +59,12 @@
         <ul>
           <router-link to="/midiasalipi" class="no-style-link">
           <li @click="menuAberto = false">
-            <img src="/IMG/iconInsta.png" class="icons" alt="CameraIcon"> MIDIA SALIPI
+            <img src="/IMG/Camera.png" class="icons" alt="CameraIcon"> MIDIA SALIPI
           </li>
           </router-link>
           <router-link to="/homenageados" class="no-style-link">
           <li @click="menuAberto = false">
-            <img src="/IMG/iconInsta.png" class="icons" alt="HomenIcon"> HOMENAGEADOS
+            <img src="/IMG/home.png" class="icons" alt="HomenIcon"> HOMENAGEADOS
           </li>
           </router-link>
            <a href="https://www.instagram.com/salaodolivrodepii/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer">
