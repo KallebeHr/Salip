@@ -53,7 +53,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 18h30min",
-    descricao: "Acolhida:  Leo Sorato | Local: Praça Domingos Mourão ",
+    descricao: "Acolhida:  Leo Sorato | Local: Praça Domingos Mourão Filho",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 19h",
@@ -61,7 +61,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 21h",
-    descricao: "Show com Sonarya | Local: Praça Domingos Mourão",
+    descricao: "Show com Sonarya | Local: Praça Domingos Mourão Filho",
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 8h",

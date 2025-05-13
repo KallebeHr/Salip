@@ -7,7 +7,7 @@
       :space-between="20"
       :pagination="{ clickable: true }"
       :modules="modules"
-      :loop="true"
+      :loop="true"   
       :navigation="true"
       :autoplay="{ delay: 2000, disableOnInteraction: true }"
       class="mySwiper" 
@@ -140,7 +140,7 @@ const fotos = ref([
     hora: '21h',
     descricao: 'Show público',
     mediacao: 'Cantor: Gonzaga Lu',
-    local: 'Praça Domingos Mourão'
+    local: 'Praça Domingos Mourão Filho'
   }
     ,
   {
@@ -152,7 +152,7 @@ const fotos = ref([
     hora: '19h',
     descricao: 'Show Público',
     mediacao: 'Mediação: Helany Max ',
-    local: 'Praça Domingos Mourão'
+    local: 'Praça Domingos Mourão Filho'
   },
       {
     url: '/IMG/CardPalestrante8.png',
@@ -163,7 +163,7 @@ const fotos = ref([
     hora: '10h',
     descricao: 'Show Público',
     mediacao: 'Grupo: Urutau',
-    local: 'Praça Domingos Mourão'
+    local: 'Praça Domingos Mourão Filho'
   }
   
 ])

@@ -12,7 +12,7 @@
     </v-expansion-panels>
   </div>
 </template>
-
+ 
 <script setup>
 const eventosOf = [
   {
