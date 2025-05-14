@@ -61,7 +61,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 21h",
-    descricao: "Show com Sonarya | Local: Praça Domingos Mourão Filho",
+    descricao: "Show com Sonayra | Local: Praça Domingos Mourão Filho",
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 8h",
