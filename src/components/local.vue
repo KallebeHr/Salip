@@ -7,10 +7,10 @@
         <div id="map"></div>
         <div class="endereco">
           <h2>Pedro II - Piauí</h2>
-          <p>R. Tertuliano B Filho, 467 </p>
-          <p>Bairro Centro</p>
-          <p>CEP: 64255-000</p>
-          <p>Evento: 22 a 24 de maio</p>
+          <p>R. Tertuliano B Filho, 467. </p>
+          <p>Bairro Centro.</p>
+          <p>CEP: 64255-000.</p>
+          <p>Evento: 22 a 24 de maio.</p>
         </div>
       </div>
     </div>

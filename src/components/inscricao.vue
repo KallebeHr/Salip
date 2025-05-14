@@ -3,7 +3,7 @@
     <header>
       <div class="data">
         <h2>22 a 24 | Maio</h2>
-        <p>Locais abaixo</p>
+        <p>Locais abaixo.</p>
       </div>
       <div class="title">
         <h1>INSCRIÇÕES</h1>
