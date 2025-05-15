@@ -8,7 +8,7 @@
       </p>
 
       <p class="paragraph">
-        Em Pedro II, o evento tem origem em 2022, com o projeto "Cara alegre do Piauí", que reuniu artistas e intelectuais em nossa cidade e plantou a semente deste salão. O desafio lançado pelo professor Cineas Santos naquele momento foi abraçado anos depois, e assim nasceu a primeira edição do salip2 em 2016, homenageando o escritor Ernâni Getirana.
+        Em Pedro II, o evento tem origem em 2002, com o projeto "Cara alegre do Piauí", que reuniu artistas e intelectuais em nossa cidade e plantou a semente deste salão. O desafio lançado pelo professor Cineas Santos naquele momento foi abraçado anos depois, e assim nasceu a primeira edição do salip2 em 2016, homenageando o escritor Ernâni Getirana.
       </p>
 
       <p class="paragraph">
