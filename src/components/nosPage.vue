@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <h1 class="title">QUEM SOMOS</h1>
+      <h1 class="title">QUEM SOMOS?</h1>
       <p class="paragraph">
         O <strong>SALIP2 - Salão do Livro de Pedro II</strong> 
         é um evento literário e cultural que celebra a leitura e a educação.
