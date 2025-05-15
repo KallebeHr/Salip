@@ -25,12 +25,12 @@ const eventosOf = [
   }
   ,
    {
-    titulo: "🗓️ DIA 23/05/2025 | SÁBADO | MANHÃ | 9h",
+    titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h",
     descricao: "Contação de Histórias / Teatro de Bonecos. Apresentação: Chagas Vale e Talitha do Monte | Praça Domingos Mourão Filho",
   }
   ,
    {
-    titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 10h",
+    titulo: "🗓️ DIA 24/05/2025 | SEXTA-FEIRA | MANHÃ | 10h",
     descricao: "Sítio do Pica-Pau Amarelo. Apresentação: Grupo Urutau | Local: 	Praça Domingos Mourão Filho",
   }
 ]

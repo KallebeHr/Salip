@@ -39,28 +39,46 @@
         <v-card-title class="dialog-title">
           {{ usuarioSelecionado?.nomeCompleto }}
         </v-card-title>
-        <v-card-text class="dialog-text">
-          <div v-if="usuarioSelecionado">
-            <p><strong>Cidade:</strong> {{ usuarioSelecionado.cidade }}</p>
-            <p><strong>UF:</strong> {{ usuarioSelecionado.uf }}</p>
-            <p v-if="usuarioSelecionado.escola"><strong>Escola:</strong> {{ usuarioSelecionado.escola }}</p>
-            <p v-if="usuarioSelecionado.localTrabalho"><strong>Trabalho:</strong> {{ usuarioSelecionado.localTrabalho }}</p>
-            <p><strong>Data de Nascimento:</strong> {{ usuarioSelecionado.dataNascimento }}</p>
-            <p><strong>Tipo:</strong> {{ usuarioSelecionado.tipoParticipante }}</p>
-            <p v-if="usuarioSelecionado.evento"><strong>Evento:</strong> {{ usuarioSelecionado.evento }}</p>
-            <p v-if="usuarioSelecionado.palestraSelecionada"><strong>Palestra:</strong> {{ usuarioSelecionado.palestraSelecionada }}</p>
-            <p v-if="usuarioSelecionado.telefone"><strong>Telefone:</strong> {{ usuarioSelecionado.telefone }}</p>
-          </div>
+        <v-card-text class="dialog-text" v-if="usuarioSelecionado">
+          <p><strong>Cidade:</strong> {{ usuarioSelecionado.cidade }}</p>
+          <p><strong>UF:</strong> {{ usuarioSelecionado.uf }}</p>
+          <p v-if="usuarioSelecionado.escola"><strong>Escola:</strong> {{ usuarioSelecionado.escola }}</p>
+          <p v-if="usuarioSelecionado.localTrabalho"><strong>Trabalho:</strong> {{ usuarioSelecionado.localTrabalho }}</p>
+          <p><strong>Data de Nascimento:</strong> {{ usuarioSelecionado.dataNascimento }}</p>
+          <p><strong>Tipo:</strong> {{ usuarioSelecionado.tipoParticipante }}</p>
+          <p v-if="usuarioSelecionado.eventosSelecionados && usuarioSelecionado.eventosSelecionados.length">
+            <strong>Eventos:</strong> {{ usuarioSelecionado.eventosSelecionados.join(', ') }}
+          </p>
+          <p v-if="usuarioSelecionado.oficinasSelecionadas && Object.keys(usuarioSelecionado.oficinasSelecionadas).length">
+            <strong>Oficinas:</strong>
+            {{
+              Object.entries(usuarioSelecionado.oficinasSelecionadas)
+                .map(([key, value]) => value)
+                .filter(Boolean)
+                .join(', ')
+            }}
+          </p>
+          <p v-if="usuarioSelecionado.exposicoesSelecionadas && Object.keys(usuarioSelecionado.exposicoesSelecionadas).length">
+            <strong>Exposições:</strong>
+            {{
+              Object.entries(usuarioSelecionado.exposicoesSelecionadas)
+                .map(([key, value]) => value)
+                .filter(Boolean)
+                .join(', ')
+            }}
+          </p>
+          <p v-if="usuarioSelecionado.palestraSelecionada"><strong>Palestra:</strong> {{ usuarioSelecionado.palestraSelecionada }}</p>
+          <p v-if="usuarioSelecionado.telefone"><strong>Telefone:</strong> {{ usuarioSelecionado.telefone }}</p>
         </v-card-text>
         <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn class="dialog-btn" text="Fechar" @click="dialogAberto = false"></v-btn>
-            <v-spacer></v-spacer>
-            
+          <v-spacer></v-spacer>
+          <v-btn class="dialog-btn" text @click="dialogAberto = false">Fechar</v-btn>
+          <v-spacer></v-spacer>
         </v-card-actions>
-    </v-card>
-</v-dialog>
-<v-btn class="download" text="Baixar Lista no EXECEL" @click="baixarExcel"></v-btn>
+      </v-card>
+    </v-dialog>
+
+    <v-btn class="download" text @click="baixarExcel">Baixar Lista no EXCEL</v-btn>
   </div>
 </template>
 
@@ -102,15 +120,22 @@ const usuariosFiltrados = computed(() => {
   if (filtroAtual.value === 'todos') return usuariosOrdenados.value
   return usuariosOrdenados.value.filter(u => u.tipoParticipante === filtroAtual.value)
 })
+
 const baixarExcel = () => {
-  const dadosParaExportar = usuariosFiltrados.value.map((u) => ({
+  const dadosParaExportar = usuariosFiltrados.value.map(u => ({
     Nome: u.nomeCompleto,
     Cidade: u.cidade,
     UF: u.uf,
     Tipo: u.tipoParticipante,
     Escola: u.escola || '',
     Trabalho: u.localTrabalho || '',
-    Evento: u.evento || '',
+    Eventos: Array.isArray(u.eventosSelecionados) ? u.eventosSelecionados.join(', ') : (u.evento || ''),
+    Oficinas: u.oficinasSelecionadas
+      ? Object.values(u.oficinasSelecionadas).filter(Boolean).join(', ')
+      : '',
+    Exposicoes: u.exposicoesSelecionadas
+      ? Object.values(u.exposicoesSelecionadas).filter(Boolean).join(', ')
+      : '',
     Palestra: u.palestraSelecionada || '',
     Telefone: u.telefone || '',
     DataNascimento: u.dataNascimento || '',
@@ -127,6 +152,7 @@ const baixarExcel = () => {
 
   saveAs(blob, nomeArquivo)
 }
+
 const logout = async () => {
   try {
     await signOut(auth)
@@ -185,7 +211,34 @@ const abrirDialog = (usuario) => {
     transition: .2s ease-in-out;
     transform: scale(1.1);
 
-
+.bntSerch {
+  cursor: pointer;
+}
+.cinza {
+  background-color: #f5f5f5;
+}
+.lista {
+  list-style: none;
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.logout {
+  margin-top: 20px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+.download {
+  margin-top: 15px;
+  padding: 10px 15px;
+  cursor: pointer;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 4px;
+}
+.dialog-btn {
+  cursor: pointer;
+}
 }
 .title {
   font-size: 1.8rem;

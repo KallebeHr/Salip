@@ -49,7 +49,7 @@ const eventosOf = [
   }
     ,
    {
-    titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | TARDE | 16h30min",
+    titulo: "🗓️ DIA 24/05/2025 | SÁBADO | TARDE | 16h30min",
     descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: Cube 11 de Agosto	| Vagas: 40 visitantes",
   }
 ]
