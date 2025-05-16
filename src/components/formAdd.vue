@@ -61,7 +61,7 @@
           <option value="" disabled>Selecione a oficina</option>
           <option v-for="oficina in oficinas" :key="oficina" :value="oficina">
             {{ oficina }}
-          </option>
+          </option> 
         </select>
         <select
           v-if="form.evento === 'palestra'"
