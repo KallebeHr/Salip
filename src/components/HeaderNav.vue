@@ -57,7 +57,7 @@
     <transition name="slide-down">
       <div v-if="menuAberto" class="menu-mobile mobile-only">
         <ul>
-          <router-link to="/midiasalipi" class="no-style-link">
+          <router-link to="/midiasalipi" class="no-style-link">   
           <li @click="menuAberto = false">
             <img src="/IMG/Camera.png" class="icons" alt="CameraIcon"> GALERIA SALIP2
           </li>

@@ -63,6 +63,15 @@
             {{ oficina }}
           </option>
         </select>
+        <select
+          v-if="form.evento === 'palestra'"
+          v-model="form.palestraSelecionada"
+        >
+          <option value="" disabled>Selecione a Palestra</option>
+          <option v-for="palestra in palestras" :key="palestra" :value="palestra">
+            {{ palestra }}
+          </option>
+        </select>
       </div>
 
       <!-- TERMOS -->
@@ -183,6 +192,7 @@ const escolas = [
 const eventos = [
   { value: 'oficina', label: 'Oficinas' },
   { value: 'EXPOSIÇÃO FOTOGRÁFICA', label: 'EXPOSIÇÃO FOTOGRÁFICA' },
+  {value: "palestra", label:'Palestras'}
 ]
 const exposicaos = [
   '23/05 - 9h -	Exposição Fotográfica Reviver Pedro II ',
@@ -194,7 +204,17 @@ const exposicaos = [
   '24/05 - 14h30min - Exposição Fotográfica Reviver Pedro II ',
   '24/05 - 16h30min - Exposição Fotográfica Reviver Pedro II ',
 ] 
-
+const palestras = [
+'Palestra de abertura com Fabrício Carpinejar (RS)',
+'Palestra: A voz de Esperança Garcia - Palestrante: Bernardo Aurélio (PI) e João P. Luiz (PI)',
+'Palestra/Show: Música e Letra - instrumentos de educação - Palestrante: Grupo Cocares',
+'Palestra:  O cânone literário   o sublime piauiense  - Palestrante: Luiz Romero (PI)',
+'Palestra: A literatura de Pedro II: da pré-história aos dias atuais - Palestrante: Ernâni Getirana (PI)',
+'Espetáculo: Esperando Godot - Texto: Samuel Becket - Apresentação: Grupo Harém de Teatro (PI)',
+'Palestra: A lírica do poeta Manuel Bandeira - Palestrantes: José de Nicola (SP) e Cineas Santos (PI)',
+'Palestra: Poesia, Música e Sala de Aula - Palestrantes: Adriano Lobão Aragão (PI) e Vagner Ribeiro (PI)',
+'Show de Humor da Selma de Nieta- Observação: Somente para visitantes e Funcionários.',
+]
 const oficinas = [
   '23/05 - 9h - Oficina de Literatura de Cordel ',
   '23/05 - 9h - Oficina de Fanzine ',
@@ -216,7 +236,8 @@ const form = reactive({
   evento: '',
   telefone: '',
   oficinaSelecionada: '',
-  exposicaoSelecionada: ''
+  exposicaoSelecionada: '',
+  palestraSelecionada: '',
 })
 
 // Refs e reactive
@@ -262,6 +283,10 @@ function checkFields() {
     $toast.warning('Selecione a Exposição.', { position: 'top-right' })
     return false
   }
+  if (form.evento === 'palestra' && !form.palestraSelecionada) {
+    $toast.warning('Selecione a palestra.', { position: 'top-right' })
+    return false
+  }
   if (!aceitaTermos.value) {
     $toast.warning('Você precisa aceitar os termos.', { position: 'top-right' })
     return false
@@ -287,6 +312,7 @@ const handleSubmit = async () => {
     telefone: form.evento ? form.telefone : null,
     oficinaSelecionada: form.evento === 'oficina' ? form.oficinaSelecionada : null,
     exposicaoSelecionada: form.evento === 'EXPOSIÇÃO FOTOGRÁFICA' ? form.exposicaoSelecionada : null,
+    palestraSelecionada: form.evento === 'palestra' ? form.palestraSelecionada : null,
     timestamp: new Date()
   }
 
