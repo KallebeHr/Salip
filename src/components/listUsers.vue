@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <!-- HEADER COM DADOS GERAIS E FILTROS -->
     <div class="dashboard-header">
       <div class="stat-box" @click="filtroAtual = 'todos'">
         <strong class="bntSerch">Total:</strong>
@@ -33,7 +32,6 @@
 
     <button class="logout" @click="logout">Sair da Administração</button>
 
-    <!-- DIALOG -->
     <v-dialog v-model="dialogAberto" max-width="500">
       <v-card class="dialog-card">
         <v-card-title class="dialog-title">

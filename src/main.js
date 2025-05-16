@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import vuetify from './plugins/vuetify' // ⬅️ ADICIONE ISSO
+import vuetify from './plugins/vuetify' 
 import { auth } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 

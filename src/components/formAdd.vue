@@ -3,7 +3,6 @@
     <form class="form-container">
       <h2 class="form-title">Inscreva-se</h2>
 
-      <!-- TIPO PARTICIPANTE -->
       <div class="form-group radio-group">
         <label v-for="opcao in opcoesTipo" :key="opcao.valor">
           <input type="radio" :value="opcao.valor" v-model="tipoParticipante" />
@@ -11,7 +10,6 @@
         </label>
       </div>
 
-      <!-- CAMPOS BÁSICOS -->
       <div class="form-group">
         <input type="text" v-model="form.nomeCompleto" placeholder="Nome completo" />
         <input type="text" v-model="form.cidade" placeholder="Cidade" />
@@ -19,7 +17,6 @@
         <input type="date" v-model="form.dataNascimento" />
       </div>
 
-      <!-- CAMPOS CONDICIONAIS -->
       <div class="form-group" v-if="tipoParticipante === 'aluno'">
         <select v-model="form.escola">
           <option value="" disabled>Selecione sua escola</option>
@@ -31,7 +28,6 @@
         <input type="text" v-model="form.localTrabalho" placeholder="Local de trabalho" />
       </div>
 
-      <!-- EVENTO -->
       <div class="form-group">
         <select v-model="form.evento">
           <option value="" disabled>Selecione um evento (opcional)</option>
@@ -88,7 +84,6 @@
 
       </div>
 
-<!-- Checkbox com link clicável -->
 <div class="form-group checkbox-group" style="display: flex; align-items: center; gap: 8px;">
   <input type="checkbox" id="termos" v-model="aceitaTermosDialog" />
   <label for="termos">
@@ -102,7 +97,6 @@
   </label>
 </div>
 
-<!-- Dialog -->
 <v-dialog v-model="mostrarTermos" max-width="600">
   <v-card title="TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP2">
 <v-card-text style="white-space: pre-line; max-height: 400px; overflow-y: auto;">
@@ -117,7 +111,6 @@
 </v-dialog>
 
 
-      <!-- BOTÃO ENVIAR -->
       <button
         type="button"
         class="form-button"
@@ -158,7 +151,7 @@ As informações fornecidas no cadastro (como nome, número e preferências de a
 Ao participar do Salip2, você se compromete a agir com respeito e cordialidade. Não é permitido o envio de conteúdos ofensivos, discriminatórios ou que violem leis vigentes.
 
 5. Responsabilidades do Usuário
-Você é responsável pelas informações inseridas em seu perfil e pela utilização de sua conta. Mantenha sua senha em sigilo.
+Você é responsável pelas informações inseridas em seu perfil e pela utilização de sua conta.
 
 6. Alterações no Evento ou Plataforma
 A organização do Salip2 reserva-se o direito de modificar o conteúdo da plataforma ou o cronograma do evento sem aviso prévio, quando necessário.
@@ -168,8 +161,7 @@ Ao marcar o campo "Li e aceito os Termos de Uso e a Política de Privacidade", v
 `
 
 const $toast = useToast();
-// Estado
-// Firebase (não precisa mudar, está funcional)
+
 const firebaseConfig = {
   apiKey: "AIzaSyBtHvQv2ePdKzE8tVfWbADQ-Codvtu9g1E",
   authDomain: "salip-d76d3.firebaseapp.com",
@@ -183,14 +175,13 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig)
 const db = getFirestore(firebaseApp)
 
-// Opções dinâmicas
 const opcoesTipo = [
   { valor: 'aluno', label: 'Sou aluno' },
   { valor: 'funcionario', label: 'Sou funcionário' },
   { valor: 'visitante', label: 'Sou visitante' }
 ]
 
-const palestrasSelecionadas = ref(['']) // Começa com uma palestra vazia
+const palestrasSelecionadas = ref(['']) 
 const escolas = [
   'Escola Municipal Monsenhor Lotário Weber',
   'Escola Municipal João Benício da Silva',
@@ -302,15 +293,13 @@ const form = reactive({
   telefone: '',
   oficinaSelecionada: '',
   exposicaoSelecionada: '',
-  palestraSelecionada: [], // inicializado como array
+  palestraSelecionada: [], 
 })
 
-// Refs e reactive
 const tipoParticipante = ref('aluno')
 const aceitaTermos = ref(false)
 const isSubmitting = ref(false)
 
-// Validação de campos obrigatórios
 function checkFields() {
   if (!form.nomeCompleto) {
     $toast.warning('Preencha o Nome completo.', { position: 'top-right' })
@@ -349,8 +338,8 @@ function checkFields() {
     return false
   }
  if (form.evento === 'palestra') {
-    // Verifica se existe alguma palestra vazia
-    if (palestrasSelecionadas.value.length === 0 || palestrasSelecionadas.value.some(p => !p || p.trim() === '')) {
+
+  if (palestrasSelecionadas.value.length === 0 || palestrasSelecionadas.value.some(p => !p || p.trim() === '')) {
       $toast.error('Selecione palestra');
       return;
     }
@@ -402,7 +391,7 @@ watch(() => form.evento, (novoEvento) => {
   form.oficinaSelecionada = ''
   palestrasSelecionadas.value = ['']
 
-  // Se quiser, pode condicionar os resets, mas resetar tudo é mais seguro
+
 })
 </script>
 

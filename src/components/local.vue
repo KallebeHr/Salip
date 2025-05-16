@@ -22,22 +22,18 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 onMounted(() => {
-  // Coordenadas do evento
   const eventoLatLng = [-4.425311683306984, -41.45828694109339]
 
-  // Inicializa o mapa centralizado no evento
   const map = L.map('map', {
     zoomControl: true,
     scrollWheelZoom: false,
   }).setView(eventoLatLng, 18)
 
-  // Camada do mapa
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 22,
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map)
 
-  // Ícone personalizado do evento
   const customIcon = L.icon({
     iconUrl: '/IMG/iconMap.svg',
     iconSize: [32, 32],
@@ -45,13 +41,11 @@ onMounted(() => {
     popupAnchor: [0, -32]
   })
 
-  // Marcador fixo do evento com popup já aberto
   L.marker(eventoLatLng, { icon: customIcon })
     .addTo(map)
     .bindPopup('Rua Tertuliano B Filho, 467 – Pedro II - PI')
     .openPopup()
 
-  // Localiza o usuário, mas não muda a centralização do mapa
   map.locate({ setView: false, maxZoom: 16 })
 
   map.on('locationfound', e => {

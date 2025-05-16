@@ -23,15 +23,12 @@ const isLoaded = ref(false);
 
 onMounted(() => {
   const markLoaded = () => {
-    // depois de garantir que tudo carregou, espera 3s e mostra app
     setTimeout(() => (isLoaded.value = true), 3000);
   };
 
   if (document.readyState === 'complete') {
-    // já tá pronto
     markLoaded();
   } else {
-    // escuta mudança de estado de carregamento
     const listener = () => {
       if (document.readyState === 'complete') {
         markLoaded();

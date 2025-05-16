@@ -70,7 +70,6 @@ header {
   line-height: 1.2;
 }
 
-/* Descrição */
 .description {
   font-size: 1.05rem;
   max-width: 720px;
@@ -79,7 +78,6 @@ header {
   margin-bottom: 2.5rem;
 }
 
-/* Botão */
 .btn-link {
   text-decoration: none;
 }
@@ -109,7 +107,6 @@ header {
   height: 1.1rem;
 }
 
-/* Responsivo */
 @media (min-width: 768px) {
   header {
     flex-direction: row;

@@ -54,7 +54,6 @@ const modules = [Autoplay]
   white-space: nowrap;
 }
 
-/* Texto */
 h1 {
   font-size: 1.8rem;
   color: white;
@@ -64,13 +63,11 @@ h1 {
   white-space: nowrap;
 }
 
-/* Ícones */
 .icon {
   width: 30px;
   height: 30px;
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .ticker-slide {
     gap: 0.8rem;

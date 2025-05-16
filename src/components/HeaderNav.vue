@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <header>
-      <!-- ESQUERDA DESKTOP -->
       <ul class="menu-esquerda desktop-only">
          <router-link to="/midiasalipi" class="no-style-link">
         <li><img src="/IMG/Camera.png" class="icons" alt="InstagramIcon"> GALERIA SALIP2</li>
@@ -15,12 +14,10 @@
         </router-link>
       </ul>
 
-      <!-- LOGO CENTRAL -->
       <a href="/" class="logo-link">
         <img src="/IMG/LOGONAMEPRIMARIO.png" alt="Logo" class="logoIMG" />
       </a>
 
-      <!-- DIREITA DESKTOP -->
       <ul class="menu-direita desktop-only">
         <router-link to="/addUser" class="no-style-link">
           <li>
@@ -48,12 +45,10 @@
       />
     </header>
 
-    <!-- OVERLAY -->
     <transition name="fade">
       <div v-if="menuAberto" class="overlay" @click="menuAberto = false"></div>
     </transition>
 
-    <!-- MENU MOBILE -->
     <transition name="slide-down">
       <div v-if="menuAberto" class="menu-mobile mobile-only">
         <ul>
@@ -98,7 +93,6 @@ const menuAberto = ref(false)
   color: black;
 }
 
-/* HEADER */
 header {
   display: flex;
   align-items: center;
@@ -111,7 +105,6 @@ header {
   z-index: 1000;
 }
 
-/* MENU */
 ul {
   list-style: none;
   display: flex;
@@ -156,7 +149,6 @@ a {
   align-items: center;
 }
 
-/* ÍCONE DE MENU NO MOBILE */
 .menu-icon {
   height: 30px;
   width: 30px;
@@ -167,7 +159,6 @@ a {
   z-index: 1001;
 }
 
-/* MENU MOBILE */
 .menu-mobile {
   position: fixed;
   top: 0;
@@ -195,7 +186,6 @@ a {
   width: 15rem;
   cursor: pointer;
 }
-/* OVERLAY */
 .overlay {
   position: fixed;
   top: 0;
@@ -207,7 +197,6 @@ a {
   z-index: 1000;
 }
 
-/* TRANSIÇÕES */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s ease;
 }
@@ -232,7 +221,6 @@ a {
   to { transform: translateY(-20px); opacity: 0; }
 }
 
-/* RESPONSIVO */
 @media (max-width: 800px) {
   .desktop-only {
     display: none !important;

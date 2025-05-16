@@ -77,14 +77,12 @@ const eventosOf = [
   text-align: center;
 }
 
-/* Painel principal */
 .painel {
   width: 100%;
   max-width: 900px;
   background-color: transparent;
 }
 
-/* Estilo de cada painel */
 .evento-panel {
   background: #fefefe !important;
   color: #2b2b2e;
@@ -102,7 +100,6 @@ const eventosOf = [
   transform: scale(1.01);
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .container {
     padding: 3rem 1rem;
