@@ -53,11 +53,11 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 18h30min",
-    descricao: "Acolhida:  Leo Sorato | Local: Praça Domingos Mourão Filho",
+    descricao: "Acolhida: Marcos Aurélio | Local: Auditório Padre Norberto",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 19h",
-    descricao: "	Espetáculo: Esperando Godot - Texto: Samuel Becket  Apresentação: Grupo Harém de Teatro (PI) Apresentação/Mediação: Helany Max | Local: Auditório Padre Norberto ",
+    descricao: "Espetáculo: Esperando Godot - Texto: Samuel Becket  Apresentação: Grupo Harém de Teatro (PI) Apresentação/Mediação: Helany Max | Local: Auditório Padre Norberto ",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 21h",

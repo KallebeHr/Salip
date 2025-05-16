@@ -279,8 +279,12 @@ const palestras = [
 const oficinas = [
   '23/05 - 9h - Oficina de Literatura de Cordel ',
   '23/05 - 9h - Oficina de Fanzine ',
+  '23/05 - 9h - Oficina de Desenho',
+  '23/05 - 9h - Oficina Poética',
   '24/05 - 9h - Oficina de Literatura de Cordel ',
   '24/05 - 9h - Oficina de Fanzine ',
+  '24/05 - 9h - Oficina de Desenho',
+  '24/05 - 9h - Oficina Poética',
 ]
 function teste() {
   let instance = $toast.warning('inscrição enviada com sucesso!', {
