@@ -5,12 +5,15 @@
     <datas />
     <datasInf />
     <DatasFotos />
+    <DatasOficina />
     <Local />
     <Conect />
   </div>
 </template>
 
 <script setup>
+import DatasOficina from '@/components/datasOficina.vue';
+
 </script>
 
 <style scoped>

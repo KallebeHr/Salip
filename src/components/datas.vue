@@ -85,7 +85,7 @@ const eventosOf = [
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | TARDE  | 16h30min",
-    descricao: "Roda de Conversa: Presença da Mulher na Literatura de Pedro II Convidadas: Marina Campelo (PI), Adeodata dos Anjos (PI), Aldenira Martins (PI), Dayse Benício (PI) e Margarete Gomes (PI). Apresentação/Mediação: Ernani Getirana (PI) | Local: Auditório Padre Norberto",
+    descricao: "Roda de Conversa: Presença da Mulher na Literatura de Pedro II Convidadas: Marina Campelo (PI), Adeodata dos Anjos (PI), Aldenira Martins (PI), Dayse Benício (PI) e Margarete Gomes (PI), Socorro Almeida (PI). Apresentação/Mediação: Ernani Getirana (PI) | Local: Auditório Padre Norberto",
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | NOITE  | 20h ",

@@ -27,14 +27,7 @@ const eventosOf = [
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 9h",
     descricao: "Oficina Poética “Escrever com Outros Passos” - Ministrante: Marina Campelo (PI)-  Vagas: 15 (quinze) – Turma 01-  Local: Escola José Teixeira Santos",
   },
-   {
-    titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 9h",
-    descricao: "Oficina de Desenho - Ministrante: Arimatéa Júnior (PI) - Vagas: 15 (quinze) – Turma 01-Local: Escola José Teixeira Santos",
-  },
-   {
-    titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h ",
-    descricao: "Oficina de Literatura de Cordel Ministrante: Joaquim Mendes (Joames) | PIVagas: 40 (quarenta) | Turma 02 | Local: Escola José Teixeira Santos",
-  },
+
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h ",
     descricao: "Oficina de Literatura de Cordel Ministrante: Joaquim Mendes (Joames) | PIVagas: 40 (quarenta) | Turma 02 | Local: Escola José Teixeira Santos",
@@ -45,7 +38,11 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h ",
-    descricao: "Oficina de Literatura de Cordel Ministrante: Joaquim Mendes (Joames) | PIVagas: 40 (quarenta) | Turma 02 | Local: Escola José Teixeira Santos",
+    descricao: "Oficina de Literatura de Cordel Ministrante: Joaquim Mendes (Joames) | Vagas: 40 (quarenta) | Turma 02 | Local: Escola José Teixeira Santos",
+  },
+   {
+    titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h ",
+    descricao: " | Vagas: 40 (quarenta) | Turma 02 | Local: Escola José Teixeira Santos",
   },
 ]
 </script>
