@@ -63,24 +63,59 @@
             {{ oficina }}
           </option> 
         </select>
-        <select
-          v-if="form.evento === 'palestra'"
-          v-model="form.palestraSelecionada"
-        >
-          <option value="" disabled>Selecione a Palestra</option>
-          <option v-for="palestra in palestras" :key="palestra" :value="palestra">
-            {{ palestra }}
-          </option>
-        </select>
+<div v-if="form.evento === 'palestra'">
+  <div
+    v-for="(palestra, index) in palestrasSelecionadas"
+    :key="index"
+    class="form-group"
+  >
+    <select v-model="palestrasSelecionadas[index]">
+      <option value="" disabled>Selecione a Palestra</option>
+      <option v-for="op in palestras" :key="op" :value="op">
+        {{ op }}
+      </option>
+    </select>
+  </div>
+
+  <button
+    type="button"
+    @click="palestrasSelecionadas.push('')"
+    class="form-button"
+  >
+    + Adicionar outra palestra
+  </button>
+</div>
+
       </div>
 
-      <!-- TERMOS -->
-      <div class="form-group checkbox-group">
-        <label>
-          <input type="checkbox" v-model="aceitaTermos" />
-          <span>Li e aceito os termos da inscrição</span>
-        </label>
-      </div>
+<!-- Checkbox com link clicável -->
+<div class="form-group checkbox-group" style="display: flex; align-items: center; gap: 8px;">
+  <input type="checkbox" id="termos" v-model="aceitaTermosDialog" />
+  <label for="termos">
+    Li e aceito os 
+    <span
+      style="color: #1976d2; text-decoration: underline; cursor: pointer;"
+      @click="mostrarTermos = true"
+    >
+      termos da inscrição
+    </span>
+  </label>
+</div>
+
+<!-- Dialog -->
+<v-dialog v-model="mostrarTermos" max-width="600">
+  <v-card title="TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP2">
+<v-card-text style="white-space: pre-line; max-height: 400px; overflow-y: auto;">
+  {{ textoTermos }}
+</v-card-text>
+
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn text="Fechar" @click="mostrarTermos = false" color="primary"></v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
 
       <!-- BOTÃO ENVIAR -->
       <button
@@ -102,9 +137,35 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore'
 import { useToast } from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-default.css'
 
+const aceitaTermosDialog = ref(false)
 
+const mostrarTermos = ref(false)
+const textoTermos = String.raw`
+TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP2
 
+Ao se cadastrar no site do Salip2 – Salão do Livro do Pedro II, você concorda com os seguintes termos:
 
+1. Finalidade do Site
+O Salip2 é um ambiente virtual destinado à divulgação, organização e participação em atividades culturais e literárias promovidas por alunos, professores e convidados do município de Pedro II - PI.
+
+2. Cadastro de Usuário
+O cadastro é gratuito e destinado a alunos, professores, organizadores e participantes do evento. É proibido o uso de informações falsas ou de terceiros sem autorização.
+
+3. Privacidade e Proteção de Dados
+As informações fornecidas no cadastro (como nome, número e preferências de atividade) serão utilizadas exclusivamente para fins de organização do evento. Seus dados não serão compartilhados com terceiros sem seu consentimento.
+
+4. Comportamento Esperado
+Ao participar do Salip2, você se compromete a agir com respeito e cordialidade. Não é permitido o envio de conteúdos ofensivos, discriminatórios ou que violem leis vigentes.
+
+5. Responsabilidades do Usuário
+Você é responsável pelas informações inseridas em seu perfil e pela utilização de sua conta. Mantenha sua senha em sigilo.
+
+6. Alterações no Evento ou Plataforma
+A organização do Salip2 reserva-se o direito de modificar o conteúdo da plataforma ou o cronograma do evento sem aviso prévio, quando necessário.
+
+7. Aceite dos Termos
+Ao marcar o campo "Li e aceito os Termos de Uso e a Política de Privacidade", você declara estar de acordo com todos os pontos acima.
+`
 
 const $toast = useToast();
 // Estado
@@ -129,6 +190,7 @@ const opcoesTipo = [
   { valor: 'visitante', label: 'Sou visitante' }
 ]
 
+const palestrasSelecionadas = ref(['']) // Começa com uma palestra vazia
 const escolas = [
   'Escola Municipal Monsenhor Lotário Weber',
   'Escola Municipal João Benício da Silva',
@@ -213,7 +275,6 @@ const palestras = [
 'Espetáculo: Esperando Godot - Texto: Samuel Becket - Apresentação: Grupo Harém de Teatro (PI)',
 'Palestra: A lírica do poeta Manuel Bandeira - Palestrantes: José de Nicola (SP) e Cineas Santos (PI)',
 'Palestra: Poesia, Música e Sala de Aula - Palestrantes: Adriano Lobão Aragão (PI) e Vagner Ribeiro (PI)',
-'Show de Humor da Selma de Nieta- Observação: Somente para visitantes e Funcionários.',
 ]
 const oficinas = [
   '23/05 - 9h - Oficina de Literatura de Cordel ',
@@ -237,7 +298,7 @@ const form = reactive({
   telefone: '',
   oficinaSelecionada: '',
   exposicaoSelecionada: '',
-  palestraSelecionada: '',
+  palestraSelecionada: [], // inicializado como array
 })
 
 // Refs e reactive
@@ -283,22 +344,24 @@ function checkFields() {
     $toast.warning('Selecione a Exposição.', { position: 'top-right' })
     return false
   }
-  if (form.evento === 'palestra' && !form.palestraSelecionada) {
-    $toast.warning('Selecione a palestra.', { position: 'top-right' })
-    return false
+ if (form.evento === 'palestra') {
+    // Verifica se existe alguma palestra vazia
+    if (palestrasSelecionadas.value.length === 0 || palestrasSelecionadas.value.some(p => !p || p.trim() === '')) {
+      $toast.error('Selecione palestra');
+      return;
+    }
   }
-  if (!aceitaTermos.value) {
+  if (!aceitaTermosDialog.value) {
     $toast.warning('Você precisa aceitar os termos.', { position: 'top-right' })
     return false
   }
   return true
 }
 
-// Envio seguro
 const handleSubmit = async () => {
-  if (isSubmitting.value) return
-  if (!checkFields()) return
-  isSubmitting.value = true
+  if (isSubmitting.value) return;
+  if (!checkFields()) return;
+  isSubmitting.value = true;
 
   const dados = {
     tipoParticipante: tipoParticipante.value,
@@ -310,25 +373,33 @@ const handleSubmit = async () => {
     localTrabalho: tipoParticipante.value === 'funcionario' ? form.localTrabalho : null,
     evento: form.evento || null,
     telefone: form.evento ? form.telefone : null,
+    palestraSelecionada: palestrasSelecionadas.value.length ? [...palestrasSelecionadas.value] : null,
     oficinaSelecionada: form.evento === 'oficina' ? form.oficinaSelecionada : null,
     exposicaoSelecionada: form.evento === 'EXPOSIÇÃO FOTOGRÁFICA' ? form.exposicaoSelecionada : null,
-    palestraSelecionada: form.evento === 'palestra' ? form.palestraSelecionada : null,
     timestamp: new Date()
-  }
+  };
 
   try {
-    await addDoc(collection(db, 'inscricoes'), dados)
-    Object.keys(form).forEach(key => form[key] = '')
-    tipoParticipante.value = 'aluno'
-    aceitaTermos.value = false
-    $toast.success('Inscrição enviada com sucesso!', { position: 'top-right' })
+    await addDoc(collection(db, 'inscricoes'), dados);
+    Object.keys(form).forEach(key => form[key] = '');
+    tipoParticipante.value = 'aluno';
+    aceitaTermos.value = false;
+    $toast.success('Inscrição enviada com sucesso!', { position: 'top-right' });
   } catch (error) {
-    console.error(error)
-    $toast.error('Erro ao enviar inscrição. Tente novamente.', { position: 'top-right' })
+    console.error(error);
+    $toast.error('Erro ao enviar inscrição. Tente novamente.', { position: 'top-right' });
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
-}
+};
+watch(() => form.evento, (novoEvento) => {
+  form.telefone = ''
+  form.exposicaoSelecionada = ''
+  form.oficinaSelecionada = ''
+  palestrasSelecionadas.value = ['']
+
+  // Se quiser, pode condicionar os resets, mas resetar tudo é mais seguro
+})
 </script>
 
 

@@ -121,37 +121,34 @@ const usuariosFiltrados = computed(() => {
   return usuariosOrdenados.value.filter(u => u.tipoParticipante === filtroAtual.value)
 })
 
+const exportarParaExcel = (dados) => {
+  const worksheet = XLSX.utils.json_to_sheet(dados);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Inscritos');
+  const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([wbout], { type: 'application/octet-stream' });
+  saveAs(blob, 'inscritos.xlsx');
+};
+
 const baixarExcel = () => {
   const dadosParaExportar = usuariosFiltrados.value.map(u => ({
-    Nome: u.nomeCompleto,
-    Cidade: u.cidade,
-    UF: u.uf,
-    Tipo: u.tipoParticipante,
+    Nome: u.nomeCompleto || '',
+    Cidade: u.cidade || '',
+    UF: u.uf || '',
+    Tipo: u.tipoParticipante || '',
     Escola: u.escola || '',
     Trabalho: u.localTrabalho || '',
-    Eventos: Array.isArray(u.eventosSelecionados) ? u.eventosSelecionados.join(', ') : (u.evento || ''),
-    Oficinas: u.oficinasSelecionadas
-      ? Object.values(u.oficinasSelecionadas).filter(Boolean).join(', ')
-      : '',
-    Exposicoes: u.exposicoesSelecionadas
-      ? Object.values(u.exposicoesSelecionadas).filter(Boolean).join(', ')
-      : '',
-    Palestra: u.palestraSelecionada || '',
+    Eventos: u.evento || '',
+    Oficinas: u.oficinaSelecionada || '',
+    Exposicoes: u.exposicaoSelecionada || '',
+    Palestras: Array.isArray(u.palestraSelecionada) ? u.palestraSelecionada.filter(p => p).join(', ') : (u.palestraSelecionada || ''),
     Telefone: u.telefone || '',
     DataNascimento: u.dataNascimento || '',
-  }))
+  }));
 
-  const ws = XLSX.utils.json_to_sheet(dadosParaExportar)
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, 'Inscritos')
+  exportarParaExcel(dadosParaExportar);
+};
 
-  const filtro = filtroAtual.value === 'todos' ? 'geral' : filtroAtual.value
-  const nomeArquivo = `inscritos_${filtro}.xlsx`
-  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
-  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
-
-  saveAs(blob, nomeArquivo)
-}
 
 const logout = async () => {
   try {
