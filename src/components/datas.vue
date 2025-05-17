@@ -17,15 +17,15 @@
 const eventosOf = [
   {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 18h30min",
-    descricao: "Solenidade Oficial de Abertura do 3º SaLiP2 - Salão do Livro de Pedro II Discursos de autoridades e homenageados. | Local: Centro Educacional de Eventos Dep. Ciro Nogueira",
+    descricao: "Solenidade Oficial de Abertura do 3º SaLiP2 - Salão do Livro de Pedro II Discursos de autoridades e homenageados. | Local: Centro Educacional de Eventos Dep. Ciro Nogueira(Antigo Claudia Eventos)",
   },
    {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 19h",
-    descricao: "Palestra de abertura com Fabrício Carpinejar (RS) | Local: Centro Educacional de Eventos Dep. Ciro Nogueira ",
+    descricao: "Palestra de abertura com Fabrício Carpinejar (RS) | Local: Centro Educacional de Eventos Dep. Ciro Nogueira(Antigo Claudia Eventos) ",
   },
    {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 21h ",
-    descricao: "Show com Soraya Castelo Branco (PI) | Local: Centro Educacional de Eventos Dep. Ciro Nogueira",
+    descricao: "Show com Soraya Castelo Branco (PI) | Local: Centro Educacional de Eventos Dep. Ciro Nogueira(Antigo Claudia Eventos)",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 8h ",

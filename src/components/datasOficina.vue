@@ -17,32 +17,19 @@
 const eventosOf = [
   {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 9h",
-    descricao: "Oficina de Literatura de Cordel Ministrante: Joaquim Mendes (Joames) | (PI) Vagas: 40 (quarenta) | Turma 01 | Local: Escola José Teixeira Santos",
+    descricao: "Oficina de Literatura de Cordel Ministrante: Joaquim Mendes (Joames) | (PI) Vagas: 20 (vinte) | Turma 01 | Local: Escola José Teixeira Santos",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 9h",
-    descricao: "Oficina de Fanzine. Ministrante: Jerciane Lima (PI) | Vagas: 40 (quarenta) | Turma 01 | Local: Escola José Teixeira Santos",
+    descricao: "Oficina de Fanzine. Ministrante: Jerciane Lima (PI) | Vagas: 20 (Vinte) | Turma 01 | Local: Escola José Teixeira Santos",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 9h",
-    descricao: "Oficina Poética “Escrever com Outros Passos” - Ministrante: Marina Campelo (PI)-  Vagas: 15 (quinze) – Turma 01-  Local: Escola José Teixeira Santos",
-  },
-
-   {
-    titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h ",
-    descricao: "Oficina de Literatura de Cordel Ministrante: Joaquim Mendes (Joames) | PIVagas: 40 (quarenta) | Turma 02 | Local: Escola José Teixeira Santos",
+    descricao: "Oficina Poética “Escrever com Outros Passos” - Ministrante: Marina Campelo (PI)-  Vagas: 20 (vinte) – Turma 01-  Local: Escola José Teixeira Santos",
   },
    {
-    titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h ",
-    descricao: "Oficina Poética “Escrever com Outros Passos” - Ministrante: Marina Campelo (PI) - Vagas: 15 (quinze) – Turma 01 - Local: Escola José Teixeira Santos",
-  },
-   {
-    titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h ",
-    descricao: "Oficina de Literatura de Cordel Ministrante: Joaquim Mendes (Joames) | Vagas: 40 (quarenta) | Turma 02 | Local: Escola José Teixeira Santos",
-  },
-   {
-    titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h ",
-    descricao: " | Vagas: 40 (quarenta) | Turma 02 | Local: Escola José Teixeira Santos",
+    titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 9h",
+    descricao: "Oficina “Comida é Memória”- Ministrante: Nutricionista Renata Luiza - Vagas: 20 (vinte) – Turma 01-  Local: Escola José Teixeira Santos",
   },
 ]
 </script>

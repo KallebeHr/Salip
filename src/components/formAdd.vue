@@ -14,7 +14,8 @@
         <input type="text" v-model="form.nomeCompleto" placeholder="Nome completo" />
         <input type="text" v-model="form.cidade" placeholder="Cidade" />
         <input type="text" v-model="form.uf" maxlength="2" placeholder="UF (ex: PI)" />
-        <input type="date" v-model="form.dataNascimento" />
+        <label for="date">Data de Nascimento <input type="date" v-model="form.dataNascimento" /></label>
+        
       </div>
 
       <div class="form-group" v-if="tipoParticipante === 'aluno'">
@@ -272,10 +273,6 @@ const oficinas = [
   '23/05 - 9h - Oficina de Fanzine ',
   '23/05 - 9h - Comida é Memória',
   '23/05 - 9h - Oficina Poética',
-  '24/05 - 9h - Oficina de Literatura de Cordel ',
-  '24/05 - 9h - Oficina de Fanzine ',
-  '24/05 - 9h - Oficina Poética',
-  '24/05 - 9h - Comida é Memória'
 ]
 function teste() {
   let instance = $toast.warning('inscrição enviada com sucesso!', {
@@ -432,7 +429,7 @@ watch(() => form.evento, (novoEvento) => {
   gap: 10px;
 }
 
-.radio-group label,
+.radio-group label,label,
 .checkbox-group label {
   display: flex;
   align-items: center;
