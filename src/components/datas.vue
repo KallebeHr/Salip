@@ -37,7 +37,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 10h30min ",
-    descricao: "Palestra/Show: Música e Letra, instrumentos de educação Palestrante: Grupo Cocares Apresentação/Mediação: Socorrinha Almeida | Local: Auditório Padre Norberto ",
+    descricao: "Palestra/Show: Música e Letra, instrumentos de educação - Palestrante: Grupo Cocares Apresentação/Mediação: Socorrinha Almeida | Local: Auditório Padre Norberto ",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | TARDE  | 14h ",
@@ -49,7 +49,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | TARDE  | 16h30min ",
-    descricao: "Palestra: A literatura de Pedro II: da pré-história aos dias atuais Palestrante: Ernâni Getirana (PI) Apresentação/Mediação: Claisse Sales | Local: Auditório Padre Norberto",
+    descricao: "Palestra: A literatura de Pedro II: da pré-história aos dias atuais - Palestrante: Ernâni Getirana (PI) Apresentação/Mediação: Claisse Sales | Local: Auditório Padre Norberto",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 18h30min",
@@ -57,7 +57,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 19h",
-    descricao: "Espetáculo: Esperando Godot - Texto: Samuel Becket  Apresentação: Grupo Harém de Teatro (PI) Apresentação/Mediação: Helany Max | Local: Auditório Padre Norberto ",
+    descricao: "Espetáculo: Esperando Godot - Texto: Samuel Becket - Apresentação: Grupo Harém de Teatro (PI) Apresentação/Mediação: Helany Max | Local: Auditório Padre Norberto ",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | NOITE  | 21h",
@@ -73,7 +73,7 @@ const eventosOf = [
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ  | 10h30min",
-    descricao: "Palestra:  Palestrante:  Apresentação/Mediação | Local: Auditório Padre Norberto ",
+    descricao: "Palestra: Piauienses Escritoras - Gênese Histórica - Palestrante: Jasmine Malta (PI)  - Apresentação/Mediação: Kássio Gomes (PI) | Local: Auditório Padre Norberto ",
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | TARDE  | 14h",

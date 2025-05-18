@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1 class="title">Galeria SALIP2</h1>
+    <h1 class="title">PALESTRANTES/ARTISTAS</h1>
     <swiper
       :slides-per-view="'auto'"
       :centered-slides="true"
@@ -146,7 +146,7 @@ const fotos = ref([
   {
     url: '/IMG/CardPalestrante7.png',
     titulo: 'Grupo Harém de Teatro (PI)',
-    professor: 'Esperando Godot – Texto: Samuel Becket ',
+    professor: 'Texto: Samuel Becket e Dramaturgia: Arimatan Martins',
     evento: 'Teatro',
     data: '23/05/2025 ',
     hora: '19h',
@@ -165,7 +165,173 @@ const fotos = ref([
     mediacao: 'Grupo: Urutau',
     local: 'Praça Domingos Mourão Filho'
   }
-  
+  ,
+      {
+    url: '/IMG/cardPalestrante9.png',
+    titulo: 'Histórias / Teatro de Bonecos',
+    professor: 'Chagas Vale',
+    evento: 'Teatro',
+    data: '23/05/2025 ',
+    hora: '9h',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ravena Ribeiro',
+    local: 'Praça Domingos Mourão Filho'
+  }
+  ,
+      {
+    url: '/IMG/cardPalestrante10.png',
+    titulo: 'Histórias / Teatro de Bonecos',
+    professor: 'Talitha do Monte',
+    evento: 'Teatro',
+    data: '23/05/2025 ',
+    hora: '9h',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ravena Ribeiro',
+    local: 'Praça Domingos Mourão Filho'
+  },
+      {
+    url: '/IMG/cardPalestrante11.png',
+    titulo: 'A voz de Esperança Garcia',
+    professor: 'Bernardo Aurélio (PI) ',
+    evento: 'Teatro',
+    data: '23/05/2025 ',
+    hora: '8h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Waleria Rubens (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/cardPalestrante12.png',
+    titulo: 'A voz de Esperança Garcia',
+    professor: 'João P. Luiz (PI) ',
+    evento: 'Teatro',
+    data: '23/05/2025 ',
+    hora: '8h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Waleria Rubens (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/cardPalestrante13.png',
+    titulo: 'Grupo Cocares (PI)',
+    professor: 'Wilker Marques, Marcos Silva, Daniel Glaydson, Rodrigo Lages, Wanderson Araújo e Francisco Oliveira.',
+    evento: 'Teatro',
+    data: '23/05/2025 ',
+    hora: '8h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Germano Bonfim (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/CardPslestrante14.png',
+    titulo: 'Poesia, Música e Sala de Aula',
+    professor: 'Adriano Lobão Aragão (PI) ',
+    evento: 'Teatro',
+    data: '24/05/2025 ',
+    hora: '14h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Helany Max',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/cardPalestrante17.png',
+    titulo: 'Piauienses Escritoras - Gênese Histórica',
+    professor: 'Jasmine Malta (PI)',
+    evento: 'Teatro',
+    data: '24/05/2025 ',
+    hora: '10h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Kássio Gomes (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/cardPalestrante15.png',
+    titulo: 'Roda de Conversa: Presença da Mulher na Literatura de Pedro II',
+    professor: 'Marina Campelo (PI)',
+    evento: 'Teatro',
+    data: '24/05/2025 ',
+    hora: '16h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ernani Getirana (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/CardPalestrante18.png',
+    titulo: 'Roda de Conversa: Presença da Mulher na Literatura de Pedro II',
+    professor: 'Adeodata dos Anjos (PI)',
+    evento: 'Teatro',
+    data: '24/05/2025 ',
+    hora: '16h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ernani Getirana (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/CardPalestrante19.png',
+    titulo: 'Roda de Conversa: Presença da Mulher na Literatura de Pedro II',
+    professor: 'Aldenira Martins (PI)',
+    evento: 'Teatro',
+    data: '24/05/2025',
+    hora: '16h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ernani Getirana (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/CardPalestrante20.png',
+    titulo: 'Roda de Conversa: Presença da Mulher na Literatura de Pedro II',
+    professor: 'Dayse Benício (PI)',
+    evento: 'Teatro',
+    data: '24/05/2025',
+    hora: '16h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ernani Getirana (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/CardPalestrante21.png',
+    titulo: 'Roda de Conversa: Presença da Mulher na Literatura de Pedro II',
+    professor: 'Lucinete Maria do Nascimento (PI)',
+    evento: 'Teatro',
+    data: '24/05/2025',
+    hora: '16h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ernani Getirana (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/CardPalestrante22.png',
+    titulo: 'Roda de Conversa: Presença da Mulher na Literatura de Pedro II',
+    professor: 'Socorro Almeida (PI) ',
+    evento: 'Teatro',
+    data: '24/05/2025',
+    hora: '16h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ernani Getirana (PI)',
+    local: 'Auditório Padre Norberto'
+  }
+  ,
+    {
+    url: '/IMG/CardPalestrante23.png',
+    titulo: 'Roda de Conversa: Presença da Mulher na Literatura de Pedro II',
+    professor: 'Margarete Gomes (PI)',
+    evento: 'Teatro',
+    data: '24/05/2025',
+    hora: '16h30min',
+    descricao: 'Show Público',
+    mediacao: 'Mediação: Ernani Getirana (PI)',
+    local: 'Auditório Padre Norberto'
+  }
 ])
 </script>
 
