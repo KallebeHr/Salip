@@ -11,6 +11,7 @@ declare module 'vue' {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     Conect: typeof import('./src/components/conect.vue')['default']
     copy: typeof import('./src/components/datas copy.vue')['default']
+    DataGerais: typeof import('./src/components/dataGerais.vue')['default']
     Datas: typeof import('./src/components/datas.vue')['default']
     DatasFotos: typeof import('./src/components/datasFotos.vue')['default']
     DatasInf: typeof import('./src/components/datasInf.vue')['default']
