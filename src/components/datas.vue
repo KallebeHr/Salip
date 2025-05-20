@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-btn @click="baixarArquivo">Clique aqui e baixe a Programação</v-btn>
     <h1 class="titulo">Programação OFICIAL dos eventos</h1>
     <v-expansion-panels class="painel" variant="inset" elevation="1">
       <v-expansion-panel
@@ -14,6 +15,18 @@
 </template>
 
 <script setup>
+const baixarArquivo = () => {
+  const fileUrl = '/ARQ/FolderPrograma.pdf' 
+  const fileName = 'Folder.pdf'
+
+  const link = document.createElement('a')
+  link.href = fileUrl
+  link.download = fileName
+  link.target = '_blank'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 const eventosOf = [
   {
     titulo: "🗓️ DIA 22/05/2025 | QUINTA-FEIRA | NOITE | 18h30min",
