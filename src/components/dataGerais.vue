@@ -1,6 +1,15 @@
 <template>
   <div class="container">
-    <h1 class="titulo">Buscar Programação</h1>
+     <!-- From Uiverse.io by devestter --> 
+     <!-- From Uiverse.io by devestter --> 
+<button class="button" @click="baixarArquivo">
+   <svg class="saveicon" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" stroke-linejoin="round" stroke-linecap="round"></path>
+</svg>
+   Clique aqui e baixe a Programação 
+  
+
+</button>
     <v-text-field
       v-model="busca"
       placeholder="Digite o nome, data ou local"
@@ -10,9 +19,7 @@
       hide-details
       prepend-inner-icon="mdi-magnify"
       class="mb-4 text-lg custom-input"
-
     />
-
     <div v-for="(categoria, nome) in categorias" :key="nome">
       <h2 class="titulo">{{ nome }}</h2>
       <v-expansion-panels class="painel" variant="inset" elevation="1">
@@ -23,7 +30,8 @@
           :text="evento.descricao"
           class="evento-panel"
         />
-        <v-expansion-panel v-if="filtrarEventos(categoria).length === 0" title="Nenhum resultado encontrado." text="Tente outra palavra-chave." />
+        <v-expansion-panel class="evento-panel" v-if="filtrarEventos(categoria).length === 0"  title="Nenhum resultado encontrado." text="Tente outra palavra-chave." />
+      
       </v-expansion-panels>
     </div>
   </div>
@@ -32,7 +40,18 @@
 
 <script setup>
 import { ref } from 'vue'
+const baixarArquivo = () => {
+  const fileUrl = '/ARQ/FolderPrograma.pdf' 
+  const fileName = 'Folder.pdf'
 
+  const link = document.createElement('a')
+  link.href = fileUrl
+  link.download = fileName
+  link.target = '_blank'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 const busca = ref('')
 const palestrasAndShows = [
   {
@@ -109,7 +128,7 @@ const palestrasAndShows = [
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | NOITE  | 20h ",
-    descricao: "Encerramento do 3º SaLiP2 com Show de Humor da Selma de Nieta | Local: Praça Domingos Mourão Filho",
+    descricao: "Encerramento do 3º SaLiP2 com Show de Humor da Selma de Nieta | Local: Praça Auditório Padre Norberto",
   },
   {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | NOITE  | 21h ",
@@ -120,40 +139,40 @@ const palestrasAndShows = [
 const fotografia = [
   {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 9h",
-    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso. | Local: Cube 11 de Agosto |	Vagas: 40 visitantes",
+    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso. | Local: clube 11 de Agosto |	Vagas: 40 visitantes",
   },
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | MANHÃ | 10h",
-    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso. | Local: Cube 11 de Agosto |	Vagas: 40 visitantes",
+    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso. | Local: clube 11 de Agosto |	Vagas: 40 visitantes",
   }
   ,
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | TARDE | 14h30min",
-    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: Cube 11 de Agosto	| Vagas: 40 visitantes",
+    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: clube 11 de Agosto	| Vagas: 40 visitantes",
   }
   ,
    {
     titulo: "🗓️ DIA 23/05/2025 | SEXTA-FEIRA | TARDE | 16h30min",
-    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: Cube 11 de Agosto |	Vagas: 40 visitantes",
+    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: clube 11 de Agosto |	Vagas: 40 visitantes",
   }
   ,
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 9h",
-    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: Cube 11 de Agosto	| Vagas: 40 visitantes",
+    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: clube 11 de Agosto	| Vagas: 40 visitantes",
   },
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | MANHÃ | 10h",
-    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: Cube 11 de Agosto	| Vagas: 40 visitantes",
+    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: clube 11 de Agosto	| Vagas: 40 visitantes",
   }
     ,
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | TARDE | 14h30min",
-    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: Cube 11 de Agosto |	Vagas: 40 visitantes",
+    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: clube 11 de Agosto |	Vagas: 40 visitantes",
   }
     ,
    {
     titulo: "🗓️ DIA 24/05/2025 | SÁBADO | TARDE | 16h30min",
-    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: Cube 11 de Agosto	| Vagas: 40 visitantes",
+    descricao: "Exposição Fotográfica Reviver Pedro II. Apresentação e Curadoria: Historiador Afonso Celso | Local: clube 11 de Agosto	| Vagas: 40 visitantes",
   }
 ]
 const eventosInfantis = [
@@ -226,7 +245,33 @@ const filtrarEventos = (eventos) => {
   color: #2b2b2e;
     background-color: #f8f9fb;
 }
+/* From Uiverse.io by devestter */ 
+.button {
+  padding: 12px 19px;
+  border: none;
+  color: #fefefe;
+  cursor: pointer;
+  background-color: #2734AF;
+  border-radius: 7px;
+  font-weight: bold;
+  transition: 0.5s;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 13px;
+  box-shadow: rgba(150, 143, 143, 0.2) 0px 2px 8px 0px;
+  margin: 20px;
+}
 
+.button:hover {
+  background-color: rgb(164, 206, 253);
+  color: #2734AF;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+
+.saveicon {
+  width: 17px;
+}
 .titulo {
   font-size: 2.2rem;
   font-weight: 700;

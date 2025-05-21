@@ -2,10 +2,7 @@
   <div class='container'>
     <Slide/>
     <inscricao />
-    <datas />
-    <datasInf />
-    <DatasFotos />
-    <DatasOficina />
+    <DataGerais />
     <Local />
     <Conect />
   </div>
@@ -13,6 +10,7 @@
 
 <script setup>
 import DatasOficina from '@/components/datasOficina.vue';
+import DataGerais from '@/components/dataGerais.vue';
 
 </script>
 
