@@ -128,7 +128,6 @@ onMounted(() => {
     .openPopup()
 })
 
-// Atualiza o mapa quando localSelecionado muda
 watch(localSelecionado, (novo) => {
   map.setView(novo.coords, 18)
   marker.setLatLng(novo.coords)

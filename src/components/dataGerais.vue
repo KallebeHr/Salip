@@ -1,7 +1,5 @@
 <template>
   <div class="container">
-     <!-- From Uiverse.io by devestter --> 
-     <!-- From Uiverse.io by devestter --> 
 <button class="button" @click="baixarArquivo">
    <svg class="saveicon" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
    <path d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" stroke-linejoin="round" stroke-linecap="round"></path>
@@ -213,7 +211,6 @@ const oficinas  = [
     descricao: "Oficina “Comida é Memória”- Ministrante: Nutricionista Renata Luiza - Vagas: 20 (vinte) – Turma 01-  Local: Escola José Teixeira Santos",
   },
 ]
-// Agrupar eventos por categoria
 const categorias = {
   'Programação Palestras e Shows': palestrasAndShows,
   'Programação Fotografia': fotografia,
@@ -221,7 +218,6 @@ const categorias = {
   'Programação Oficinas': oficinas
 }
 
-// Função para buscar eventos de acordo com a palavra-chave
 const filtrarEventos = (eventos) => {
   if (!busca.value) return eventos
   const termo = busca.value.toLowerCase()
@@ -245,7 +241,6 @@ const filtrarEventos = (eventos) => {
   color: #2b2b2e;
     background-color: #f8f9fb;
 }
-/* From Uiverse.io by devestter */ 
 .button {
   padding: 12px 19px;
   border: none;
@@ -305,8 +300,8 @@ const filtrarEventos = (eventos) => {
   transform: scale(1.01);
 }
 .custom-input {
-  height: 40px; /* aumenta a altura */
-  font-size: 18px; /* aumenta o texto */
+  height: 40px; 
+  font-size: 18px; 
   width: 20rem;
 }
 

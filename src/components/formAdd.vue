@@ -262,6 +262,7 @@ const palestras = [
 'Palestra de abertura com Fabrício Carpinejar (RS)',
 'Palestra: A voz de Esperança Garcia - Palestrante: Bernardo Aurélio (PI) e João P. Luiz (PI)',
 'Palestra/Show: Música e Letra - instrumentos de educação - Palestrante: Grupo Cocares',
+'Palestra: Piauienses Escritoras - Gênese Histórica - Palestrante: Jasmine Malta (PI)',
 'Palestra:  O cânone literário   o sublime piauiense  - Palestrante: Luiz Romero (PI)',
 'Palestra: A literatura de Pedro II: da pré-história aos dias atuais - Palestrante: Ernâni Getirana (PI)',
 'Espetáculo: Esperando Godot - Texto: Samuel Becket - Apresentação: Grupo Harém de Teatro (PI)',
