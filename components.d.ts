@@ -10,7 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     Conect: typeof import('./src/components/conect.vue')['default']
-    copy: typeof import('./src/components/datas copy.vue')['default']
+    copy: typeof import('./src/components/PalestraNoite22 copy.vue')['default']
     DataGerais: typeof import('./src/components/dataGerais.vue')['default']
     Datas: typeof import('./src/components/datas.vue')['default']
     DatasFotos: typeof import('./src/components/datasFotos.vue')['default']
@@ -29,7 +29,9 @@ declare module 'vue' {
     Navbar: typeof import('./src/components/Navbar.vue')['default']
     NosPage: typeof import('./src/components/nosPage.vue')['default']
     PalestraCarp: typeof import('./src/components/palestraCarp.vue')['default']
+    PalestraCarp23: typeof import('./src/components/palestraCarp23.vue')['default']
     PalestraNoite22: typeof import('./src/components/PalestraNoite22.vue')['default']
+    PalestraNoite23: typeof import('./src/components/PalestraNoite23.vue')['default']
     Palestras: typeof import('./src/components/palestraCarp.vue')['default']
     Preloader: typeof import('./src/components/preloader.vue')['default']
     QuemSomos: typeof import('./src/components/quemSomos.vue')['default']

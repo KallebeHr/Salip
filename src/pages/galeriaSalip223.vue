@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <palestraCarp />
-    <PalestraNoite22 />
+    <palestraCarp23 />
+    <PalestraNoite23 />
     <Conect />
+
   </div>
 </template>
 

@@ -4,7 +4,7 @@
     <img src="/IMG/Palestras/palestraCarp/carp9.jpg" alt="Imagem da palestra Carp" class="responsive-image" />
     <ul class="date-list">
       <router-link to="/galeriaSalip222" class="no-style-link"><li>Quinta-Feira | 22/05</li></router-link>
-      <router-link to="/" class="no-style-link"><li>Sexta-Feira | 23/05</li></router-link>
+      <router-link to="/galeriaSalip223" class="no-style-link"><li>Sexta-Feira | 23/05</li></router-link>
       <router-link to="/" class="no-style-link"><li>Sábado | 24/05</li></router-link>
     </ul>
   </div>
