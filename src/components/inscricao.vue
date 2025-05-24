@@ -23,6 +23,12 @@
         FAZER INSCRIÇÃO
       </p>
     </a>
+    <a href="https://wa.link/sg68qw" class="btn-link" target="_blank" rel="noopener noreferrer">
+        <p class="pAdd">
+          <img src="/IMG/iconWhats.png" class="icons" alt="WhatsApp Icon" />
+            SUPORTE DE INSCRIÇÃO
+          </p>
+          </a>
   </div>
 </template>
 
@@ -95,6 +101,7 @@ header {
   background-color: #ffffff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
+  margin: 10px;
 }
 
 .pAdd:hover {

@@ -1,21 +1,27 @@
 <template>
-  <div class="banner-container">
-    <swiper
-      :modules="modules"
-      effect="fade"
-      :loop="true"
-      :navigation="true"
-      :autoplay="{ delay: 4500, disableOnInteraction: false }"
-      :slides-per-view="1"
-      class="banner-swiper"
-    >
-      <swiper-slide v-for="n in 4" :key="n" class="banner-slide">
-        <img :src="`/IMG/Slide${n}.png`" :alt="`Foto ${n}`" />
-      </swiper-slide>
-    </swiper> 
+  <div class="container">
+    <div>
+      <h1 class="frase">Quinta-Feira | 22/05</h1>
+      <div class="banner-container">
+        <swiper
+        :modules="modules"
+        effect="fade"
+        :loop="true"
+        :navigation="true"
+        :autoplay="{ delay: 7500, disableOnInteraction: false }"
+        :slides-per-view="1"
+        class="banner-swiper"
+        >
+        <swiper-slide v-for="n in 9" :key="n" class="banner-slide">
+          <img :src="`/IMG/Palestras/palestraCarp/carp${n}.jpg`" :alt="`Foto ${n}`" />
+        </swiper-slide>
+      </swiper> 
+    </div>
+    <p class="frase">Em cada imagem, um sopro da alma literária que encheu Pedro II de encantos e histórias.</p>
+    
+    </div>
   </div>
 </template>
-
 
 <script setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -29,7 +35,24 @@ const modules = [Navigation, EffectFade, Autoplay]
 </script>
 
 <style scoped>
-/* Container principal */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: auto;
+  text-align: center;
+}
+.titulo{
+  color: #444;
+
+}
+.frase {
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-bottom: 1rem;
+  color: #444;
+  margin: 2rem;
+}
 .banner-container {
   width: 100%;
   max-width: 100vw;
@@ -87,21 +110,18 @@ const modules = [Navigation, EffectFade, Autoplay]
   font-size: 1.2rem;
 }
 
-/* Responsivo */
+.banner-slide {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-height: 80vh;
+}
+
 @media (max-width: 768px) {
-  .banner-slide img {
+  .banner-slide {
+    aspect-ratio: 16 / 9;
     max-height: 55vh;
   }
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    width: 30px;
-    height: 30px;
-  }
-
-  .swiper-button-prev::after,
-  .swiper-button-next::after {
-    font-size: 1rem;
-  }
 }
+
+
 </style>

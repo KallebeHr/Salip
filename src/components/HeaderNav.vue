@@ -3,7 +3,7 @@
     <header>
       <ul class="menu-esquerda desktop-only">
          <router-link to="/midiasalipi" class="no-style-link">
-        <li><img src="/IMG/Camera.png" class="icons" alt="InstagramIcon"> GALERIA SALIP2</li>
+        <li><img src="/IMG/pales.png" class="icons" alt="InstagramIcon"> PALESTRANTES/SHOWS</li>
         </router-link>
 
          <router-link to="/homenageados" class="no-style-link">
@@ -28,12 +28,9 @@
         <a href="https://www.instagram.com/salaodolivrodepii/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer">
         <li><img src="/IMG/iconInsta.png" class="icons" alt="InstagramIcon"> INSTAGRAM</li>
         </a>
- <a href="https://wa.link/sg68qw" target="_blank" rel="noopener noreferrer">
-        <li>
-          <img src="/IMG/iconWhats.png" class="icons" alt="WhatsApp Icon" />
-            SUPORTE DE INSCRIÇÃO
-          </li>
-          </a>
+         <router-link to="/edicoes" class="no-style-link">
+          <li><img src="/IMG/edit.png" class="icons" alt="QuemSomos"> EDIÇÕES</li>
+        </router-link>
       </ul>
 
     
@@ -54,7 +51,12 @@
         <ul>
           <router-link to="/midiasalipi" class="no-style-link">   
           <li @click="menuAberto = false">
-            <img src="/IMG/Camera.png" class="icons" alt="CameraIcon"> GALERIA SALIP2
+            <img src="/IMG/pales.png" class="icons" alt="CameraIcon"> PALESTRANTES/SHOWS
+          </li>
+          </router-link>
+          <router-link to="/edicoes" class="no-style-link">   
+          <li @click="menuAberto = false">
+            <img src="/IMG/edit.png" class="icons" alt="CameraIcon"> EDIÇÕES
           </li>
           </router-link>
           <router-link to="/homenageados" class="no-style-link">

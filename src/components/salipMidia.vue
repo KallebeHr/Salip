@@ -49,7 +49,7 @@
             </div>
           </div>
         </div>
-      </swiper-slide>
+      </swiper-slide> 
     </swiper>
   </div>
 </template>
