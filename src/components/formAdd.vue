@@ -393,7 +393,6 @@ watch(() => form.evento, (novoEvento) => {
 })
 </script>
 
-
 <style scoped>
    .form-wrapper {
   background-color: #fff;
