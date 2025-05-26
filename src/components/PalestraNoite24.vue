@@ -8,7 +8,7 @@
       :modules="modules"
       class="mySwiper"
     >
-      <swiper-slide v-for="n in 28" :key="n" class="banner-slide">
+      <swiper-slide v-for="n in 11" :key="n" class="banner-slide">
         <img :src="`/IMG/Palestras/24/carpNoite${n}.jpg`" :alt="`Foto ${n}`" />
       </swiper-slide>
     </swiper>
