@@ -12,6 +12,8 @@
   "dependencies": {
     "@fontsource/roboto": "5.2.5",
     "@mdi/font": "7.4.47",
+    "@mdi/js": "^7.4.47",
+    "chart.js": "^4.5.1",
     "file-saver": "^2.0.5",
     "firebase": "^11.7.1",
     "leaflet": "^1.9.4",

@@ -1,162 +1,167 @@
 <template>
-  <div class="body" v-if="!isloaded">
-    <div class="loading-container">
-  <div class="loading-text">
-    <span>S</span>
-    <span>A</span>
-    <span>L</span>
-    <span>I</span>
-    <span>P</span>
-    <span>2</span>
-  </div>
-</div>
-  </div>
+  <transition name="fade">
+    <div class="loader-overlay" v-if="!isloaded">
+      <div class="loading-container">
+        
+        <div class="loading-text">
+          <span style="--i:1">S</span>
+          <span style="--i:2">A</span>
+          <span style="--i:3">L</span>
+          <span style="--i:4">I</span>
+          <span style="--i:5">P</span>
+          <span style="--i:6">2</span>
+        </div>
+
+        <div class="glow-track">
+          <div class="glow-line"></div>
+        </div>
+
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
 export default {
-    data: () => {
-      return {
-        isloaded: false
-      }
-    },
-    mounted() {
-      document.onreadystatechange = () => {
-        if (document.readyState == "complete") { 
-          this.isloaded = true;
-        } 
-      }
-    },
+  data() {
+    return {
+      isloaded: false
+    }
+  },
+  mounted() {
+    // Verifica se a página já está carregada (útil para Hot Reload no desenvolvimento)
+    if (document.readyState === "complete") {
+      this.finishLoading();
+    } else {
+      // Usar o evento 'load' do window é mais seguro para garantir que imagens e scripts carregaram
+      window.addEventListener("load", this.finishLoading);
+    }
+  },
+  methods: {
+    finishLoading() {
+      // Um pequeno delay opcional apenas para a animação não cortar rápido demais
+      setTimeout(() => {
+        this.isloaded = true;
+      }, 3000);
+    }
   }
+}
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+/* Peso 700 para a fonte ficar mais imponente e moderna */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
 * {
-      box-sizing: border-box;
-    }
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    .body {
-      width: 100%;
-      background-color: #2734af;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Montserrat', sans-serif;
-    }
+/* --- ANIMAÇÃO DE SAÍDA DO VUE (FADE) --- */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(1.05); /* Dá um leve zoom out ao sumir */
+}
 
-    .loading-container {
-      width: 100%;
-      max-width: 520px;
-      text-align: center;
-      color: black;
-      position: relative;
-      margin: 0 32px;
-    }
+/* --- OVERLAY PRINCIPAL --- */
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Gradiente moderno substituindo a cor sólida */
+  background: linear-gradient(135deg, #161e6d 0%, #2734af 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  z-index: 99999; /* Garante que fique por cima de tudo */
+}
 
-    .loading-container::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 3px;
-      background-color: #fff;
-      bottom: 0;
-      left: 0;
-      border-radius: 10px;
-      animation: movingLine 2.4s infinite ease-in-out;
-    }
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
 
-    @keyframes movingLine {
-      0% {
-        opacity: 0;
-        width: 0;
-      }
-      33.3%, 66% {
-        opacity: 0.8;
-        width: 100%;
-      }
-      85% {
-        width: 0;
-        left: initial;
-        right: 0;
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        width: 0;
-      }
-    }
-    .loading-text {
-      font-size: 5vw;
-      line-height: 64px;
-      letter-spacing: 10px;
-      margin-bottom: 32px;
-      display: flex;
-      justify-content: space-evenly;
-    }
+/* --- TEXTO E EFEITO DE ONDA --- */
+.loading-text {
+  display: flex;
+  gap: 8px; /* Espaçamento consistente entre as letras */
+  font-size: 4rem; /* Tamanho ajustado e responsivo */
+  color: #ffffff;
+  letter-spacing: 5px;
+}
 
-    .loading-text {
-      animation: moveLetters 2.4s infinite ease-in-out;
-      transform: translateX(0);
-      position: relative;
-      display: inline-block;
-      opacity: 0;
-      text-shadow: 0px 2px 10px rgba(46, 74, 81, 0.3); 
-      background: none;
-    }
+.loading-text span {
+  display: inline-block;
+  opacity: 0;
+  /* A animação usa o valor da variável --i definida no HTML para o delay */
+  animation: floatBounce 2s infinite ease-in-out;
+  animation-delay: calc(0.15s * var(--i)); 
+}
 
-    .loading-text, span:nth-child(1) {
-      animation-delay: 0.1s;
-    }
+@keyframes floatBounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+    text-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 1;
+    /* Efeito de neon azul claro quando a letra sobe */
+    text-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4), 0 0 20px #00d2ff; 
+  }
+}
 
-    .loading-text, span:nth-child(2) {
-      animation-delay: 0.2s;
-    }
+/* --- LINHA DE CARREGAMENTO (ESTILO SCANNER) --- */
+.glow-track {
+  width: 250px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1); /* Trilho de fundo sutil */
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
 
-    .loading-text, span:nth-child(3) {
-      animation-delay: 0.3s;
-    }
+.glow-line {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  /* Gradiente na linha que viaja de um lado para o outro */
+  background: linear-gradient(90deg, transparent, #00d2ff, #ffffff, transparent);
+  animation: scanLine 2s infinite ease-in-out;
+}
 
-    .loading-text, span:nth-child(4) {
-      animation-delay: 0.4s;
-    }
+@keyframes scanLine {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 150%;
+  }
+  100% {
+    left: -100%;
+  }
+}
 
-    .loading-text, span:nth-child(5) {
-      animation-delay: 0.5s;
-    }
-
-    .loading-text, span:nth-child(6) {
-      animation-delay: 0.6s;
-    }
-
-    .loading-text, span:nth-child(7) {
-      animation-delay: 0.7s;
-    }
-    .loading-text, span:nth-child(8) {
-      animation-delay: 0.8s;
-    }
-    .loading-text, span:nth-child(9) {
-      animation-delay: 0.9s;
-    }
-    .loading-text, span:nth-child(10) {
-      animation-delay: 1s;
-    }
-
-
-    @keyframes moveLetters {
-      0% {
-        transform: translateX(-15vw);
-        opacity: 0;
-      }
-      33.3%, 66% {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      100% {
-        transform: translateX(15vw);
-        opacity: 0;
-      }
-    }
-
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 600px) {
+  .loading-text {
+    font-size: 2.5rem;
+    gap: 4px;
+  }
+  .glow-track {
+    width: 200px;
+  }
+}
 </style>

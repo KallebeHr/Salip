@@ -30,7 +30,7 @@ const breakpoints = {
     spaceBetween: 10
   },
   480: {
-    slidesPerView: 1,  // um slide inteiro + metade do próximo
+    slidesPerView: 1,  
     spaceBetween: 15
   },
   768: {
