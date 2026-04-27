@@ -9,6 +9,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
+    AvaliarEvento: typeof import('./src/components/avaliarEvento.vue')['default']
+    CertiAntes: typeof import('./src/components/CertiAntes.vue')['default']
     Conect: typeof import('./src/components/conect.vue')['default']
     copy: typeof import('./src/components/PalestraNoite23 copy.vue')['default']
     DataGerais: typeof import('./src/components/dataGerais.vue')['default']
@@ -21,6 +23,7 @@ declare module 'vue' {
     Header: typeof import('./src/components/Header.vue')['default']
     HeaderNav: typeof import('./src/components/HeaderNav.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Hero: typeof import('./src/components/hero.vue')['default']
     Homen: typeof import('./src/components/homen.vue')['default']
     Inscricao: typeof import('./src/components/inscricao.vue')['default']
     ListUsers: typeof import('./src/components/listUsers.vue')['default']
@@ -40,6 +43,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SalipMidia: typeof import('./src/components/salipMidia.vue')['default']
+    ScrollP: typeof import('./src/components/scrollP.vue')['default']
     Slide: typeof import('./src/components/slide.vue')['default']
   }
 }

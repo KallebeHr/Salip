@@ -15,6 +15,7 @@
     justify-items: center;
     height: auto;
     min-height: 80vh;
+    width: 100%;
     background-color: #f8f9fb;
 
     }

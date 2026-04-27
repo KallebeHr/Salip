@@ -1,6 +1,6 @@
 <template>
   <div class='container'>
-    <Slide/>
+    <hero/>
     <inscricao />
     <DataGerais />
     <Local />

@@ -769,6 +769,7 @@ async function logout() {
 
 .admin-wrap {
   min-height: 100vh;
+  width: 100%;
   background: #f8f7f4;
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: #1a1a18;
