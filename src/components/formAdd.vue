@@ -602,7 +602,7 @@ const textoTermos = `TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP2\n\n1. F
   --c-bg: #f1f5f9;
   --c-error: #ef4444;
   --c-error-bg: #fef2f2;
-  --c-success: #22c55e;
+  --c-success: #22c55e;  
   --radius: 16px;
   --shadow: 0 10px 40px -10px rgba(20, 65, 129, 0.1);
 }
