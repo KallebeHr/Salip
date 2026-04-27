@@ -594,7 +594,7 @@ const textoTermos = `TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP2\n\n1. F
   --c-blue: #144181;
   --c-blue-hover: #103468;
   --c-blue-light: #000000;
-  --c-yellow: #D8DF52;
+  --c-yellow: #D8DF52; 
   --c-yellow-hover: #c4cc42;
   --c-dark: #1e293b;
   --c-gray-text: #64748b;
