@@ -2,12 +2,12 @@
   <section class="wrapper">
     <form class="card" @submit.prevent="submitEvaluation">
       <header class="header">
-        <span class="tag">SALIP 2 • Avaliação • Melhoria contínua</span>
+        <span class="tag">SALIP2 • Avaliação • Melhoria contínua</span>
 
         <h1>Avalie sua experiência</h1>
 
         <p>
-          Sua opinião ajuda a equipe do SALIP 2 a entender o que funcionou bem,
+          Sua opinião ajuda a equipe do SALIP2 a entender o que funcionou bem,
           o que pode melhorar e quais atividades marcaram o público.
         </p>
       </header>
@@ -35,7 +35,8 @@
         </div>
       </div>
 
-      <div class="step">
+      <!-- ETAPA 1 -->
+      <div class="step" :class="{ 'has-error': errors.identificationMode || errors.name }">
         <div class="step-title">
           <span>1</span>
 
@@ -127,13 +128,17 @@
         </Transition>
       </div>
 
-      <div class="step">
+      <!-- ETAPA 2 -->
+      <div class="step" :class="{ 'has-error': errors.evaluationType || errors.activity }">
         <div class="step-title">
           <span>2</span>
 
           <div>
             <h2>O que você quer avaliar?</h2>
-            <p>Você pode avaliar o evento geral, uma oficina, palestra ou exposição específica.</p>
+            <p>
+              Você pode avaliar o evento geral, oficina, palestra, mesa,
+              bate-papo, lançamento ou show.
+            </p>
           </div>
         </div>
 
@@ -189,16 +194,32 @@
                 :key="activity.id"
                 :value="activity.title"
               >
-                {{ activity.title }}
+                {{ activity.dateLabel }} • {{ activity.time }} — {{ activity.title }}
               </option>
             </select>
 
             <small v-if="errors.activity">{{ errors.activity }}</small>
           </div>
         </Transition>
+
+        <Transition name="fade">
+          <div class="activity-preview" v-if="selectedActivity">
+            <strong>Atividade selecionada</strong>
+
+            <p>{{ selectedActivity.description }}</p>
+
+            <div class="preview-tags">
+              <span>📅 {{ selectedActivity.dateLabel }}</span>
+              <span>🕒 {{ selectedActivity.time }}</span>
+              <span>📍 {{ selectedActivity.location }}</span>
+              <span v-if="selectedActivity.vagas">🎟️ {{ selectedActivity.vagas }} vagas</span>
+            </div>
+          </div>
+        </Transition>
       </div>
 
-      <div class="step rating-step">
+      <!-- ETAPA 3 -->
+      <div class="step rating-step" :class="{ 'has-error': errors.rating }">
         <div class="step-title">
           <span>3</span>
 
@@ -233,6 +254,7 @@
         <small v-if="errors.rating">{{ errors.rating }}</small>
       </div>
 
+      <!-- ETAPA 4 -->
       <div class="step">
         <div class="step-title">
           <span>4</span>
@@ -260,7 +282,7 @@
                 :key="value"
                 type="button"
                 :class="{ active: form.aspects[aspect.key] >= value }"
-                @click="form.aspects[aspect.key] = value"
+                @click="selectAspect(aspect.key, value)"
               >
                 {{ value }}
               </button>
@@ -269,6 +291,7 @@
         </div>
       </div>
 
+      <!-- ETAPA 5 -->
       <div class="step">
         <div class="step-title">
           <span>5</span>
@@ -291,7 +314,8 @@
         </div>
       </div>
 
-      <div class="step">
+      <!-- ETAPA 6 -->
+      <div class="step" :class="{ 'has-error': errors.allowUse }">
         <div class="step-title">
           <span>6</span>
 
@@ -302,7 +326,11 @@
         </div>
 
         <label class="terms" :class="{ checked: form.allowUse }">
-          <input type="checkbox" v-model="form.allowUse" />
+          <input
+            type="checkbox"
+            v-model="form.allowUse"
+            @change="clearFieldError('allowUse')"
+          />
 
           <span class="terms-box">
             <svg
@@ -322,7 +350,7 @@
 
           <span>
             Autorizo o uso desta avaliação para fins de melhoria, relatório interno
-            e planejamento das próximas edições do SALIP 2.
+            e planejamento das próximas edições do SALIP2.
           </span>
         </label>
 
@@ -340,7 +368,7 @@
 
       <p class="security-note">
         A avaliação será salva. Se você escolher a opção anônima,
-        nenhum nome será registrado!
+        nenhum nome será registrado.
       </p>
     </form>
 
@@ -350,8 +378,18 @@
         class="notification"
         :class="notification.type"
       >
-        <strong>{{ notification.title }}</strong>
-        <p>{{ notification.message }}</p>
+        <div class="notification-icon">
+          {{ notification.type === 'success' ? '✅' : notification.type === 'warning' ? '⚠️' : '❌' }}
+        </div>
+
+        <div>
+          <strong>{{ notification.title }}</strong>
+          <p>{{ notification.message }}</p>
+        </div>
+
+        <button type="button" @click="notification.show = false">
+          ×
+        </button>
       </div>
     </transition>
   </section>
@@ -375,78 +413,401 @@ const evaluationTypes = [
   {
     value: 'oficina',
     label: 'Oficina',
-    description: 'Avalie uma oficina específica que você participou.',
+    description: 'Avalie uma oficina específica da programação.',
     icon: '🎨',
   },
   {
     value: 'palestra',
     label: 'Palestra',
-    description: 'Avalie uma palestra, mesa ou conversa literária.',
+    description: 'Avalie palestras principais e momentos formativos.',
     icon: '🎤',
   },
   {
-    value: 'exposicao',
-    label: 'Exposição',
-    description: 'Avalie uma exposição ou visita guiada.',
-    icon: '🖼️',
+    value: 'mesa',
+    label: 'Mesa',
+    description: 'Avalie mesas literárias, debates e conversas temáticas.',
+    icon: '📚',
+  },
+  {
+    value: 'batepapo',
+    label: 'Bate-papo',
+    description: 'Avalie bate-papos, exibições e rodas de conversa.',
+    icon: '💬',
+  },
+  {
+    value: 'lancamento',
+    label: 'Lançamentos',
+    description: 'Avalie os momentos de lançamentos de livros.',
+    icon: '📖',
+  },
+  {
+    value: 'show',
+    label: 'Show',
+    description: 'Avalie apresentações musicais da programação.',
+    icon: '🎶',
   },
 ]
 
 const activities = [
   {
-    id: 'evento-geral-salip2',
+    id: 'evento-geral-salip2-2026',
     type: 'evento_geral',
-    title: 'SALIP 2 — Experiência geral do evento',
+    dateLabel: '07 a 09/05',
+    time: 'Geral',
+    title: 'SALIP2 — Experiência geral do evento',
+    description: 'Avaliação geral da organização, estrutura, programação e experiência completa do SALIP2.',
+    location: 'Pedro II - PI',
+    vagas: null,
+  },
+
+  // 07/05 — Quinta — Noite
+  {
+    id: 'abertura-oficial-salip2',
+    type: 'palestra',
+    dateLabel: '07/05',
+    time: '18h30',
+    title: 'Solenidade Oficial de Abertura do 4º SaLiP2',
+    description: 'Abertura oficial do evento, com discursos de autoridades e homenageados.',
+    location: 'Espaço de Eventos Deputado Ciro Nogueira',
+    vagas: null,
   },
   {
-    id: 'oficina-cordel',
+    id: 'palestra-francisco-jose',
+    type: 'palestra',
+    dateLabel: '07/05',
+    time: '19h',
+    title: 'Palestra de abertura: O desafio das grandes reportagens',
+    description: 'Palestrante: Francisco José. Apresentação/Mediação: Wilson Brandão.',
+    location: 'Espaço de Eventos Deputado Ciro Nogueira',
+    vagas: null,
+  },
+  {
+    id: 'show-marcos-aurelio',
+    type: 'show',
+    dateLabel: '07/05',
+    time: '21h',
+    title: 'Show musical com Marcos Aurélio',
+    description: 'Show musical com Marcos Aurélio.',
+    location: 'Espaço de Eventos Deputado Ciro Nogueira',
+    vagas: null,
+  },
+
+  // 08/05 — Sexta — Manhã
+  {
+    id: 'lancamentos-08-manha',
+    type: 'lancamento',
+    dateLabel: '08/05',
+    time: '08h30',
+    title: 'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    description: 'Convidados: Amadeu Messias, Aldenira Martins e Claísse Sales. Mediação: APLA.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'batepapo-rivanildo-feitosa',
+    type: 'batepapo',
+    dateLabel: '08/05',
+    time: '09h',
+    title: 'Bate-papo e exibição do filme: O Sacro e o Profano de Araújo e Verônica',
+    description: 'Palestrante: Rivanildo Feitosa. Apresentação/Mediação: Wilson Brandão.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'palestra-fonseca-neto',
+    type: 'palestra',
+    dateLabel: '08/05',
+    time: '10h30',
+    title: 'Pedro II, 200 anos: um homem, uma cidade',
+    description: 'Palestrante: Fonseca Neto. Apresentação/Mediação: Wilson Brandão.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+
+  // 08/05 — Sexta — Tarde
+  {
+    id: 'lancamentos-08-tarde',
+    type: 'lancamento',
+    dateLabel: '08/05',
+    time: '14h30',
+    title: 'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses — tarde',
+    description: 'Convidados: Rameiro Junior, Eduardo Albuquerque, Ernâni Getirana e Gerciane Lima. Mediação: APLA.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'palestra-marcelo-mesquita',
+    type: 'palestra',
+    dateLabel: '08/05',
+    time: '15h',
+    title: 'Educar com IA ou se educar para a IA? O futuro dos jovens nesta desafiante era',
+    description: 'Palestrante: Dr. Marcelo Mesquita. Apresentação/Mediação: Helany Max.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'mesa-mulheres-que-escrevem',
+    type: 'mesa',
+    dateLabel: '08/05',
+    time: '16h30',
+    title: 'Mulheres que Escrevem: A Literatura de Marina Campelo, Lúcia Ana e Graça Targino',
+    description: 'Mesa com Marina Campelo, Lúcia Ana e Graça Targino. Apresentação/Mediação: Ernâni Getirana.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+
+  // 08/05 — Sexta — Noite
+  {
+    id: 'palestra-hamilton-werneck',
+    type: 'palestra',
+    dateLabel: '08/05',
+    time: '19h',
+    title: 'Quando o professor acredita, a educação acontece',
+    description: 'Palestrante: Hamilton Werneck. Apresentação/Mediação: Wilson Brandão.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'show-banda-mistura-fina',
+    type: 'show',
+    dateLabel: '08/05',
+    time: '21h',
+    title: 'Show com a Banda Mistura Fina',
+    description: 'Show com a Banda Mistura Fina, de Piripiri.',
+    location: 'Praça Domingos Mourão',
+    vagas: null,
+  },
+
+  // 09/05 — Sábado — Manhã
+  {
+    id: 'lancamentos-09-manha',
+    type: 'lancamento',
+    dateLabel: '09/05',
+    time: '08h',
+    title: 'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses — sábado manhã',
+    description: 'Convidados: Humberto Cordeiro, Ioman Malaquias, Raimundo Silva e Dayse Benício. Mediação: APLA.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'mesa-sergia-alves',
+    type: 'mesa',
+    dateLabel: '09/05',
+    time: '08h30',
+    title: 'Tempo e memória na literatura de Sérgia Alves',
+    description: 'Mesa com Algemira Mendes e Sérgia Alves. Apresentação/Mediação: Marleide Lins.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'palestra-ernani-getirana',
+    type: 'palestra',
+    dateLabel: '09/05',
+    time: '10h30',
+    title: 'A estratégia do matuto: criação e técnica literária na poética de Genuíno Sales',
+    description: 'Palestrante: Ernâni Getirana. Apresentação/Mediação: APLA.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+
+  // 09/05 — Sábado — Tarde
+  {
+    id: 'lancamentos-09-tarde',
+    type: 'lancamento',
+    dateLabel: '09/05',
+    time: '14h30',
+    title: 'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses — sábado tarde',
+    description: 'Convidados: Ricardo Resende, Socorro Almeida, Cleandro Oliveira e Wilson Brandão, em parceria com Zózimo Tavares. Mediação: APLA.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'palestra-normandes-jasmine-malta',
+    type: 'palestra',
+    dateLabel: '09/05',
+    time: '15h30',
+    title: 'Casal de escritores: gênese de escrita literária de ficção investigativa',
+    description: 'Palestrantes: Normandes Malta e Jasmine Malta. Apresentação/Mediação: Helany Max.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+
+  // 09/05 — Sábado — Noite
+  {
+    id: 'palestra-marcio-lima',
+    type: 'palestra',
+    dateLabel: '09/05',
+    time: '19h',
+    title: 'A crise invisível na educação',
+    description: 'Palestrante: Márcio Lima. Apresentação/Mediação: Kássio Gomes.',
+    location: 'Espaço MGF Eventos',
+    vagas: null,
+  },
+  {
+    id: 'show-gonzaga-lu-trio-asa-branca',
+    type: 'show',
+    dateLabel: '09/05',
+    time: '21h',
+    title: 'Show com Gonzaga Lu e Trio Asa Branca',
+    description: 'Show musical com Gonzaga Lu e Trio Asa Branca.',
+    location: 'Praça Domingos Mourão',
+    vagas: null,
+  },
+
+  // Oficinas — 08/05 manhã
+  {
+    id: 'oficina-experimentos-cientificos-1-08-manha',
     type: 'oficina',
-    title: 'Oficina de Literatura de Cordel',
+    dateLabel: '08/05',
+    time: '08h',
+    title: 'Oficina de Experimentos Científicos - 1',
+    description: 'Ministrante: Dinael Viana.',
+    location: 'José Teixeira Santos',
+    vagas: 25,
   },
   {
-    id: 'oficina-fanzine',
+    id: 'oficina-experimentos-cientificos-2-08-manha',
     type: 'oficina',
-    title: 'Oficina de Fanzine',
+    dateLabel: '08/05',
+    time: '08h',
+    title: 'Oficina de Experimentos Científicos - 2',
+    description: 'Ministrante: Genary Viana Barroso.',
+    location: 'José Teixeira Santos',
+    vagas: 20,
   },
   {
-    id: 'oficina-comida-memoria',
+    id: 'oficina-pintura-acrilica-08-manha',
     type: 'oficina',
-    title: 'Comida é Memória',
+    dateLabel: '08/05',
+    time: '08h',
+    title: 'Oficina de Pintura Acrílica',
+    description: 'Ministrante: José de Arimatéa.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 10,
   },
   {
-    id: 'palestra-carpinejar',
-    type: 'palestra',
-    title: 'Abertura com Fabrício Carpinejar',
+    id: 'oficina-producao-caricatura-08-manha',
+    type: 'oficina',
+    dateLabel: '08/05',
+    time: '08h',
+    title: 'Oficina de Produção de Caricatura',
+    description: 'Ministrante: Juniel Sousa.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 15,
   },
   {
-    id: 'palestra-esperanca-garcia',
-    type: 'palestra',
-    title: 'A voz de Esperança Garcia',
+    id: 'oficina-desenho-oleo-08-manha',
+    type: 'oficina',
+    dateLabel: '08/05',
+    time: '08h',
+    title: 'Oficina de Desenho a Óleo',
+    description: 'Ministrante: Gilsiê Coelho.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 3,
+  },
+
+  // Oficinas — 08/05 tarde
+  {
+    id: 'oficina-experimentos-cientificos-1-08-tarde',
+    type: 'oficina',
+    dateLabel: '08/05',
+    time: '14h',
+    title: 'Oficina de Experimentos Científicos - 1 — tarde',
+    description: 'Ministrante: Dinael Viana.',
+    location: 'José Teixeira Santos',
+    vagas: 25,
   },
   {
-    id: 'palestra-canone-piauiense',
-    type: 'palestra',
-    title: 'O cânone literário piauiense',
+    id: 'oficina-experimentos-cientificos-2-08-tarde',
+    type: 'oficina',
+    dateLabel: '08/05',
+    time: '14h',
+    title: 'Oficina de Experimentos Científicos - 2 — tarde',
+    description: 'Ministrante: Genary Viana Barroso.',
+    location: 'José Teixeira Santos',
+    vagas: 20,
   },
   {
-    id: 'palestra-manuel-bandeira',
-    type: 'palestra',
-    title: 'A lírica de Manuel Bandeira',
+    id: 'oficina-pintura-acrilica-08-tarde',
+    type: 'oficina',
+    dateLabel: '08/05',
+    time: '14h',
+    title: 'Oficina de Pintura Acrílica — tarde',
+    description: 'Ministrante: José de Arimatéa.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 10,
   },
   {
-    id: 'exposicao-23-09',
-    type: 'exposicao',
-    title: 'Exposição — 23/05 às 9h',
+    id: 'oficina-producao-caricatura-08-tarde',
+    type: 'oficina',
+    dateLabel: '08/05',
+    time: '14h',
+    title: 'Oficina de Produção de Caricatura — tarde',
+    description: 'Ministrante: Juniel Sousa.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 15,
   },
   {
-    id: 'exposicao-23-1430',
-    type: 'exposicao',
-    title: 'Exposição — 23/05 às 14h30',
+    id: 'oficina-desenho-oleo-08-tarde',
+    type: 'oficina',
+    dateLabel: '08/05',
+    time: '14h',
+    title: 'Oficina de Desenho a Óleo — tarde',
+    description: 'Ministrante: Gilsiê Coelho.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 3,
+  },
+
+  // Oficinas — 09/05 manhã
+  {
+    id: 'oficina-experimentos-cientificos-1-09-manha',
+    type: 'oficina',
+    dateLabel: '09/05',
+    time: '08h',
+    title: 'Oficina de Experimentos Científicos - 1 — sábado',
+    description: 'Ministrante: Dinael Viana.',
+    location: 'José Teixeira Santos',
+    vagas: 25,
   },
   {
-    id: 'exposicao-24-10',
-    type: 'exposicao',
-    title: 'Exposição — 24/05 às 10h',
+    id: 'oficina-experimentos-cientificos-2-09-manha',
+    type: 'oficina',
+    dateLabel: '09/05',
+    time: '08h',
+    title: 'Oficina de Experimentos Científicos - 2 — sábado',
+    description: 'Ministrante: Genary Viana Barroso.',
+    location: 'José Teixeira Santos',
+    vagas: 20,
+  },
+  {
+    id: 'oficina-pintura-acrilica-09-manha',
+    type: 'oficina',
+    dateLabel: '09/05',
+    time: '08h',
+    title: 'Oficina de Pintura Acrílica — sábado',
+    description: 'Ministrante: José de Arimatéa.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 10,
+  },
+  {
+    id: 'oficina-producao-caricatura-09-manha',
+    type: 'oficina',
+    dateLabel: '09/05',
+    time: '08h',
+    title: 'Oficina de Produção de Caricatura — sábado',
+    description: 'Ministrante: Juniel Sousa.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 15,
+  },
+  {
+    id: 'oficina-desenho-oleo-09-manha',
+    type: 'oficina',
+    dateLabel: '09/05',
+    time: '08h',
+    title: 'Oficina de Desenho a Óleo — sábado',
+    description: 'Ministrante: Gilsiê Coelho.',
+    location: 'Praça Domingos Mourão Filho',
+    vagas: 3,
   },
 ]
 
@@ -512,11 +873,18 @@ const filteredActivities = computed(() => {
   return activities.filter((activity) => activity.type === form.evaluationType)
 })
 
+const selectedActivity = computed(() => {
+  return activities.find((activity) => activity.title === form.activity) || null
+})
+
 const activityLabel = computed(() => {
   if (form.evaluationType === 'evento_geral') return 'Evento avaliado'
   if (form.evaluationType === 'oficina') return 'Oficina avaliada'
   if (form.evaluationType === 'palestra') return 'Palestra avaliada'
-  if (form.evaluationType === 'exposicao') return 'Exposição avaliada'
+  if (form.evaluationType === 'mesa') return 'Mesa avaliada'
+  if (form.evaluationType === 'batepapo') return 'Bate-papo avaliado'
+  if (form.evaluationType === 'lancamento') return 'Lançamento avaliado'
+  if (form.evaluationType === 'show') return 'Show avaliado'
   return 'Atividade avaliada'
 })
 
@@ -524,7 +892,10 @@ const activityPlaceholder = computed(() => {
   if (form.evaluationType === 'evento_geral') return 'Selecione o evento geral'
   if (form.evaluationType === 'oficina') return 'Selecione a oficina'
   if (form.evaluationType === 'palestra') return 'Selecione a palestra'
-  if (form.evaluationType === 'exposicao') return 'Selecione a exposição'
+  if (form.evaluationType === 'mesa') return 'Selecione a mesa'
+  if (form.evaluationType === 'batepapo') return 'Selecione o bate-papo'
+  if (form.evaluationType === 'lancamento') return 'Selecione o lançamento'
+  if (form.evaluationType === 'show') return 'Selecione o show'
   return 'Selecione uma opção'
 })
 
@@ -584,8 +955,14 @@ function selectRating(value) {
   errors.rating = ''
 }
 
+function selectAspect(key, value) {
+  form.aspects[key] = value
+}
+
 function clearFieldError(field) {
-  errors[field] = ''
+  if (errors[field] !== undefined) {
+    errors[field] = ''
+  }
 }
 
 function showNotification(type, title, message) {
@@ -596,7 +973,31 @@ function showNotification(type, title, message) {
 
   setTimeout(() => {
     notification.show = false
-  }, 4200)
+  }, 5200)
+}
+
+function getFirstErrorMessage() {
+  if (errors.identificationMode) return errors.identificationMode
+  if (errors.name) return errors.name
+  if (errors.evaluationType) return errors.evaluationType
+  if (errors.activity) return errors.activity
+  if (errors.rating) return errors.rating
+  if (errors.allowUse) return errors.allowUse
+
+  return 'Revise as informações destacadas antes de enviar sua avaliação.'
+}
+
+function scrollToFirstError() {
+  setTimeout(() => {
+    const firstError = document.querySelector('.has-error')
+
+    if (firstError) {
+      firstError.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+    }
+  }, 80)
 }
 
 function validateForm() {
@@ -616,7 +1017,7 @@ function validateForm() {
   }
 
   if (!form.evaluationType) {
-    errors.evaluationType = 'Escolha se deseja avaliar o evento geral, oficina, palestra ou exposição.'
+    errors.evaluationType = 'Escolha o tipo de avaliação que deseja fazer.'
   }
 
   if (!form.activity) {
@@ -631,14 +1032,25 @@ function validateForm() {
     errors.allowUse = 'Confirme a autorização para enviar sua avaliação.'
   }
 
-  return (
+  const isValid =
     !errors.identificationMode &&
     !errors.name &&
     !errors.evaluationType &&
     !errors.activity &&
     !errors.rating &&
     !errors.allowUse
-  )
+
+  if (!isValid) {
+    showNotification(
+      'warning',
+      'Formulário incompleto',
+      getFirstErrorMessage()
+    )
+
+    scrollToFirstError()
+  }
+
+  return isValid
 }
 
 function gerarIdCurto(tamanho = 6) {
@@ -672,7 +1084,7 @@ async function gerarIdAvaliacaoUnico() {
 }
 
 function montarDadosAvaliacao(idAvaliacao) {
-  const activityData = activities.find((item) => item.title === form.activity)
+  const activityData = selectedActivity.value
   const isAnonima = form.identificationMode === 'anonima'
 
   return {
@@ -688,7 +1100,11 @@ function montarDadosAvaliacao(idAvaliacao) {
       tipo: form.evaluationType,
       tipoLabel: getEvaluationTypeLabel(form.evaluationType),
       atividadeId: activityData?.id || '',
-      atividadeTitulo: form.activity,
+      atividadeTitulo: activityData?.title || form.activity,
+      atividadeData: activityData?.dateLabel || '',
+      atividadeHorario: activityData?.time || '',
+      atividadeLocal: activityData?.location || '',
+      atividadeVagas: activityData?.vagas || null,
       notaGeral: form.rating,
       comentario: form.comment.trim(),
       autorizouUso: form.allowUse,
@@ -703,10 +1119,9 @@ function montarDadosAvaliacao(idAvaliacao) {
     },
 
     privacidade: {
-      mensagem:
-        isAnonima
-          ? 'Usuário escolheu enviar avaliação anônima.'
-          : 'Usuário escolheu registrar o nome na avaliação.',
+      mensagem: isAnonima
+        ? 'Usuário escolheu enviar avaliação anônima.'
+        : 'Usuário escolheu registrar o nome na avaliação.',
       nomeRegistrado: !isAnonima,
     },
 
@@ -734,14 +1149,7 @@ function getEvaluationTypeLabel(type) {
 }
 
 async function submitEvaluation() {
-  if (!validateForm()) {
-    showNotification(
-      'error',
-      'Existem campos pendentes',
-      'Revise as informações destacadas antes de enviar sua avaliação.'
-    )
-    return
-  }
+  if (!validateForm()) return
 
   if (isSubmitting.value) return
 
@@ -941,12 +1349,18 @@ h1 {
   padding: clamp(16px, 4vw, 22px);
   margin-bottom: 18px;
   background: #ffffff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .step:focus-within {
   border-color: rgba(20, 65, 129, 0.4);
   box-shadow: 0 12px 30px rgba(20, 65, 129, 0.08);
+}
+
+.step.has-error {
+  border-color: rgba(220, 38, 38, 0.65);
+  background: #fffafa;
+  box-shadow: 0 12px 32px rgba(220, 38, 38, 0.08);
 }
 
 .step-title {
@@ -982,13 +1396,15 @@ h1 {
   line-height: 1.5;
 }
 
-.identity-grid {
+.identity-grid,
+.choice-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
-.identity-card {
+.identity-card,
+.choice-card {
   border: 2px solid #dfe8f4;
   background: #f9fbff;
   border-radius: 18px;
@@ -1002,42 +1418,49 @@ h1 {
   color: #17345e;
 }
 
-.identity-card:hover {
+.identity-card:hover,
+.choice-card:hover {
   border-color: #b9c9dd;
   background: #ffffff;
   transform: translateY(-2px);
 }
 
-.identity-card.selected {
+.identity-card.selected,
+.choice-card.selected {
   border-color: #144181;
   background: #eaf2ff;
   box-shadow: 0 12px 26px rgba(20, 65, 129, 0.12);
 }
 
-.identity-icon {
+.identity-icon,
+.choice-icon {
   font-size: 1.5rem;
   line-height: 1;
 }
 
-.identity-card span:nth-child(2) {
+.identity-card span:nth-child(2),
+.choice-text {
   display: grid;
   gap: 4px;
   flex: 1;
 }
 
-.identity-card strong {
+.identity-card strong,
+.choice-text strong {
   color: #144181;
   font-weight: 900;
 }
 
-.identity-card small {
+.identity-card small,
+.choice-text small {
   color: #63758c;
   font-size: 0.78rem;
   line-height: 1.4;
   font-weight: 700;
 }
 
-.identity-card i {
+.identity-card i,
+.choice-check {
   width: 24px;
   height: 24px;
   border-radius: 999px;
@@ -1052,12 +1475,14 @@ h1 {
   font-style: normal;
 }
 
-.identity-card.selected i {
+.identity-card.selected i,
+.choice-card.selected .choice-check {
   opacity: 1;
   transform: scale(1);
 }
 
-.name-field {
+.name-field,
+.activity-field {
   margin-top: 16px;
 }
 
@@ -1123,84 +1548,45 @@ small {
   color: #dc2626;
   font-weight: 800;
   font-size: 0.82rem;
+  margin-top: 8px;
 }
 
-.choice-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.choice-card {
-  border: 2px solid #dfe8f4;
-  background: #f9fbff;
-  border-radius: 18px;
+.activity-preview {
+  margin-top: 16px;
   padding: 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  text-align: left;
-  cursor: pointer;
-  transition: 0.2s ease;
-  color: #17345e;
+  border-radius: 18px;
+  background: #eef5ff;
+  border: 1px solid #d8e6f8;
 }
 
-.choice-card:hover {
-  border-color: #b9c9dd;
-  background: #ffffff;
-  transform: translateY(-2px);
-}
-
-.choice-card.selected {
-  border-color: #144181;
-  background: #eaf2ff;
-  box-shadow: 0 12px 26px rgba(20, 65, 129, 0.12);
-}
-
-.choice-icon {
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-.choice-text {
-  flex: 1;
-  display: grid;
-  gap: 4px;
-}
-
-.choice-text strong {
+.activity-preview strong {
+  display: block;
   color: #144181;
   font-weight: 900;
+  margin-bottom: 6px;
 }
 
-.choice-text small {
-  color: #63758c;
-  font-size: 0.78rem;
-  line-height: 1.4;
-  font-weight: 700;
+.activity-preview p {
+  color: #52657d;
+  margin: 0 0 12px;
+  line-height: 1.55;
+  font-weight: 600;
 }
 
-.choice-check {
-  width: 24px;
-  height: 24px;
+.preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preview-tags span {
+  background: #ffffff;
+  border: 1px solid #dce7f5;
+  color: #144181;
   border-radius: 999px;
-  background: #144181;
-  color: #ffffff;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: 0.2s ease;
-}
-
-.choice-card.selected .choice-check {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.activity-field {
-  margin-top: 16px;
+  padding: 7px 10px;
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
 .rating-step {
@@ -1406,27 +1792,61 @@ small {
   position: fixed;
   right: 24px;
   bottom: 24px;
-  max-width: 380px;
-  padding: 18px 20px;
+  max-width: 430px;
+  padding: 16px 18px;
   border-radius: 20px;
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
-  z-index: 20;
+  z-index: 999;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.notification-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .notification strong {
   display: block;
   margin-bottom: 4px;
+  font-weight: 900;
 }
 
 .notification p {
   margin: 0;
   line-height: 1.5;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.notification button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.notification button:hover {
+  opacity: 1;
 }
 
 .notification.success {
   background: #d8df52;
   color: #144181;
+}
+
+.notification.warning {
+  background: #ffffff7;
+  color: #92400e;
+  border-left: 8px solid #f59e0b;
 }
 
 .notification.error {
