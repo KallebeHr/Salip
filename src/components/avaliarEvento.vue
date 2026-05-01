@@ -339,8 +339,8 @@
       </button>
 
       <p class="security-note">
-        A avaliação será salva no Firebase. Se você escolher a opção anônima,
-        nenhum nome será registrado.
+        A avaliação será salva. Se você escolher a opção anônima,
+        nenhum nome será registrado!
       </p>
     </form>
 
