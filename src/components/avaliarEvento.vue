@@ -1809,7 +1809,7 @@ small {
   border-radius: 12px;
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgb(255, 255, 255);
 }
 
 .notification strong {
@@ -1844,7 +1844,7 @@ small {
 }
 
 .notification.warning {
-  background: #ffffff7;
+  background: #ffffff;
   color: #92400e;
   border-left: 8px solid #f59e0b;
 }
