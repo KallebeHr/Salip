@@ -1,16 +1,16 @@
 <template>
   <div class="page-wrap">
-    
     <header class="page-header">
-      <h1 class="brand-logo">📚 SALIP 2</h1>
+      <h1 class="brand-logo">SALIP 2</h1>
       <p class="brand-subtitle">Salão do Livro de Pedro II</p>
     </header>
 
-    <div class="progress-wrap">
+    <div class="progress-wrap" v-if="etapaAtual <= 4">
       <div class="progress-steps">
         <div class="step-line">
           <div class="step-line-fill" :style="{ width: progressWidth + '%' }"></div>
         </div>
+
         <div
           v-for="(step, i) in steps"
           :key="i"
@@ -21,9 +21,22 @@
           }"
         >
           <div class="step-circle">
-            <svg v-if="etapaAtual > i + 1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg
+              v-if="etapaAtual > i + 1"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
             <span v-else>{{ i + 1 }}</span>
           </div>
+
           <span class="step-label">{{ step }}</span>
         </div>
       </div>
@@ -31,15 +44,16 @@
 
     <main class="form-card">
       <Transition name="slide" mode="out-in">
-        
         <div v-if="etapaAtual === 1" key="step1" class="etapa">
           <header class="etapa-header">
             <span class="etapa-tag">Passo 1 de 4</span>
             <h2 class="etapa-title">Como você vai participar?</h2>
-            <p class="etapa-desc">Escolha o perfil que melhor descreve você para personalizarmos sua experiência.</p>
+            <p class="etapa-desc">
+              Escolha o perfil que melhor descreve você para personalizarmos sua experiência.
+            </p>
           </header>
 
-          <div class="tipo-grid" role="radiogroup">
+          <div class="tipo-grid" role="radiogroup" aria-label="Tipo de participante">
             <label
               v-for="opcao in opcoesTipo"
               :key="opcao.valor"
@@ -47,23 +61,55 @@
               :class="{ selected: tipoParticipante === opcao.valor }"
               tabindex="0"
               @keydown.enter="tipoParticipante = opcao.valor"
+              @keydown.space.prevent="tipoParticipante = opcao.valor"
             >
-              <input type="radio" :value="opcao.valor" v-model="tipoParticipante" class="sr-only" />
-              <div class="tipo-icon" v-html="opcao.icon"></div>
+              <input
+                type="radio"
+                :value="opcao.valor"
+                v-model="tipoParticipante"
+                class="sr-only"
+              />
+
+              <div class="tipo-icon" aria-hidden="true">{{ opcao.icon }}</div>
+
               <div class="tipo-info">
                 <span class="tipo-label">{{ opcao.label }}</span>
                 <span class="tipo-desc">{{ opcao.desc }}</span>
               </div>
-              <div class="tipo-check">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+
+              <div class="tipo-check" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
               </div>
             </label>
           </div>
 
           <footer class="etapa-footer">
-            <button class="btn-primary w-full-mobile" @click="irParaEtapa(2)">
+            <button class="btn-primary w-full-mobile" type="button" @click="irParaEtapa(2)">
               Continuar
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
             </button>
           </footer>
         </div>
@@ -71,74 +117,196 @@
         <div v-else-if="etapaAtual === 2" key="step2" class="etapa">
           <header class="etapa-header">
             <span class="etapa-tag">Passo 2 de 4</span>
-            <h2 class="etapa-title">Seus Dados Pessoais</h2>
-            <p class="etapa-desc">Precisamos dessas informações para gerar seu crachá e certificado oficial.</p>
+            <h2 class="etapa-title">Seus dados pessoais</h2>
+            <p class="etapa-desc">
+              Precisamos dessas informações para gerar seu crachá e certificado oficial.
+            </p>
           </header>
 
           <div class="fields-col">
             <div class="field-wrap" :class="{ error: erros.nomeCompleto }">
-              <label for="nome" class="field-label">Nome completo <span class="req">*</span></label>
-              <input id="nome" type="text" class="field-input" v-model="form.nomeCompleto" placeholder="Ex: Maria Silva Santos" @blur="validarCampo('nomeCompleto')" />
-              <span class="field-msg" v-if="erros.nomeCompleto">{{ erros.nomeCompleto }}</span>
+              <label for="nome" class="field-label">
+                Nome completo <span class="req">*</span>
+              </label>
+              <input
+                id="nome"
+                type="text"
+                class="field-input"
+                v-model="form.nomeCompleto"
+                placeholder="Ex: Maria Silva Santos"
+                autocomplete="name"
+                @blur="validarCampo('nomeCompleto')"
+              />
+              <span class="field-msg" v-if="erros.nomeCompleto">
+                {{ erros.nomeCompleto }}
+              </span>
             </div>
 
             <div class="field-row">
               <div class="field-wrap" :class="{ error: erros.cidade }">
-                <label for="cidade" class="field-label">Cidade <span class="req">*</span></label>
+                <label for="cidade" class="field-label">
+                  Cidade <span class="req">*</span>
+                </label>
+
                 <div class="select-wrap">
-                  <select id="cidade" class="field-input" v-model="form.cidade" @change="validarCampo('cidade')">
+                  <select
+                    id="cidade"
+                    class="field-input"
+                    v-model="form.cidade"
+                    @change="validarCampo('cidade')"
+                  >
                     <option value="" disabled>Selecione...</option>
-                    <optgroup v-for="grupo in cidadesAgrupadas" :key="grupo.estado" :label="grupo.estado">
-                      <option v-for="cidade in grupo.cidades" :key="cidade" :value="cidade">{{ cidade }}</option>
+
+                    <optgroup
+                      v-for="grupo in cidadesAgrupadas"
+                      :key="grupo.estado"
+                      :label="grupo.estado"
+                    >
+                      <option
+                        v-for="cidade in grupo.cidades"
+                        :key="cidade"
+                        :value="cidade"
+                      >
+                        {{ cidade }}
+                      </option>
                     </optgroup>
                   </select>
                 </div>
-                <span class="field-msg" v-if="erros.cidade">{{ erros.cidade }}</span>
+
+                <span class="field-msg" v-if="erros.cidade">
+                  {{ erros.cidade }}
+                </span>
               </div>
 
               <div class="field-wrap" :class="{ error: erros.uf }">
-                <label for="uf" class="field-label">UF <span class="req">*</span></label>
-                <input id="uf" type="text" class="field-input text-center" v-model="form.uf" maxlength="2" placeholder="PI" :readonly="form.cidade && ufAutomatica" @input="form.uf = form.uf.toUpperCase()" @blur="validarCampo('uf')" />
-                <span class="field-msg" v-if="erros.uf">{{ erros.uf }}</span>
+                <label for="uf" class="field-label">
+                  UF <span class="req">*</span>
+                </label>
+
+                <input
+                  id="uf"
+                  type="text"
+                  class="field-input text-center"
+                  v-model="form.uf"
+                  maxlength="2"
+                  placeholder="PI"
+                  :readonly="form.cidade && ufAutomatica"
+                  @input="form.uf = form.uf.toUpperCase()"
+                  @blur="validarCampo('uf')"
+                />
+
+                <span class="field-msg" v-if="erros.uf">
+                  {{ erros.uf }}
+                </span>
               </div>
             </div>
 
             <div class="field-wrap" :class="{ error: erros.dataNascimento }">
-              <label for="nascimento" class="field-label">Data de nascimento <span class="req">*</span></label>
-              <input id="nascimento" type="date" class="field-input" v-model="form.dataNascimento" :max="hoje" @blur="validarCampo('dataNascimento')" />
+              <label for="nascimento" class="field-label">
+                Data de nascimento <span class="req">*</span>
+              </label>
+
+              <input
+                id="nascimento"
+                type="date"
+                class="field-input"
+                v-model="form.dataNascimento"
+                :max="hoje"
+                @blur="validarCampo('dataNascimento')"
+              />
+
               <div class="field-footer">
-                <span class="field-msg" v-if="erros.dataNascimento">{{ erros.dataNascimento }}</span>
-                <span class="field-hint" v-else-if="form.dataNascimento">{{ calcIdade(form.dataNascimento) }} anos</span>
+                <span class="field-msg" v-if="erros.dataNascimento">
+                  {{ erros.dataNascimento }}
+                </span>
+
+                <span class="field-hint" v-else-if="form.dataNascimento">
+                  {{ calcIdade(form.dataNascimento) }} anos
+                </span>
               </div>
             </div>
 
             <Transition name="fade">
-              <div class="field-wrap" v-if="tipoParticipante === 'aluno'" :class="{ error: erros.escola }">
-                <label for="escola" class="field-label">Em qual escola você estuda? <span class="req">*</span></label>
+              <div
+                class="field-wrap"
+                v-if="tipoParticipante === 'aluno'"
+                :class="{ error: erros.escola }"
+              >
+                <label for="escola" class="field-label">
+                  Em qual escola você estuda? <span class="req">*</span>
+                </label>
+
                 <div class="select-wrap">
-                  <select id="escola" class="field-input" v-model="form.escola" @change="validarCampo('escola')">
+                  <select
+                    id="escola"
+                    class="field-input"
+                    v-model="form.escola"
+                    @change="validarCampo('escola')"
+                  >
                     <option value="" disabled>Selecione sua escola...</option>
-                    <option v-for="escola in escolas" :key="escola" :value="escola">{{ escola }}</option>
+
+                    <option
+                      v-for="escola in escolas"
+                      :key="escola"
+                      :value="escola"
+                    >
+                      {{ escola }}
+                    </option>
                   </select>
                 </div>
-                <span class="field-msg" v-if="erros.escola">{{ erros.escola }}</span>
+
+                <span class="field-msg" v-if="erros.escola">
+                  {{ erros.escola }}
+                </span>
               </div>
             </Transition>
 
             <Transition name="fade">
-              <div class="field-wrap" v-if="tipoParticipante === 'funcionario'" :class="{ error: erros.localTrabalho }">
-                <label for="trabalho" class="field-label">Local de trabalho <span class="req">*</span></label>
-                <input id="trabalho" type="text" class="field-input" v-model="form.localTrabalho" placeholder="Ex: Secretaria de Educação" @blur="validarCampo('localTrabalho')" />
-                <span class="field-msg" v-if="erros.localTrabalho">{{ erros.localTrabalho }}</span>
+              <div
+                class="field-wrap"
+                v-if="tipoParticipante === 'funcionario'"
+                :class="{ error: erros.localTrabalho }"
+              >
+                <label for="trabalho" class="field-label">
+                  Local de trabalho <span class="req">*</span>
+                </label>
+
+                <input
+                  id="trabalho"
+                  type="text"
+                  class="field-input"
+                  v-model="form.localTrabalho"
+                  placeholder="Ex: Secretaria de Educação"
+                  @blur="validarCampo('localTrabalho')"
+                />
+
+                <span class="field-msg" v-if="erros.localTrabalho">
+                  {{ erros.localTrabalho }}
+                </span>
               </div>
             </Transition>
           </div>
 
           <footer class="etapa-footer sb">
-            <button class="btn-secondary" @click="irParaEtapa(1)">Voltar</button>
-            <button class="btn-primary" @click="validarEtapa2()">
+            <button class="btn-secondary" type="button" @click="irParaEtapa(1)">
+              Voltar
+            </button>
+
+            <button class="btn-primary" type="button" @click="validarEtapa2">
               Continuar
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
             </button>
           </footer>
         </div>
@@ -146,18 +314,43 @@
         <div v-else-if="etapaAtual === 3" key="step3" class="etapa">
           <header class="etapa-header">
             <span class="etapa-tag">Passo 3 de 4</span>
-            <h2 class="etapa-title">Sua Agenda (Opcional)</h2>
-            <p class="etapa-desc">Selecione as atividades exclusivas que você deseja participar. Se quiser apenas passear, pode pular.</p>
+            <h2 class="etapa-title">Sua agenda</h2>
+            <p class="etapa-desc">
+              Selecione as atividades exclusivas que você deseja participar. Se quiser apenas visitar o evento, pode continuar sem escolher.
+            </p>
           </header>
 
           <div class="evento-selecao">
             <div class="evento-grid">
-              <label v-for="cat in categoriasAtividades" :key="cat.id" class="evento-card checkbox-card" :class="{ selected: form.categorias.includes(cat.id) }">
-                <input type="checkbox" :value="cat.id" v-model="form.categorias" class="sr-only" />
-                <div class="evento-icon">{{ cat.icon }}</div>
+              <label
+                v-for="cat in categoriasAtividades"
+                :key="cat.id"
+                class="evento-card checkbox-card"
+                :class="{ selected: form.categorias.includes(cat.id) }"
+              >
+                <input
+                  type="checkbox"
+                  :value="cat.id"
+                  v-model="form.categorias"
+                  class="sr-only"
+                />
+
+                <div class="evento-icon" aria-hidden="true">{{ cat.icon }}</div>
                 <div class="evento-nome">{{ cat.label }}</div>
-                <div class="checkbox-indicator">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+
+                <div class="checkbox-indicator" aria-hidden="true">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
                 </div>
               </label>
             </div>
@@ -165,58 +358,190 @@
 
           <Transition name="fade">
             <div class="sub-atividade-wrap" v-if="form.categorias.length > 0">
-              
               <div class="field-wrap" :class="{ error: erros.telefone }">
-                <label class="field-label">Telefone (WhatsApp) <span class="req">*</span></label>
-                <input type="tel" class="field-input" v-model="form.telefone" placeholder="(86) 99999-9999" @blur="validarCampo('telefone')" />
-                <span class="field-msg" v-if="erros.telefone">{{ erros.telefone }}</span>
-                <span class="field-hint" v-else>Para enviarmos os lembretes das vagas.</span>
+                <label class="field-label">
+                  Telefone WhatsApp <span class="req">*</span>
+                </label>
+
+                <input
+                  type="tel"
+                  class="field-input"
+                  v-model="form.telefone"
+                  placeholder="(86) 99999-9999"
+                  autocomplete="tel"
+                  @input="form.telefone = mascararTelefone(form.telefone)"
+                  @blur="validarCampo('telefone')"
+                />
+
+                <span class="field-msg" v-if="erros.telefone">
+                  {{ erros.telefone }}
+                </span>
+
+                <span class="field-hint" v-else>
+                  Usaremos apenas para lembretes sobre as atividades escolhidas.
+                </span>
               </div>
 
-              <div v-if="form.categorias.includes('oficinas')" class="atividade-bloco" :class="{ error: erros.oficinas }">
-                <h3 class="bloco-title">🎨 Escolha suas Oficinas</h3>
+              <div
+                v-if="form.categorias.includes('oficinas')"
+                class="atividade-bloco"
+                :class="{ error: erros.oficinas }"
+              >
+                <h3 class="bloco-title">🎨 Escolha suas oficinas</h3>
+
                 <div class="opcoes-lista">
-                  <label v-for="of in oficinas" :key="of" class="opcao-item" :class="{ selected: form.oficinasSelecionadas.includes(of) }">
-                    <input type="checkbox" :value="of" v-model="form.oficinasSelecionadas" class="sr-only" />
-                    <span class="opcao-check"><svg v-if="form.oficinasSelecionadas.includes(of)" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                  <label
+                    v-for="of in oficinas"
+                    :key="of"
+                    class="opcao-item"
+                    :class="{ selected: form.oficinasSelecionadas.includes(of) }"
+                  >
+                    <input
+                      type="checkbox"
+                      :value="of"
+                      v-model="form.oficinasSelecionadas"
+                      class="sr-only"
+                    />
+
+                    <span class="opcao-check">
+                      <svg
+                        v-if="form.oficinasSelecionadas.includes(of)"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+
                     <span class="opcao-texto">{{ of }}</span>
                   </label>
                 </div>
-                <span class="field-msg" v-if="erros.oficinas">{{ erros.oficinas }}</span>
+
+                <span class="field-msg" v-if="erros.oficinas">
+                  {{ erros.oficinas }}
+                </span>
               </div>
 
-              <div v-if="form.categorias.includes('exposicoes')" class="atividade-bloco" :class="{ error: erros.exposicoes }">
-                <h3 class="bloco-title">📷 Horários da Exposição</h3>
+              <div
+                v-if="form.categorias.includes('exposicoes')"
+                class="atividade-bloco"
+                :class="{ error: erros.exposicoes }"
+              >
+                <h3 class="bloco-title">📷 Horários da exposição</h3>
+
                 <div class="opcoes-lista">
-                  <label v-for="ex in exposicaos" :key="ex" class="opcao-item" :class="{ selected: form.exposicoesSelecionadas.includes(ex) }">
-                    <input type="checkbox" :value="ex" v-model="form.exposicoesSelecionadas" class="sr-only" />
-                    <span class="opcao-check"><svg v-if="form.exposicoesSelecionadas.includes(ex)" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                  <label
+                    v-for="ex in exposicoes"
+                    :key="ex"
+                    class="opcao-item"
+                    :class="{ selected: form.exposicoesSelecionadas.includes(ex) }"
+                  >
+                    <input
+                      type="checkbox"
+                      :value="ex"
+                      v-model="form.exposicoesSelecionadas"
+                      class="sr-only"
+                    />
+
+                    <span class="opcao-check">
+                      <svg
+                        v-if="form.exposicoesSelecionadas.includes(ex)"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+
                     <span class="opcao-texto">{{ ex }}</span>
                   </label>
                 </div>
-                <span class="field-msg" v-if="erros.exposicoes">{{ erros.exposicoes }}</span>
+
+                <span class="field-msg" v-if="erros.exposicoes">
+                  {{ erros.exposicoes }}
+                </span>
               </div>
 
-              <div v-if="form.categorias.includes('palestras')" class="atividade-bloco" :class="{ error: erros.palestras }">
+              <div
+                v-if="form.categorias.includes('palestras')"
+                class="atividade-bloco"
+                :class="{ error: erros.palestras }"
+              >
                 <h3 class="bloco-title">🎤 Palestras de interesse</h3>
+
                 <div class="opcoes-lista">
-                  <label v-for="pal in palestras" :key="pal" class="opcao-item" :class="{ selected: form.palestrasSelecionadas.includes(pal) }">
-                    <input type="checkbox" :value="pal" v-model="form.palestrasSelecionadas" class="sr-only" />
-                    <span class="opcao-check"><svg v-if="form.palestrasSelecionadas.includes(pal)" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                  <label
+                    v-for="pal in palestras"
+                    :key="pal"
+                    class="opcao-item"
+                    :class="{ selected: form.palestrasSelecionadas.includes(pal) }"
+                  >
+                    <input
+                      type="checkbox"
+                      :value="pal"
+                      v-model="form.palestrasSelecionadas"
+                      class="sr-only"
+                    />
+
+                    <span class="opcao-check">
+                      <svg
+                        v-if="form.palestrasSelecionadas.includes(pal)"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+
                     <span class="opcao-texto">{{ pal }}</span>
                   </label>
                 </div>
-                <span class="field-msg" v-if="erros.palestras">{{ erros.palestras }}</span>
-              </div>
 
+                <span class="field-msg" v-if="erros.palestras">
+                  {{ erros.palestras }}
+                </span>
+              </div>
             </div>
           </Transition>
 
           <footer class="etapa-footer sb">
-            <button class="btn-secondary" @click="irParaEtapa(2)">Voltar</button>
-            <button class="btn-primary" @click="validarEtapa3()">
-              Revisar Inscrição
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <button class="btn-secondary" type="button" @click="irParaEtapa(2)">
+              Voltar
+            </button>
+
+            <button class="btn-primary" type="button" @click="validarEtapa3">
+              Revisar inscrição
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
             </button>
           </footer>
         </div>
@@ -225,51 +550,92 @@
           <header class="etapa-header">
             <span class="etapa-tag">Passo 4 de 4</span>
             <h2 class="etapa-title">Revise seus dados</h2>
-            <p class="etapa-desc">Verifique se está tudo correto antes de confirmar sua inscrição no SALIP2.</p>
+            <p class="etapa-desc">
+              Verifique se está tudo correto antes de confirmar sua inscrição no SALIP 2.
+            </p>
           </header>
 
           <div class="resumo-wrap">
             <div class="resumo-card">
               <div class="resumo-header">
                 <div class="badge-tipo">{{ labelTipo }}</div>
-                <button class="btn-edit-link" @click="irParaEtapa(2)">Editar Dados</button>
+
+                <button class="btn-edit-link" type="button" @click="irParaEtapa(2)">
+                  Editar dados
+                </button>
               </div>
+
               <dl class="resumo-list">
                 <div class="resumo-item">
                   <dt>Nome</dt>
                   <dd>{{ form.nomeCompleto }}</dd>
                 </div>
+
                 <div class="resumo-item">
                   <dt>Origem</dt>
                   <dd>{{ form.cidade }} - {{ form.uf }}</dd>
                 </div>
+
+                <div class="resumo-item">
+                  <dt>Nascimento</dt>
+                  <dd>{{ formatarData(form.dataNascimento) }}</dd>
+                </div>
+
                 <div class="resumo-item" v-if="form.escola">
                   <dt>Escola</dt>
                   <dd>{{ form.escola }}</dd>
+                </div>
+
+                <div class="resumo-item" v-if="form.localTrabalho">
+                  <dt>Trabalho</dt>
+                  <dd>{{ form.localTrabalho }}</dd>
+                </div>
+
+                <div class="resumo-item" v-if="form.telefone">
+                  <dt>WhatsApp</dt>
+                  <dd>{{ form.telefone }}</dd>
                 </div>
               </dl>
             </div>
 
             <div class="resumo-card highlight">
               <div class="resumo-header">
-                <strong>Sua Agenda</strong>
-                <button class="btn-edit-link" @click="irParaEtapa(3)">Editar Agenda</button>
+                <strong>Sua agenda</strong>
+
+                <button class="btn-edit-link" type="button" @click="irParaEtapa(3)">
+                  Editar agenda
+                </button>
               </div>
-              
+
               <div class="resumo-atividades" v-if="form.categorias.length > 0">
                 <div v-if="form.oficinasSelecionadas.length" class="agenda-bloco">
                   <span>🎨 Oficinas</span>
-                  <ul><li v-for="o in form.oficinasSelecionadas" :key="o">{{ o }}</li></ul>
+                  <ul>
+                    <li v-for="o in form.oficinasSelecionadas" :key="o">
+                      {{ o }}
+                    </li>
+                  </ul>
                 </div>
+
                 <div v-if="form.exposicoesSelecionadas.length" class="agenda-bloco">
                   <span>📷 Exposições</span>
-                  <ul><li v-for="e in form.exposicoesSelecionadas" :key="e">{{ e }}</li></ul>
+                  <ul>
+                    <li v-for="e in form.exposicoesSelecionadas" :key="e">
+                      {{ e }}
+                    </li>
+                  </ul>
                 </div>
+
                 <div v-if="form.palestrasSelecionadas.length" class="agenda-bloco">
                   <span>🎤 Palestras</span>
-                  <ul><li v-for="p in form.palestrasSelecionadas" :key="p">{{ p }}</li></ul>
+                  <ul>
+                    <li v-for="p in form.palestrasSelecionadas" :key="p">
+                      {{ p }}
+                    </li>
+                  </ul>
                 </div>
               </div>
+
               <div class="resumo-atividades empty" v-else>
                 <span>Nenhuma atividade extra. Acesso geral ao evento confirmado.</span>
               </div>
@@ -279,108 +645,211 @@
           <div class="termos-wrap">
             <label class="termos-label" :class="{ checked: aceitaTermos }">
               <input type="checkbox" v-model="aceitaTermos" class="sr-only" />
-              <div class="termos-check">
-                <svg v-if="aceitaTermos" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+
+              <div class="termos-check" aria-hidden="true">
+                <svg
+                  v-if="aceitaTermos"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
               </div>
+
               <span class="termos-text">
-                Li e aceito os <button type="button" class="link-inline" @click.prevent="mostrarTermos = true">Termos de Uso e Privacidade</button> do SALIP2.
+                Li e aceito os
+                <button
+                  type="button"
+                  class="link-inline"
+                  @click.prevent="mostrarTermos = true"
+                >
+                  Termos de Uso e Privacidade
+                </button>
+                do SALIP 2.
               </span>
             </label>
-            <span class="field-msg" v-if="erros.termos">{{ erros.termos }}</span>
+
+            <span class="field-msg" v-if="erros.termos">
+              {{ erros.termos }}
+            </span>
           </div>
 
           <footer class="etapa-footer sb">
-            <button class="btn-secondary" @click="irParaEtapa(3)" :disabled="isSubmitting">Voltar</button>
-            <button class="btn-submit" :class="{ loading: isSubmitting }" :disabled="isSubmitting" @click="handleSubmit">
-              <span v-if="!isSubmitting">Confirmar Inscrição</span>
-              <span v-else class="spinner-wrap">Processando <span class="spinner"></span></span>
+            <button
+              class="btn-secondary"
+              type="button"
+              @click="irParaEtapa(3)"
+              :disabled="isSubmitting"
+            >
+              Voltar
+            </button>
+
+            <button
+              class="btn-submit"
+              type="button"
+              :class="{ loading: isSubmitting }"
+              :disabled="isSubmitting"
+              @click="handleSubmit"
+            >
+              <span v-if="!isSubmitting">Confirmar inscrição</span>
+
+              <span v-else class="spinner-wrap">
+                Enviando dados
+                <span class="spinner"></span>
+              </span>
             </button>
           </footer>
         </div>
 
         <div v-else-if="etapaAtual === 5" key="step5" class="etapa sucesso-etapa">
-          <div class="sucesso-anim">🎉</div>
+          <div class="sucesso-anim" aria-hidden="true">🎉</div>
+
           <h2 class="sucesso-titulo">Inscrição confirmada!</h2>
+
           <p class="sucesso-desc">
-            Tudo certo, <strong>{{ nomeEnviado }}</strong>! Estamos ansiosos para te ver no SALIP2. Compartilhe com seus amigos que você vai colar lá!
+            Tudo certo, <strong>{{ nomeEnviado }}</strong>! Sua inscrição foi enviada e organizada no sistema do SALIP 2.
           </p>
-          
+
+          <div class="id-confirmacao">
+            <span class="id-label">Seu ID de inscrição</span>
+            <strong class="id-code">{{ form.idUsuario }}</strong>
+            <small>Guarde este código para consultar sua inscrição no evento.</small>
+          </div>
+
           <div class="acoes-sucesso">
-            <button class="btn-story" @click="gerarStory" :disabled="isGeneratingStory">
-              <svg v-if="!isGeneratingStory" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            <button
+              class="btn-story"
+              type="button"
+              @click="gerarStory"
+              :disabled="isGeneratingStory"
+            >
+              <svg
+                v-if="!isGeneratingStory"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+
               <span v-if="!isGeneratingStory">Compartilhar no Story</span>
-              <span v-else class="spinner-wrap">Gerando arte... <span class="spinner story-spinner"></span></span>
+
+              <span v-else class="spinner-wrap">
+                Gerando arte
+                <span class="spinner story-spinner"></span>
+              </span>
             </button>
-            
-            <button class="btn-text" @click="resetarFormulario">Fazer nova inscrição</button>
+
+            <button class="btn-text" type="button" @click="resetarFormulario">
+              Fazer nova inscrição
+            </button>
           </div>
         </div>
       </Transition>
     </main>
 
     <Transition name="fade">
-      <div v-if="mostrarTermos" class="modal-overlay" @click.self="mostrarTermos = false">
+      <div
+        v-if="mostrarTermos"
+        class="modal-overlay"
+        @click.self="mostrarTermos = false"
+      >
         <div class="modal-card" role="dialog" aria-modal="true">
           <header class="modal-header">
             <h3>Termos de Uso e Privacidade</h3>
-            <button @click="mostrarTermos = false" class="btn-close" aria-label="Fechar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+
+            <button
+              type="button"
+              @click="mostrarTermos = false"
+              class="btn-close"
+              aria-label="Fechar"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
             </button>
           </header>
+
           <div class="modal-body">
             <pre class="termos-conteudo">{{ textoTermos }}</pre>
           </div>
+
           <footer class="modal-footer">
-            <button class="btn-primary w-full" @click="aceitaTermos = true; mostrarTermos = false">Entendi e Aceito</button>
+            <button
+              class="btn-primary w-full"
+              type="button"
+              @click="aceitaTermos = true; mostrarTermos = false"
+            >
+              Entendi e aceito
+            </button>
           </footer>
         </div>
       </div>
     </Transition>
 
     <div class="story-export-wrapper">
-      <div 
-        ref="storyNode" 
-        class="story-canvas" 
-        style="background: linear-gradient(135deg, #0f2c59 0%, #144181 100%);"
-      >
+      <div ref="storyNode" class="story-canvas">
         <div class="story-bg-graphics">
           <div class="circle-top"></div>
           <div class="circle-bottom"></div>
         </div>
-        
+
         <div class="story-content-box">
           <div class="story-event-brand">
-            <div class="story-icon"><img src="/IMG/LOGONAMEPRIMARIO.png" alt="SALIP 2"></div>
+            <div class="story-icon">
+              <img src="/IMG/LOGONAMEPRIMARIO.png" alt="SALIP 2" />
+            </div>
           </div>
-          
-          <div class="story-badge">
-            PRESENÇA CONFIRMADA 
-          </div>
-          
-          <h2 class="story-title">Eu vou para o maior evento literário de Pedro II!</h2>
-          
+
+          <div class="story-badge">PRESENÇA CONFIRMADA</div>
+
+          <h2 class="story-title">
+            Eu vou para o maior evento literário de Pedro II!
+          </h2>
+
           <div class="story-ticket">
-             <span class="user-label">Participante</span>
-             <span class="user-name">{{ nomeStory }}</span>
+            <span class="user-label">Participante</span>
+            <span class="user-name">{{ nomeStory }}</span>
+            <span class="story-id">ID {{ form.idUsuario }}</span>
           </div>
-          
+
           <div class="story-footer">
             <span class="story-hashtag">#EuNoSalip2</span>
-            <span class="story-date">23 e 24 de Maio</span>
+            <span class="story-date">7 a 9 de Maio</span>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
-
 import { ref, reactive, computed, watch, nextTick } from 'vue'
-
-// import { collection, addDoc } from 'firebase/firestore'
-// import { db } from '@/firebase'
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { db } from '@/firebase'
 import { useToast } from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-default.css'
 import html2canvas from 'html2canvas'
@@ -389,22 +858,31 @@ const $toast = useToast()
 
 const etapaAtual = ref(1)
 const steps = ['Perfil', 'Dados', 'Agenda', 'Revisão']
-const progressWidth = computed(() => ((etapaAtual.value - 1) / (steps.length - 1)) * 100)
+
+const progressWidth = computed(() => {
+  return ((etapaAtual.value - 1) / (steps.length - 1)) * 100
+})
 
 const tipoParticipante = ref('aluno')
 const aceitaTermos = ref(false)
 const mostrarTermos = ref(false)
 const isSubmitting = ref(false)
+const isGeneratingStory = ref(false)
 const nomeEnviado = ref('')
 const nomeStory = ref('')
 const ufAutomatica = ref(false)
+const storyNode = ref(null)
+
 const hoje = new Date().toISOString().split('T')[0]
 
 const form = reactive({
+  idUsuario: '',
+  tipoParticipante: '',
   nomeCompleto: '',
   cidade: '',
   uf: '',
   dataNascimento: '',
+  idade: null,
   escola: '',
   localTrabalho: '',
   telefone: '',
@@ -417,79 +895,345 @@ const form = reactive({
 const erros = reactive({})
 
 const opcoesTipo = [
-  { valor: 'aluno', label: 'Estudante', desc: 'Aluno de escola ou universidade', icon: '🎒' },
-  { valor: 'funcionario', label: 'Profissional', desc: 'Professor, servidor ou gestor', icon: '💼' },
-  { valor: 'visitante', label: 'Visitante', desc: 'Comunidade em geral', icon: '🎟️' },
+  {
+    valor: 'aluno',
+    label: 'Estudante',
+    desc: 'Aluno de escola ou universidade',
+    icon: '🎒',
+  },
+  {
+    valor: 'funcionario',
+    label: 'Profissional',
+    desc: 'Professor, servidor ou gestor',
+    icon: '💼',
+  },
+  {
+    valor: 'visitante',
+    label: 'Visitante',
+    desc: 'Comunidade em geral',
+    icon: '🎟️',
+  },
 ]
 
 const cidadesComUF = {
-  'Pedro II': 'PI', 'Teresina': 'PI', 'Parnaíba': 'PI', 'Piripiri': 'PI', 'Fortaleza': 'CE', 'São Luís': 'MA', 'Outra cidade': ''
+  'Pedro II': 'PI',
+  Teresina: 'PI',
+  Parnaíba: 'PI',
+  Piripiri: 'PI',
+  'Campo Maior': 'PI',
+  Picos: 'PI',
+  Fortaleza: 'CE',
+  Sobral: 'CE',
+  'Juazeiro do Norte': 'CE',
+  'São Luís': 'MA',
+  'Outra cidade': '',
 }
 
 const cidadesAgrupadas = [
-  { estado: 'Piauí', cidades: ['Pedro II','Teresina','Parnaíba','Piripiri','Campo Maior','Picos'] },
-  { estado: 'Ceará', cidades: ['Fortaleza','Sobral','Juazeiro do Norte'] },
-  { estado: 'Outros', cidades: ['São Luís', 'Outra cidade'] }
+  {
+    estado: 'Piauí',
+    cidades: ['Pedro II', 'Teresina', 'Parnaíba', 'Piripiri', 'Campo Maior', 'Picos'],
+  },
+  {
+    estado: 'Ceará',
+    cidades: ['Fortaleza', 'Sobral', 'Juazeiro do Norte'],
+  },
+  {
+    estado: 'Outros',
+    cidades: ['São Luís', 'Outra cidade'],
+  },
 ]
-
-watch(() => form.cidade, (cidade) => {
-  if (cidade && cidadesComUF[cidade]) {
-    form.uf = cidadesComUF[cidade]
-    ufAutomatica.value = true
-  } else {
-    ufAutomatica.value = false
-    if (cidade === 'Outra cidade') form.uf = ''
-  }
-})
 
 const categoriasAtividades = [
-  { id: 'oficinas', label: 'Oficinas Literárias', icon: '🎨' },
-  { id: 'exposicoes', label: 'Exposições de Arte', icon: '📷' },
-  { id: 'palestras', label: 'Palestras Oficiais', icon: '🎤' },
+  {
+    id: 'oficinas',
+    label: 'Oficinas Literárias',
+    icon: '🎨',
+  },
+  {
+    id: 'exposicoes',
+    label: 'Exposições de Arte',
+    icon: '📷',
+  },
+  {
+    id: 'palestras',
+    label: 'Palestras Oficiais',
+    icon: '🎤',
+  },
 ]
 
-const exposicaos = ['23/05 — 9h', '23/05 — 14h30', '24/05 — 10h']
+const exposicoes = ['23/05 — 9h', '23/05 — 14h30', '24/05 — 10h']
+
 const palestras = [
   'Abertura com Fabrício Carpinejar',
   'A voz de Esperança Garcia',
   'O cânone literário piauiense',
-  'A lírica de Manuel Bandeira'
+  'A lírica de Manuel Bandeira',
 ]
-const oficinas = ['Oficina de Literatura de Cordel', 'Oficina de Fanzine', 'Comida é Memória']
-const escolas = ['Escola Municipal Monsenhor Lotário Weber', 'IFPI — Instituto Federal do Piauí', 'Outra (não listada)']
 
-const labelTipo = computed(() => opcoesTipo.find(o => o.valor === tipoParticipante.value)?.label || 'Participante')
+const oficinas = [
+  'Oficina de Literatura de Cordel',
+  'Oficina de Fanzine',
+  'Comida é Memória',
+]
+
+const escolas = [
+  'Escola Municipal Monsenhor Lotário Weber',
+  'IFPI — Instituto Federal do Piauí',
+  'Outra escola',
+]
+
+const labelTipo = computed(() => {
+  return opcoesTipo.find((opcao) => opcao.valor === tipoParticipante.value)?.label || 'Participante'
+})
+
+watch(
+  () => form.cidade,
+  (cidade) => {
+    if (cidade && cidadesComUF[cidade]) {
+      form.uf = cidadesComUF[cidade]
+      ufAutomatica.value = true
+    } else {
+      ufAutomatica.value = false
+
+      if (cidade === 'Outra cidade') {
+        form.uf = ''
+      }
+    }
+  }
+)
+
+watch(tipoParticipante, () => {
+  delete erros.escola
+  delete erros.localTrabalho
+
+  if (tipoParticipante.value !== 'aluno') {
+    form.escola = ''
+  }
+
+  if (tipoParticipante.value !== 'funcionario') {
+    form.localTrabalho = ''
+  }
+})
+
+watch(
+  () => [...form.categorias],
+  (categorias) => {
+    if (!categorias.includes('oficinas')) {
+      form.oficinasSelecionadas = []
+      delete erros.oficinas
+    }
+
+    if (!categorias.includes('exposicoes')) {
+      form.exposicoesSelecionadas = []
+      delete erros.exposicoes
+    }
+
+    if (!categorias.includes('palestras')) {
+      form.palestrasSelecionadas = []
+      delete erros.palestras
+    }
+
+    if (categorias.length === 0) {
+      form.telefone = ''
+      delete erros.telefone
+    }
+  }
+)
+
+function limparTexto(valor) {
+  return typeof valor === 'string' ? valor.trim() : valor
+}
+
+function gerarIdCurto(tamanho = 4) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let id = ''
+
+  for (let i = 0; i < tamanho; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+
+  return id
+}
+
+async function gerarIdUsuarioUnico() {
+  let tentativas = 0
+  const limiteTentativas = 30
+
+  while (tentativas < limiteTentativas) {
+    const id = gerarIdCurto(4)
+    const refUsuario = doc(db, 'inscricoes_salip2', id)
+    const snap = await getDoc(refUsuario)
+
+    if (!snap.exists()) {
+      return id
+    }
+
+    tentativas++
+  }
+
+  throw new Error('Não foi possível gerar um ID único.')
+}
+
+function montarDadosUsuario(idUsuario) {
+  const idade = calcIdade(form.dataNascimento)
+
+  return {
+    idUsuario,
+
+    participante: {
+      tipo: tipoParticipante.value,
+      tipoLabel: labelTipo.value,
+      nomeCompleto: limparTexto(form.nomeCompleto),
+      primeiroNome: limparTexto(form.nomeCompleto).split(' ')[0] || '',
+      cidade: form.cidade,
+      uf: form.uf.toUpperCase(),
+      dataNascimento: form.dataNascimento,
+      idade,
+      escola: tipoParticipante.value === 'aluno' ? form.escola : '',
+      localTrabalho:
+        tipoParticipante.value === 'funcionario'
+          ? limparTexto(form.localTrabalho)
+          : '',
+      telefone: limparTexto(form.telefone),
+    },
+
+    agenda: {
+      possuiAtividadesExtras: form.categorias.length > 0,
+      categorias: [...form.categorias],
+      oficinas: [...form.oficinasSelecionadas],
+      exposicoes: [...form.exposicoesSelecionadas],
+      palestras: [...form.palestrasSelecionadas],
+    },
+
+    consentimento: {
+      aceitouTermos: aceitaTermos.value,
+      textoTermosVersao: 'SALIP2-2026-v1',
+      aceitoEm: serverTimestamp(),
+    },
+
+    controle: {
+      status: 'confirmada',
+      origem: 'formulario_site',
+      criadoEm: serverTimestamp(),
+      atualizadoEm: serverTimestamp(),
+    },
+  }
+}
 
 function validarCampo(campo) {
   delete erros[campo]
-  if (campo === 'nomeCompleto' && !form.nomeCompleto.trim()) erros.nomeCompleto = 'Como devemos te chamar?'
-  if (campo === 'cidade' && !form.cidade) erros.cidade = 'Qual sua cidade?'
-  if (campo === 'uf' && !form.uf.trim()) erros.uf = 'Insira a sigla do estado'
-  if (campo === 'dataNascimento' && !form.dataNascimento) erros.dataNascimento = 'Insira sua data de nascimento'
-  if (campo === 'escola' && tipoParticipante.value === 'aluno' && !form.escola) erros.escola = 'Selecione sua instituição'
-  if (campo === 'localTrabalho' && tipoParticipante.value === 'funcionario' && !form.localTrabalho.trim()) erros.localTrabalho = 'Informe o local'
-  if (campo === 'telefone' && form.categorias.length > 0 && !form.telefone.trim()) erros.telefone = 'Informe seu WhatsApp'
+
+  if (campo === 'nomeCompleto') {
+    if (!form.nomeCompleto.trim()) {
+      erros.nomeCompleto = 'Informe seu nome completo.'
+    } else if (form.nomeCompleto.trim().split(' ').length < 2) {
+      erros.nomeCompleto = 'Digite nome e sobrenome.'
+    }
+  }
+
+  if (campo === 'cidade' && !form.cidade) {
+    erros.cidade = 'Selecione sua cidade.'
+  }
+
+  if (campo === 'uf') {
+    const uf = form.uf.trim().toUpperCase()
+
+    if (!uf) {
+      erros.uf = 'Insira a sigla do estado.'
+    } else if (!/^[A-Z]{2}$/.test(uf)) {
+      erros.uf = 'Use apenas 2 letras.'
+    }
+  }
+
+  if (campo === 'dataNascimento') {
+    if (!form.dataNascimento) {
+      erros.dataNascimento = 'Insira sua data de nascimento.'
+    } else if (new Date(form.dataNascimento) > new Date()) {
+      erros.dataNascimento = 'A data não pode ser no futuro.'
+    }
+  }
+
+  if (campo === 'escola') {
+    if (tipoParticipante.value === 'aluno' && !form.escola) {
+      erros.escola = 'Selecione sua instituição.'
+    }
+  }
+
+  if (campo === 'localTrabalho') {
+    if (tipoParticipante.value === 'funcionario' && !form.localTrabalho.trim()) {
+      erros.localTrabalho = 'Informe o local de trabalho.'
+    }
+  }
+
+  if (campo === 'telefone') {
+    if (form.categorias.length > 0 && !form.telefone.trim()) {
+      erros.telefone = 'Informe seu WhatsApp.'
+    } else if (form.telefone.trim() && form.telefone.replace(/\D/g, '').length < 10) {
+      erros.telefone = 'Informe um telefone válido.'
+    }
+  }
 }
 
 function validarEtapa2() {
-  ['nomeCompleto','cidade','uf','dataNascimento'].forEach(validarCampo)
-  if (tipoParticipante.value === 'aluno') validarCampo('escola')
-  if (tipoParticipante.value === 'funcionario') validarCampo('localTrabalho')
-  if (Object.keys(erros).length === 0) irParaEtapa(3)
+  ;['nomeCompleto', 'cidade', 'uf', 'dataNascimento'].forEach(validarCampo)
+
+  if (tipoParticipante.value === 'aluno') {
+    validarCampo('escola')
+  }
+
+  if (tipoParticipante.value === 'funcionario') {
+    validarCampo('localTrabalho')
+  }
+
+  if (Object.keys(erros).length === 0) {
+    irParaEtapa(3)
+  }
 }
 
 function validarEtapa3() {
-  delete erros.telefone; delete erros.oficinas; delete erros.exposicoes; delete erros.palestras;
-  let hasError = false;
+  delete erros.telefone
+  delete erros.oficinas
+  delete erros.exposicoes
+  delete erros.palestras
+
+  let hasError = false
 
   if (form.categorias.length > 0) {
-    if (!form.telefone.trim()) { erros.telefone = 'Necessário para contato sobre as vagas.'; hasError = true; }
-    if (form.categorias.includes('oficinas') && form.oficinasSelecionadas.length === 0) { erros.oficinas = 'Selecione ao menos uma oficina.'; hasError = true; }
-    if (form.categorias.includes('exposicoes') && form.exposicoesSelecionadas.length === 0) { erros.exposicoes = 'Selecione um horário para visita.'; hasError = true; }
-    if (form.categorias.includes('palestras') && form.palestrasSelecionadas.length === 0) { erros.palestras = 'Selecione ao menos uma palestra.'; hasError = true; }
+    validarCampo('telefone')
+
+    if (erros.telefone) {
+      hasError = true
+    }
+
+    if (
+      form.categorias.includes('oficinas') &&
+      form.oficinasSelecionadas.length === 0
+    ) {
+      erros.oficinas = 'Selecione ao menos uma oficina.'
+      hasError = true
+    }
+
+    if (
+      form.categorias.includes('exposicoes') &&
+      form.exposicoesSelecionadas.length === 0
+    ) {
+      erros.exposicoes = 'Selecione um horário para visita.'
+      hasError = true
+    }
+
+    if (
+      form.categorias.includes('palestras') &&
+      form.palestrasSelecionadas.length === 0
+    ) {
+      erros.palestras = 'Selecione ao menos uma palestra.'
+      hasError = true
+    }
   }
 
-  if (!hasError) irParaEtapa(4)
+  if (!hasError) {
+    irParaEtapa(4)
+  }
 }
 
 function irParaEtapa(n) {
@@ -499,62 +1243,103 @@ function irParaEtapa(n) {
 
 async function handleSubmit() {
   delete erros.termos
-  if (!aceitaTermos.value) { erros.termos = 'Você precisa aceitar os termos de uso para continuar.'; return; }
-  if (isSubmitting.value) return;
+
+  if (!aceitaTermos.value) {
+    erros.termos = 'Você precisa aceitar os termos de uso para continuar.'
+    return
+  }
+
+  if (isSubmitting.value) return
+
   isSubmitting.value = true
 
-  // Simulando requisição (Aqui entra seu código do Firebase)
   try {
-    await new Promise(res => setTimeout(res, 1200));
+    const idUsuario = await gerarIdUsuarioUnico()
 
-    nomeEnviado.value = form.nomeCompleto.split(' ')[0]
-    nomeStory.value = form.nomeCompleto
+    form.idUsuario = idUsuario
+    form.tipoParticipante = tipoParticipante.value
+    form.idade = calcIdade(form.dataNascimento)
+
+    const dadosUsuario = montarDadosUsuario(idUsuario)
+
+    await setDoc(doc(db, 'inscricoes_salip2', idUsuario), dadosUsuario)
+
+    nomeEnviado.value = limparTexto(form.nomeCompleto).split(' ')[0]
+    nomeStory.value = limparTexto(form.nomeCompleto)
+
     etapaAtual.value = 5
+
+    $toast.success(`Inscrição confirmada! Seu ID é ${idUsuario}.`)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } catch (err) {
     console.error(err)
-    $toast.error('Ocorreu um erro de conexão. Tente novamente.')
+    $toast.error('Não foi possível confirmar sua inscrição. Verifique sua conexão e tente novamente.')
   } finally {
     isSubmitting.value = false
   }
 }
 
 function resetarFormulario() {
-  Object.assign(form, { nomeCompleto: '', cidade: '', uf: '', dataNascimento: '', escola: '', localTrabalho: '', telefone: '', categorias: [], oficinasSelecionadas: [], exposicoesSelecionadas: [], palestrasSelecionadas: [] })
-  tipoParticipante.value = 'aluno'; aceitaTermos.value = false;
-  etapaAtual.value = 1; window.scrollTo({ top: 0, behavior: 'smooth' })
-}
+  Object.assign(form, {
+    idUsuario: '',
+    tipoParticipante: '',
+    nomeCompleto: '',
+    cidade: '',
+    uf: '',
+    dataNascimento: '',
+    idade: null,
+    escola: '',
+    localTrabalho: '',
+    telefone: '',
+    categorias: [],
+    oficinasSelecionadas: [],
+    exposicoesSelecionadas: [],
+    palestrasSelecionadas: [],
+  })
 
-// ─── INSTAGRAM STORY GENERATION (Bugfix de Fundo Branco) ───
-const storyNode = ref(null)
-const isGeneratingStory = ref(false)
+  Object.keys(erros).forEach((key) => delete erros[key])
+
+  tipoParticipante.value = 'aluno'
+  aceitaTermos.value = false
+  mostrarTermos.value = false
+  nomeEnviado.value = ''
+  nomeStory.value = ''
+  etapaAtual.value = 1
+
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 async function gerarStory() {
   if (!storyNode.value || isGeneratingStory.value) return
+
   isGeneratingStory.value = true
-  
+
   try {
     await nextTick()
+
     const canvas = await html2canvas(storyNode.value, {
-      scale: 2, 
+      scale: 2,
       useCORS: true,
-      backgroundColor: '#144181', // Força azul
-      width: 1080, // Trava a proporção de story
-      height: 1920
+      backgroundColor: '#144181',
+      width: 1080,
+      height: 1920,
     })
-    
-    const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9)
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg', 0.92)
 
     if (navigator.share) {
       try {
         const blob = await (await fetch(imageDataUrl)).blob()
-        const file = new File([blob], 'salip2-story.jpg', { type: 'image/jpeg' })
+        const file = new File([blob], 'salip2-story.jpg', {
+          type: 'image/jpeg',
+        })
+
         await navigator.share({
           title: 'Meu Ingresso SALIP 2',
-          text: 'Olha só, minha inscrição no SALIP 2 está confirmada! #EuNoSalip2',
-          files: [file]
+          text: 'Minha inscrição no SALIP 2 está confirmada! #EuNoSalip2',
+          files: [file],
         })
-        isGeneratingStory.value = false
+
         return
       } catch (e) {
         console.warn('Share API falhou, acionando download.', e)
@@ -565,8 +1350,8 @@ async function gerarStory() {
     link.download = 'salip2-story.jpg'
     link.href = imageDataUrl
     link.click()
-    $toast.success('Arte salva! Agora é só postar nos stories.')
 
+    $toast.success('Arte salva! Agora é só postar nos stories.')
   } catch (err) {
     console.error(err)
     $toast.error('Erro ao gerar a arte. Tente novamente.')
@@ -577,44 +1362,132 @@ async function gerarStory() {
 
 function calcIdade(dob) {
   if (!dob) return ''
-  const d = new Date(dob), now = new Date()
+
+  const d = new Date(dob)
+  const now = new Date()
+
   let age = now.getFullYear() - d.getFullYear()
-  if (now.getMonth() < d.getMonth() || (now.getMonth() === d.getMonth() && now.getDate() < d.getDate())) age--
+
+  if (
+    now.getMonth() < d.getMonth() ||
+    (now.getMonth() === d.getMonth() && now.getDate() < d.getDate())
+  ) {
+    age--
+  }
+
   return age
 }
 
-const textoTermos = `TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP2\n\n1. Finalidade...\n(Omitido para focar na lógica, mantenha seu texto original completo aqui)`
+function formatarData(data) {
+  if (!data) return ''
+
+  const [ano, mes, dia] = data.split('-')
+  return `${dia}/${mes}/${ano}`
+}
+
+function mascararTelefone(valor) {
+  const numeros = valor.replace(/\D/g, '').slice(0, 11)
+
+  if (numeros.length <= 2) {
+    return numeros
+  }
+
+  if (numeros.length <= 6) {
+    return `(${numeros.slice(0, 2)}) ${numeros.slice(2)}`
+  }
+
+  if (numeros.length <= 10) {
+    return `(${numeros.slice(0, 2)}) ${numeros.slice(2, 6)}-${numeros.slice(6)}`
+  }
+
+  return `(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7)}`
+}
+
+const textoTermos = `TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP 2
+
+1. Finalidade
+Os dados informados neste formulário serão utilizados exclusivamente para organização da inscrição, controle de participação, emissão de crachás, certificados e comunicação sobre atividades do SALIP 2.
+
+2. Dados coletados
+Podemos coletar nome completo, cidade, UF, data de nascimento, tipo de participante, escola, local de trabalho, telefone e atividades selecionadas.
+
+3. Uso das informações
+As informações serão usadas para identificação do participante, organização da agenda, confirmação de inscrição e comunicação relacionada ao evento.
+
+4. Compartilhamento
+Os dados não serão vendidos. Poderão ser acessados apenas pela equipe organizadora e por prestadores envolvidos diretamente na realização do evento.
+
+5. Consentimento
+Ao aceitar estes termos, você declara estar ciente da coleta e do uso dos dados para as finalidades descritas.
+
+6. Segurança
+A organização adotará medidas razoáveis para proteger as informações enviadas.
+
+7. Solicitações
+O participante poderá solicitar correção ou remoção de seus dados entrando em contato com a organização do evento.`
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;800&display=swap');
 
 :root {
   --c-blue: #144181;
-  --c-blue-hover: #103468;
-  --c-blue-light: #000000;
-  --c-yellow: #D8DF52; 
+  --c-blue-hover: #0f3368;
+  --c-blue-soft: #eaf2ff;
+  --c-blue-soft-strong: #dbeafe;
+  --c-yellow: #d8df52;
   --c-yellow-hover: #c4cc42;
-  --c-dark: #1e293b;
-  --c-gray-text: #64748b;
-  --c-border: #cbd5e1;
-  --c-bg: #f1f5f9;
-  --c-error: #ef4444;
-  --c-error-bg: #fef2f2;
-  --c-success: #22c55e;  
-  --radius: 16px;
-  --shadow: 0 10px 40px -10px rgba(20, 65, 129, 0.1);
+  --c-dark: #172033;
+  --c-text: #334155;
+  --c-muted: #64748b;
+  --c-border: #dbe3ef;
+  --c-bg: #f3f7fb;
+  --c-white: #ffffff;
+  --c-error: #dc2626;
+  --c-error-bg: #fff1f2;
+  --c-success: #16a34a;
+  --radius: 18px;
+  --shadow: 0 18px 50px -18px rgba(20, 65, 129, 0.28);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; 
-    color: black !important; 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  color: #334155;
+  padding: 0;
 }
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  outline: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
 
 .page-wrap {
   min-height: 100vh;
-  background: var(--c-bg);
+  background:
+    radial-gradient(circle at top left, rgba(216, 223, 82, 0.25), transparent 30rem),
+    linear-gradient(180deg, #eef5ff 0%, var(--c-bg) 45%, #ffffff 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -623,172 +1496,971 @@ const textoTermos = `TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP2\n\n1. F
   color: var(--c-dark);
 }
 
-/* ─── HEADER SIMPLES ─── */
-.page-header { text-align: center; margin-bottom: 2rem; }
-.brand-logo { font-size: 2rem; font-weight: 800; color: var(--c-blue); letter-spacing: -0.5px; }
-.brand-subtitle { font-size: 14px; font-weight: 600; color: var(--c-gray-text); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-
-/* ─── PROGRESS BAR ─── */
-.progress-wrap { width: 100%; max-width: 650px; margin-bottom: 2rem; }
-.progress-steps { display: flex; align-items: flex-start; justify-content: space-between; position: relative; }
-.step-line { position: absolute; top: 16px; left: 12%; right: 12%; height: 3px; background: #e2e8f0; z-index: 0; border-radius: 4px; }
-.step-line-fill { height: 100%; background: var(--c-blue); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 4px; }
-.step-item { display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 1; flex: 1; }
-.step-circle { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 3px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #94a3b8; transition: all 0.3s; }
-.step-item.active .step-circle { border-color: var(--c-blue); color: var(--c-blue); box-shadow: 0 0 0 4px rgba(20, 65, 129, 0.1); }
-.step-item.done .step-circle { background: var(--c-blue); border-color: var(--c-blue); color: #fff; }
-.step-label { font-size: 12px; font-weight: 600; color: var(--c-gray-text); transition: color 0.3s; }
-.step-item.active .step-label { color: var(--c-blue); font-weight: 700; }
-
-/* ─── FORM CONTAINER ─── */
-.form-card { width: 100%; max-width: 650px; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05); overflow: hidden; position: relative; }
-.etapa { padding: 3rem; display: flex; flex-direction: column; gap: 2rem; }
-.etapa-header { display: flex; flex-direction: column; gap: 6px; }
-.etapa-tag { font-size: 12px; font-weight: 700; color: var(--c-blue); text-transform: uppercase; letter-spacing: 1px; }
-.etapa-title { font-size: 1.75rem; font-weight: 800; color: var(--c-dark); letter-spacing: -0.5px; }
-.etapa-desc { font-size: 15px; color: var(--c-gray-text); line-height: 1.5; }
-
-/* ─── TIPO SELEÇÃO ─── */
-.tipo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.tipo-card { border: 2px solid #e2e8f0; border-radius: 12px; padding: 1.5rem 1rem; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; cursor: pointer; transition: all 0.2s; position: relative; outline: none; background: #f8fafc; }
-.tipo-card:hover, .tipo-card:focus-within { border-color: #cbd5e1; background: #fff; transform: translateY(-2px); }
-.tipo-card.selected { border-color: var(--c-blue); background: var(--c-blue-light); }
-.tipo-icon { font-size: 2.2rem; }
-.tipo-info { display: flex; flex-direction: column; gap: 4px; }
-.tipo-label { font-weight: 700; font-size: 15px; color: var(--c-dark); }
-.tipo-desc { font-size: 12px; color: var(--c-gray-text); line-height: 1.4; }
-.tipo-check { position: absolute; top: 12px; right: 12px; width: 24px; height: 24px; border-radius: 50%; background: var(--c-blue); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: 0.2s; }
-.tipo-card.selected .tipo-check { opacity: 1; transform: scale(1); }
-
-/* ─── INPUTS E CAMPOS ─── */
-.fields-col { display: flex; flex-direction: column; gap: 1.5rem; }
-.field-row { display: grid; grid-template-columns: 1fr 120px; gap: 16px; }
-.field-wrap { display: flex; flex-direction: column; gap: 8px; }
-.field-label { font-size: 14px; font-weight: 700; color: var(--c-dark); }
-.req { color: var(--c-error); }
-.field-input { width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; font-family: inherit; color: var(--c-dark); transition: all 0.2s ease; outline: none; background: #f8fafc; }
-.field-input::placeholder { color: #94a3b8; }
-.field-input:focus { border-color: var(--c-blue); background: #fff; box-shadow: 0 0 0 4px rgba(20, 65, 129, 0.08); }
-.text-center { text-align: center; }
-.field-wrap.error .field-input { border-color: var(--c-error); background: var(--c-error-bg); }
-.field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-.field-msg { font-size: 13px; font-weight: 600; color: var(--c-error); animation: fadeIn 0.2s; margin-top: 4px; }
-.field-hint { font-size: 13px; font-weight: 500; color: var(--c-gray-text); }
-.select-wrap { position: relative; }
-select.field-input { appearance: none; cursor: pointer; padding-right: 40px; }
-.select-wrap::after { content: '▾'; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b; font-size: 16px; }
-
-/* ─── EVENTOS MULTIPLOS ─── */
-.evento-selecao { display: flex; flex-direction: column; gap: 16px; }
-.evento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.checkbox-card { border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; position: relative; text-align: center; background: #f8fafc; }
-.checkbox-card:hover { border-color: #cbd5e1; background: #fff; }
-.checkbox-card.selected { border-color: var(--c-blue); background: var(--c-blue-light); }
-.evento-icon { font-size: 1.5rem; }
-.evento-nome { font-size: 13px; font-weight: 600; color: var(--c-dark); }
-.checkbox-indicator { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border: 2px solid #cbd5e1; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: transparent; transition: 0.2s; }
-.checkbox-card.selected .checkbox-indicator { background: var(--c-blue); border-color: var(--c-blue); color: #fff; }
-
-.sub-atividade-wrap { display: flex; flex-direction: column; gap: 1.5rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 1.5rem; }
-.atividade-bloco { display: flex; flex-direction: column; gap: 12px; }
-.bloco-title { font-size: 15px; font-weight: 800; color: var(--c-blue); }
-.opcoes-lista { display: flex; flex-direction: column; gap: 8px; }
-.opcao-item { display: flex; align-items: center; gap: 12px; padding: 14px; background: #fff; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: 0.2s; }
-.opcao-item:hover { border-color: #cbd5e1; }
-.opcao-item.selected { border-color: var(--c-blue); background: var(--c-blue-light); }
-.opcao-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; transition: 0.2s; }
-.opcao-item.selected .opcao-check { background: var(--c-blue); border-color: var(--c-blue); }
-.opcao-texto { font-size: 14px; font-weight: 600; color: var(--c-dark); }
-
-/* ─── REVISÃO E RESUMO ─── */
-.resumo-wrap { display: flex; flex-direction: column; gap: 16px; }
-.resumo-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; }
-.resumo-card.highlight { background: var(--c-blue-light); border-color: #bfdbfe; }
-.resumo-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 12px; }
-.resumo-header strong { font-size: 16px; color: var(--c-blue); }
-.badge-tipo { background: var(--c-yellow); color: var(--c-dark); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-.btn-edit-link { background: none; border: none; color: var(--c-blue); font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: underline; }
-.resumo-list { display: flex; flex-direction: column; gap: 12px; }
-.resumo-item { display: flex; justify-content: space-between; align-items: center; }
-.resumo-item dt { font-size: 14px; color: var(--c-gray-text); }
-.resumo-item dd { font-size: 14px; font-weight: 700; color: var(--c-dark); text-align: right; }
-.resumo-atividades { display: flex; flex-direction: column; gap: 16px; }
-.agenda-bloco span { font-size: 14px; font-weight: 800; color: var(--c-dark); margin-bottom: 8px; display: inline-block; }
-.agenda-bloco ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-.agenda-bloco li { font-size: 14px; font-weight: 600; color: var(--c-blue); padding-left: 16px; position: relative; }
-.agenda-bloco li::before { content: '•'; color: var(--c-yellow); position: absolute; left: 0; font-size: 18px; line-height: 14px; }
-.resumo-atividades.empty { text-align: center; color: var(--c-gray-text); font-size: 14px; font-weight: 500; }
-
-/* ─── TERMOS ─── */
-.termos-wrap { margin-top: 1rem; padding: 1rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; }
-.termos-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
-.termos-check { width: 24px; height: 24px; border-radius: 6px; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; transition: 0.2s; }
-.termos-label.checked .termos-check { background: var(--c-blue); border-color: var(--c-blue); }
-.termos-text { font-size: 14px; color: var(--c-dark); line-height: 1.5; font-weight: 500; }
-.link-inline { background: none; border: none; color: var(--c-blue); font-weight: 700; cursor: pointer; text-decoration: underline; font-family: inherit; font-size: inherit; }
-
-/* ─── BOTOES ─── */
-.etapa-footer { display: flex; justify-content: flex-end; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; margin-top: 1.5rem; }
-.etapa-footer.sb { justify-content: space-between; }
-button { font-family: inherit; outline: none; }
-.btn-primary { background: var(--c-blue); color: #fff; border: none; padding: 14px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s; }
-.btn-primary:hover, .btn-primary:focus-visible { background: var(--c-blue-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(20,65,129,0.25); }
-.btn-secondary { background: #fff; color: var(--c-gray-text); border: 2px solid #e2e8f0; padding: 12px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-.btn-secondary:hover { border-color: #cbd5e1; color: var(--c-dark); }
-.btn-submit { background: var(--c-yellow); color: var(--c-dark); border: none; padding: 14px 32px; border-radius: 10px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-.btn-submit:hover:not(:disabled) { background: var(--c-yellow-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(216, 223, 82, 0.4); }
-.btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
-
-/* ─── SPINNERS E ESTADOS ─── */
-.spinner-wrap { display: flex; align-items: center; gap: 8px; }
-.spinner { width: 18px; height: 18px; border: 3px solid rgba(0,0,0,0.1); border-top-color: currentColor; border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ─── SUCESSO ─── */
-.sucesso-etapa { align-items: center; text-align: center; padding: 4rem 2rem; }
-.sucesso-anim { font-size: 6rem; animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; margin-bottom: 1rem; }
-@keyframes pop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-.sucesso-titulo { font-size: 2.2rem; font-weight: 800; color: var(--c-blue); letter-spacing: -0.5px; }
-.sucesso-desc { font-size: 16px; color: var(--c-gray-text); margin-bottom: 2.5rem; line-height: 1.6; }
-
-.acoes-sucesso { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 340px; }
-.btn-story { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #fff; border: none; padding: 18px; border-radius: 14px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 10px 25px rgba(220, 39, 67, 0.3); }
-.btn-story:hover:not(:disabled) { transform: scale(1.03); box-shadow: 0 15px 35px rgba(220, 39, 67, 0.4); }
-.btn-text { background: transparent; border: none; color: var(--c-gray-text); font-weight: 700; cursor: pointer; padding: 10px; }
-.btn-text:hover { color: var(--c-blue); text-decoration: underline; }
-
-/* ─── MODAL ─── */
-.modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.2s; }
-.modal-card { background: #fff; width: 100%; max-width: 500px; max-height: 85vh; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-.modal-header { padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
-.modal-header h3 { font-size: 18px; font-weight: 800; color: var(--c-dark); }
-.btn-close { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--c-gray-text); transition: 0.2s; }
-.btn-close:hover { background: #e2e8f0; color: var(--c-error); }
-.modal-body { padding: 2rem; overflow-y: auto; flex: 1; }
-.termos-conteudo { font-family: inherit; font-size: 14px; line-height: 1.6; color: var(--c-gray-text); white-space: pre-wrap; }
-.modal-footer { padding: 1.5rem 2rem; border-top: 1px solid #e2e8f0; background: #f8fafc; }
-.w-full { width: 100%; justify-content: center; }
-
-/* ─── TRANSIÇÕES ─── */
-.slide-enter-active, .slide-leave-active { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-.slide-enter-from { opacity: 0; transform: translateX(40px); }
-.slide-leave-to { opacity: 0; transform: translateX(-40px); }
-.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-/* ─── RESPONSIVIDADE ─── */
-@media (max-width: 650px) {
-  .etapa { padding: 2rem 1.5rem; }
-  .tipo-grid { grid-template-columns: 1fr; }
-  .field-row { grid-template-columns: 1fr; gap: 1.5rem; }
-  .evento-grid { grid-template-columns: 1fr; }
-  .etapa-footer.sb { flex-direction: column-reverse; gap: 1rem; }
-  .btn-primary, .btn-secondary, .btn-submit, .w-full-mobile { width: 100%; justify-content: center; }
-  .sucesso-titulo { font-size: 1.8rem; }
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-/* ─── OFF-SCREEN STORY GENERATION (Mágica do Canvas) ─── */
+.brand-logo {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: var(--c-blue);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.brand-subtitle {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--c-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 0.55rem;
+}
+
+.progress-wrap {
+  width: 100%;
+  max-width: 680px;
+  margin-bottom: 2rem;
+}
+
+.progress-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+}
+
+.step-line {
+  position: absolute;
+  top: 16px;
+  left: 12%;
+  right: 12%;
+  height: 4px;
+  background: #dce7f5;
+  z-index: 0;
+  border-radius: 999px;
+}
+
+.step-line-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-blue), #2563eb);
+  transition: width 0.4s ease;
+  border-radius: 999px;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  z-index: 1;
+  flex: 1;
+}
+
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--c-white);
+  border: 3px solid #dce7f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #7c8ba1;
+  transition: all 0.25s ease;
+}
+
+.step-item.active .step-circle {
+  border-color: var(--c-blue);
+  color: var(--c-blue);
+  box-shadow: 0 0 0 5px rgba(20, 65, 129, 0.1);
+}
+
+.step-item.done .step-circle {
+  background: var(--c-blue);
+  border-color: var(--c-blue);
+  color: var(--c-white);
+}
+
+.step-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--c-muted);
+  transition: color 0.25s ease;
+}
+
+.step-item.active .step-label {
+  color: var(--c-blue);
+}
+
+.form-card {
+  width: 100%;
+  max-width: 680px;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(20, 65, 129, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.etapa {
+  padding: clamp(1.5rem, 5vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.etapa-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.etapa-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--c-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.etapa-title {
+  font-size: clamp(1.65rem, 5vw, 2rem);
+  font-weight: 800;
+  color: var(--c-dark);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.etapa-desc {
+  font-size: 0.95rem;
+  color: var(--c-muted);
+  line-height: 1.6;
+}
+
+.tipo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.tipo-card {
+  border: 2px solid var(--c-border);
+  border-radius: 1rem;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  outline: none;
+  background: #f8fbff;
+}
+
+.tipo-card:hover,
+.tipo-card:focus-within {
+  border-color: #b8c9df;
+  background: var(--c-white);
+  transform: translateY(-2px);
+}
+
+.tipo-card.selected,
+.checkbox-card.selected,
+.opcao-item.selected {
+  border-color: var(--c-blue);
+  background: var(--c-blue-soft);
+  box-shadow: 0 12px 28px rgba(20, 65, 129, 0.12);
+}
+
+.tipo-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.tipo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tipo-label {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--c-dark);
+}
+
+.tipo-desc {
+  font-size: 0.76rem;
+  color: var(--c-muted);
+  line-height: 1.45;
+}
+
+.tipo-check {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  background: var(--c-blue);
+  color: var(--c-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: 0.2s ease;
+}
+
+.tipo-card.selected .tipo-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fields-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 1rem;
+}
+
+.field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-label {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--c-dark);
+}
+
+.req {
+  color: var(--c-error);
+}
+
+.field-input {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 2px solid var(--c-border);
+  border-radius: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--c-dark);
+  transition: all 0.2s ease;
+  outline: none;
+  background: #f8fbff;
+}
+
+.field-input::placeholder {
+  color: #8da0b8;
+}
+
+.field-input:focus {
+  border-color: var(--c-blue);
+  background: var(--c-white);
+  box-shadow: 0 0 0 4px rgba(20, 65, 129, 0.08);
+}
+
+.field-input:read-only {
+  background: #eef4fb;
+  color: var(--c-muted);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.field-wrap.error .field-input {
+  border-color: var(--c-error);
+  background: var(--c-error-bg);
+}
+
+.field-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.field-msg {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--c-error);
+  animation: fadeIn 0.2s;
+  margin-top: 0.2rem;
+}
+
+.field-hint {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--c-muted);
+}
+
+.select-wrap {
+  position: relative;
+}
+
+select.field-input {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 2.5rem;
+}
+
+.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--c-muted);
+  font-size: 1rem;
+}
+
+.evento-selecao {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.evento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.checkbox-card {
+  border: 2px solid var(--c-border);
+  border-radius: 1rem;
+  padding: 1.1rem 0.85rem;
+  min-height: 112px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  position: relative;
+  text-align: center;
+  background: #f8fbff;
+}
+
+.checkbox-card:hover {
+  border-color: #b8c9df;
+  background: var(--c-white);
+  transform: translateY(-2px);
+}
+
+.evento-icon {
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.evento-nome {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--c-dark);
+  line-height: 1.3;
+}
+
+.checkbox-indicator {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #bcc9da;
+  border-radius: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: 0.2s ease;
+  background: var(--c-white);
+}
+
+.checkbox-card.selected .checkbox-indicator {
+  background: var(--c-blue);
+  border-color: var(--c-blue);
+  color: var(--c-white);
+}
+
+.sub-atividade-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.35rem;
+  background: #f8fbff;
+  border-radius: 1rem;
+  border: 1px solid var(--c-border);
+  margin-top: 0.25rem;
+}
+
+.atividade-bloco {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bloco-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--c-blue);
+}
+
+.opcoes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.opcao-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem;
+  background: var(--c-white);
+  border: 2px solid var(--c-border);
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.opcao-item:hover {
+  border-color: #b8c9df;
+}
+
+.opcao-check {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 0.42rem;
+  border: 2px solid #bcc9da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-white);
+  flex-shrink: 0;
+  transition: 0.2s ease;
+  background: var(--c-white);
+}
+
+.opcao-item.selected .opcao-check {
+  background: var(--c-blue);
+  border-color: var(--c-blue);
+}
+
+.opcao-texto {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--c-dark);
+  line-height: 1.35;
+}
+
+.resumo-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resumo-card {
+  background: #f8fbff;
+  border: 1px solid var(--c-border);
+  border-radius: 1rem;
+  padding: 1.35rem;
+}
+
+.resumo-card.highlight {
+  background: var(--c-blue-soft);
+  border-color: var(--c-blue-soft-strong);
+}
+
+.resumo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(20, 65, 129, 0.1);
+  margin-bottom: 0.85rem;
+}
+
+.resumo-header strong {
+  font-size: 1rem;
+  color: var(--c-blue);
+}
+
+.badge-tipo {
+  background: var(--c-yellow);
+  color: var(--c-dark);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.btn-edit-link {
+  background: none;
+  border: none;
+  color: var(--c-blue);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.resumo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.resumo-item dt {
+  font-size: 0.88rem;
+  color: var(--c-muted);
+  font-weight: 700;
+}
+
+.resumo-item dd {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--c-dark);
+  text-align: right;
+  line-height: 1.35;
+}
+
+.resumo-atividades {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.agenda-bloco span {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: var(--c-dark);
+  margin-bottom: 0.45rem;
+  display: inline-block;
+}
+
+.agenda-bloco ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.agenda-bloco li {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--c-blue);
+  padding-left: 1rem;
+  position: relative;
+  line-height: 1.35;
+}
+
+.agenda-bloco li::before {
+  content: '•';
+  color: #7d8500;
+  position: absolute;
+  left: 0;
+  font-size: 1.2rem;
+  line-height: 0.85rem;
+}
+
+.resumo-atividades.empty {
+  text-align: center;
+  color: var(--c-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.termos-wrap {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-radius: 1rem;
+}
+
+.termos-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+
+.termos-check {
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 0.45rem;
+  border: 2px solid #bcc9da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-white);
+  flex-shrink: 0;
+  transition: 0.2s ease;
+  background: var(--c-white);
+}
+
+.termos-label.checked .termos-check {
+  background: var(--c-blue);
+  border-color: var(--c-blue);
+}
+
+.termos-text {
+  font-size: 0.88rem;
+  color: var(--c-dark);
+  line-height: 1.55;
+  font-weight: 600;
+}
+
+.link-inline {
+  background: none;
+  border: none;
+  color: var(--c-blue);
+  font-weight: 900;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: inherit;
+}
+
+.etapa-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--c-border);
+  margin-top: 0.5rem;
+}
+
+.etapa-footer.sb {
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn-primary {
+  background: var(--c-blue);
+  color: var(--c-white);
+  border: none;
+  padding: 0.9rem 1.6rem;
+  border-radius: 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--c-blue-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(20, 65, 129, 0.26);
+}
+
+.btn-secondary {
+  background: var(--c-white);
+  color: var(--c-text);
+  border: 2px solid var(--c-border);
+  padding: 0.78rem 1.6rem;
+  border-radius: 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: #b8c9df;
+  color: var(--c-dark);
+}
+
+.btn-submit {
+  background: var(--c-yellow);
+  color: var(--c-dark);
+  border: none;
+  padding: 0.9rem 1.8rem;
+  border-radius: 0.8rem;
+  font-size: 1rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--c-yellow-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(160, 168, 35, 0.28);
+}
+
+.btn-submit:disabled {
+  opacity: 0.75;
+}
+
+.spinner-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.spinner {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 3px solid rgba(23, 32, 51, 0.14);
+  border-top-color: currentColor;
+  border-radius: 999px;
+  animation: spin 1s linear infinite;
+}
+
+.sucesso-etapa {
+  align-items: center;
+  text-align: center;
+  padding: clamp(2.5rem, 7vw, 4rem) clamp(1.5rem, 5vw, 2rem);
+}
+
+.sucesso-anim {
+  font-size: 5.5rem;
+  animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  margin-bottom: 0.5rem;
+}
+
+.sucesso-titulo {
+  font-size: clamp(1.8rem, 6vw, 2.3rem);
+  font-weight: 900;
+  color: var(--c-blue);
+  letter-spacing: -0.05em;
+}
+
+.sucesso-desc {
+  font-size: 1rem;
+  color: var(--c-muted);
+  margin-bottom: 0.5rem;
+  line-height: 1.65;
+  max-width: 520px;
+}
+
+.id-confirmacao {
+  width: 100%;
+  max-width: 360px;
+  background: var(--c-blue-soft);
+  border: 1px solid var(--c-blue-soft-strong);
+  border-radius: 1.2rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.id-label {
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: var(--c-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.id-code {
+  font-size: 2.4rem;
+  color: var(--c-dark);
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.id-confirmacao small {
+  color: var(--c-muted);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.acoes-sucesso {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 0.5rem;
+}
+
+.btn-story {
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+  color: var(--c-white);
+  border: none;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 12px 28px rgba(220, 39, 67, 0.28);
+}
+
+.btn-story:hover:not(:disabled) {
+  transform: scale(1.025);
+  box-shadow: 0 18px 36px rgba(220, 39, 67, 0.34);
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--c-muted);
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0.65rem;
+}
+
+.btn-text:hover {
+  color: var(--c-blue);
+  text-decoration: underline;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(5px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s;
+}
+
+.modal-card {
+  background: var(--c-white);
+  width: 100%;
+  max-width: 540px;
+  max-height: 85vh;
+  border-radius: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+}
+
+.modal-header {
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.modal-header h3 {
+  font-size: 1.08rem;
+  font-weight: 900;
+  color: var(--c-dark);
+}
+
+.btn-close {
+  background: #f1f5f9;
+  border: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--c-muted);
+  transition: 0.2s ease;
+}
+
+.btn-close:hover {
+  background: #e2e8f0;
+  color: var(--c-error);
+}
+
+.modal-body {
+  padding: 1.6rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.termos-conteudo {
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--c-text);
+  white-space: pre-wrap;
+}
+
+.modal-footer {
+  padding: 1.3rem 1.6rem;
+  border-top: 1px solid var(--c-border);
+  background: #f8fbff;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.35s ease;
+}
+
+.slide-enter-from {
+  opacity: 0;
+  transform: translateX(32px);
+}
+
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(-32px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .story-export-wrapper {
   position: fixed;
   top: 0;
@@ -797,6 +2469,7 @@ button { font-family: inherit; outline: none; }
   opacity: 0;
   pointer-events: none;
 }
+
 .story-canvas {
   width: 1080px;
   height: 1920px;
@@ -805,15 +2478,39 @@ button { font-family: inherit; outline: none; }
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(135deg, #0f2c59 0%, #144181 100%);
   padding: 100px;
   box-sizing: border-box;
   font-family: 'Plus Jakarta Sans', sans-serif;
   overflow: hidden;
 }
+
 .story-bg-graphics {
   position: absolute;
   inset: 0;
   z-index: 1;
+}
+
+.circle-top,
+.circle-bottom {
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(216, 223, 82, 0.18);
+  filter: blur(6px);
+}
+
+.circle-top {
+  width: 520px;
+  height: 520px;
+  top: -120px;
+  right: -120px;
+}
+
+.circle-bottom {
+  width: 680px;
+  height: 680px;
+  bottom: -220px;
+  left: -180px;
 }
 
 .story-content-box {
@@ -822,55 +2519,164 @@ button { font-family: inherit; outline: none; }
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(30px);
-  border: 2px solid rgba(20, 65, 129, 0.1);
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid rgba(255, 255, 255, 0.35);
   border-radius: 80px;
   padding: 140px 80px;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
   width: 900px;
 }
-.story-event-brand { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 50px; }
-.story-icon { font-size: 80px; }
 
-.story-badge { 
-  background-color: var(--c-yellow); 
-  color: var(--c-dark);
-  font-size: 30px; 
-  font-weight: 800; 
-  padding: 20px 40px; 
-  border-radius: 100px; 
-  display: inline-block; 
-  margin-bottom: 80px; 
-  letter-spacing: 1px; 
+.story-event-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 50px;
 }
 
-.story-title { 
-  color: var(--c-dark);
-  font-size: 65px; 
-  font-family: 'Great Vibes', cursive;  
-  font-weight: 800; 
-  line-height: 1.2; 
-  margin-bottom: 80px; 
-  padding: 0 40px; 
+.story-icon img {
+  max-width: 360px;
+  max-height: 180px;
+  object-fit: contain;
 }
 
-.story-ticket { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 16px; 
-  margin-bottom: 80px; 
-  padding: 50px; 
-  border-radius: 40px; 
-  width: 100%; 
-  background-color: rgba(20, 65, 129, 0.05);
+.story-badge {
+  background-color: var(--c-yellow);
+  color: var(--c-dark);
+  font-size: 30px;
+  font-weight: 900;
+  padding: 20px 40px;
+  border-radius: 100px;
+  display: inline-block;
+  margin-bottom: 80px;
+  letter-spacing: 1px;
+}
+
+.story-title {
+  color: var(--c-dark);
+  font-size: 65px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 900;
+  line-height: 1.18;
+  margin-bottom: 80px;
+  padding: 0 40px;
+}
+
+.story-ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 80px;
+  padding: 50px;
+  border-radius: 40px;
+  width: 100%;
+  background-color: rgba(20, 65, 129, 0.06);
   border: 2px dashed rgba(20, 65, 129, 0.3);
 }
 
-.user-label { color: var(--c-blue); font-size: 28px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; }
-.user-name { color: var(--c-dark); font-size: 55px; font-weight: 800; }
+.user-label {
+  color: var(--c-blue);
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
 
-.story-footer { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
-.story-hashtag { color: var(--c-blue); font-size: 45px; font-weight: 800; }
-.story-date { color: var(--c-gray-text); font-size: 32px; font-weight: 600; }
+.user-name {
+  color: var(--c-dark);
+  font-size: 55px;
+  font-weight: 900;
+  line-height: 1.08;
+}
+
+.story-id {
+  color: var(--c-muted);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.story-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.story-hashtag {
+  color: var(--c-blue);
+  font-size: 45px;
+  font-weight: 900;
+}
+
+.story-date {
+  color: var(--c-muted);
+  font-size: 32px;
+  font-weight: 700;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 650px) {
+  .page-wrap {
+    padding: 2rem 0.85rem 4rem;
+  }
+
+  .tipo-grid,
+  .evento-grid,
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .etapa-footer.sb {
+    flex-direction: column-reverse;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-submit,
+  .w-full-mobile {
+    width: 100%;
+  }
+
+  .resumo-item {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .resumo-item dd {
+    text-align: left;
+  }
+
+  .sucesso-anim {
+    font-size: 4.5rem;
+  }
+}
 </style>

@@ -3,35 +3,40 @@
     <div class="map-route__bg" aria-hidden="true">
       <span class="blur blur--a"></span>
       <span class="blur blur--b"></span>
-      <span class="grid"></span>
     </div>
 
     <div class="map-route__wrap">
       <header class="map-route__header">
         <div class="map-route__intro">
-          <span class="map-route__kicker">Mapa • Locais do evento</span>
+          <span class="map-route__kicker">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            Locais do Evento
+          </span>
           <h2 id="map-route-title" class="map-route__title">
-            Selecione um local e escolha como deseja visualizar sua rota
+            Encontre sua rota ideal
           </h2>
           <p class="map-route__desc">
-            Você pode apenas ver o destino no mapa, abrir a navegação externa
-            ou, se quiser, ativar sua localização para acompanhar distância
-            e direção em tempo real.
+            Selecione o destino, ative sua localização e acompanhe a distância em tempo real.
           </p>
         </div>
 
         <div class="map-route__status">
-          <span class="status-pill" :class="{ 'is-live': trackingAtivo }">
-            {{ trackingAtivo ? 'Modo ao vivo ativo' : 'Modo ao vivo desligado' }}
-          </span>
-
-          <span class="status-pill" :class="{ 'is-ok': !!userLocation }">
-            {{ userLocation ? 'Localização disponível' : 'Localização não ativada' }}
+          <span class="status-indicator" :class="{ 'is-active': trackingAtivo }">
+            <span class="status-indicator__dot"></span>
+            {{ trackingAtivo ? 'Modo Ao Vivo' : 'Ao Vivo Desligado' }}
           </span>
         </div>
       </header>
 
-      <div class="map-route__locations" aria-label="Locais do evento">
+      <div 
+        class="map-route__locations" 
+        aria-label="Locais do evento"
+        ref="locationsContainer"
+        @mousedown="iniciarArrasto"
+        @mousemove="arrastar"
+        @mouseup="pararArrasto"
+        @mouseleave="pararArrasto"
+      >
         <button
           v-for="local in locais"
           :key="local.nome"
@@ -40,154 +45,92 @@
           :class="{ active: localSelecionado.nome === local.nome }"
           @click="selecionarLocal(local)"
         >
-          <span class="location-chip__title">{{ local.nome }}</span>
-          <span class="location-chip__meta">{{ local.endereco }}</span>
+          <div class="location-chip__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
+          </div>
+          <div class="location-chip__text">
+            <span class="location-chip__title">{{ local.nome }}</span>
+            <span class="location-chip__meta">{{ local.endereco }}</span>
+          </div>
         </button>
       </div>
 
       <div class="map-route__content">
-        <div class="map-route__map-card">
-          <div class="map-toolbar">
-            <button
-              class="toolbar-btn toolbar-btn--primary"
-              type="button"
-              @click="obterLocalizacaoUsuario"
-            >
-              Usar minha localização
+        <div class="map-wrapper">
+          <div id="map" class="map-container"></div>
+          
+          <div class="map-toolbar-floating">
+            <button class="glass-btn primary" @click="obterLocalizacaoUsuario" title="Sua Localização">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+              <span>Localizar</span>
             </button>
-
-            <button
-              class="toolbar-btn"
-              type="button"
-              @click="toggleTracking"
-              :disabled="!userLocation && !trackingAtivo"
-            >
-              {{ trackingAtivo ? 'Desativar ao vivo' : 'Ativar ao vivo' }}
+            <button class="glass-btn" @click="toggleTracking" :class="{ 'is-tracking': trackingAtivo }" :disabled="!userLocation && !trackingAtivo" title="Acompanhar em tempo real">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+              <span>{{ trackingAtivo ? 'Parar' : 'Acompanhar' }}</span>
             </button>
-
-            <button
-              class="toolbar-btn"
-              type="button"
-              @click="centralizarTudo"
-            >
-              Ver rota no mapa
+            <button class="glass-btn icon-only" @click="centralizarTudo" title="Ver rota completa">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
             </button>
-
-            <button
-              class="toolbar-btn"
-              type="button"
-              @click="centralizarDestino"
-            >
-              Focar destino
-            </button>
-          </div>
-
-          <div class="map-permission-note">
-            Sua localização só será solicitada quando você clicar em
-            <strong>“Usar minha localização”</strong>.
-          </div>
-
-          <div id="map"></div>
-
-          <div class="map-note">
-            <strong>Mapa interativo:</strong>
-            se você ativar sua localização, o sistema mostra a distância em tempo real
-            entre você e o destino. Para rota viária completa, use Google Maps ou Waze.
           </div>
         </div>
 
         <aside class="map-route__info-card">
           <div class="info-card__head">
-            <p class="info-card__eyebrow">Destino selecionado</p>
+            <p class="info-card__eyebrow">Destino</p>
             <h3>{{ localSelecionado.nome }}</h3>
+            <p class="info-card__address">{{ localSelecionado.endereco }} • {{ localSelecionado.bairro }}</p>
           </div>
 
-          <div class="info-card__grid">
-            <div class="info-box">
-              <span class="label">Cidade</span>
-              <strong>Pedro II - Piauí</strong>
+          <div class="stats-grid">
+            <div class="stat-box highlight">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path></svg>
+              <div>
+                <span class="stat-box__label">Distância</span>
+                <strong class="stat-box__value">{{ distanciaFormatada }}</strong>
+              </div>
             </div>
-
-            <div class="info-box">
-              <span class="label">Evento</span>
-              <strong>{{ localSelecionado.evento }}</strong>
+            <div class="stat-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <div>
+                <span class="stat-box__label">A pé</span>
+                <strong class="stat-box__value">{{ tempoCaminhada }}</strong>
+              </div>
             </div>
-
-            <div class="info-box">
-              <span class="label">Endereço</span>
-              <strong>{{ localSelecionado.endereco }}</strong>
+            <div class="stat-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2" ry="2"></rect><circle cx="7" cy="21" r="2"></circle><circle cx="17" cy="21" r="2"></circle><path d="M14 11l-2-6H6l-2 6"></path></svg>
+              <div>
+                <span class="stat-box__label">De carro</span>
+                <strong class="stat-box__value">{{ tempoCarro }}</strong>
+              </div>
             </div>
-
-            <div class="info-box">
-              <span class="label">Bairro</span>
-              <strong>{{ localSelecionado.bairro }}</strong>
-            </div>
-
-            <div class="info-box">
-              <span class="label">CEP</span>
-              <strong>{{ localSelecionado.cep }}</strong>
-            </div>
-
-            <div class="info-box">
-              <span class="label">Coordenadas</span>
-              <strong>
-                {{ localSelecionado.coords[0].toFixed(6) }},
-                {{ localSelecionado.coords[1].toFixed(6) }}
-              </strong>
-            </div>
-          </div>
-
-          <div class="stats-card">
-            <div class="stat">
-              <span class="stat__label">Distância atual</span>
-              <strong class="stat__value">{{ distanciaFormatada }}</strong>
-            </div>
-
-            <div class="stat">
-              <span class="stat__label">Tempo estimado a pé</span>
-              <strong class="stat__value">{{ tempoCaminhada }}</strong>
-            </div>
-
-            <div class="stat">
-              <span class="stat__label">Tempo estimado de carro</span>
-              <strong class="stat__value">{{ tempoCarro }}</strong>
-            </div>
-
-            <div class="stat">
-              <span class="stat__label">Direção aproximada</span>
-              <strong class="stat__value">{{ direcaoCardinal }}</strong>
+            <div class="stat-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+              <div>
+                <span class="stat-box__label">Direção</span>
+                <strong class="stat-box__value">{{ direcaoCardinal }}</strong>
+              </div>
             </div>
           </div>
 
           <div class="actions">
-            <a
-              :href="googleMapsLink"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="action-btn action-btn--primary"
-            >
-              Ver rota no Google Maps
+            <a :href="googleMapsLink" target="_blank" rel="noopener noreferrer" class="btn-modern btn-modern--maps">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path></svg>
+              Google Maps
             </a>
-
-            <a
-              :href="wazeLink"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="action-btn action-btn--ghost"
-            >
-              Abrir no Waze
-            </a>
-
-            <button
-              type="button"
-              class="action-btn action-btn--soft"
-              @click="copiarEndereco"
-            >
-              Copiar endereço
-            </button>
+            
+            <div class="actions-row">
+              <a :href="wazeLink" target="_blank" rel="noopener noreferrer" class="btn-modern btn-modern--waze">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 10h.01M12 10h.01M7 10h.01M21 11c0-4.418-4.03-8-9-8S3 6.582 3 11s4.03 8 9 8c1.393 0 2.707-.267 3.89-.745C17.65 19.342 19.354 21 21 21v-4.103A8.868 8.868 0 0 0 21 11z"></path></svg>
+                Waze
+              </a>
+              <button type="button" class="btn-modern btn-modern--ghost" @click="copiarEndereco">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copiar
+              </button>
+            </div>
           </div>
 
-          <p class="helper-text">
+          <p class="helper-text fade-in" :key="mensagemStatus">
             {{ mensagemStatus }}
           </p>
         </aside>
@@ -203,10 +146,10 @@ import 'leaflet/dist/leaflet.css'
 
 const locais = [
   {
-    nome: 'Centro Educacional de Eventos Dep. Ciro Nogueira (Antigo Claudia Eventos)',
+    nome: 'Centro Educacional de Eventos Dep. Ciro Nogueira',
     coords: [-4.427919148311333, -41.45083749513804],
     endereco: 'R. Auto Freire, 380.',
-    bairro: 'Bairro Centro.',
+    bairro: 'Centro',
     cep: 'CEP: 64255-000.',
     evento: '22 a 24 de maio.'
   },
@@ -214,7 +157,7 @@ const locais = [
     nome: 'Escola José Teixeira Santos',
     coords: [-4.425063223695662, -41.45858866691448],
     endereco: 'R. Antônio Benício da Silva, 223-93.',
-    bairro: 'Bairro sem informações.',
+    bairro: 'Centro',
     cep: 'CEP: 64255-000.',
     evento: '22 a 24 de maio.'
   },
@@ -222,7 +165,7 @@ const locais = [
     nome: 'Praça Domingos Mourão Filho',
     coords: [-4.425720967622175, -41.457979453637016],
     endereco: 'Praça Domingos Mourão Filho.',
-    bairro: 'Bairro sem informação.',
+    bairro: 'Centro',
     cep: 'CEP: 64255-000.',
     evento: '22 a 24 de maio.'
   },
@@ -230,7 +173,7 @@ const locais = [
     nome: 'Clube 11 de Agosto',
     coords: [-4.426571408209469, -41.45929467563859],
     endereco: 'R. João Benício da Silva, 610-668.',
-    bairro: 'Bairro sem informações.',
+    bairro: 'Centro',
     cep: 'CEP: 64255-000.',
     evento: '22 a 24 de maio.'
   },
@@ -238,7 +181,7 @@ const locais = [
     nome: 'Praça Auditório Padre Norberto',
     coords: [-4.425356995724244, -41.458229746978226],
     endereco: 'Praça Domingos Mourão Filho.',
-    bairro: 'Bairro sem informações.',
+    bairro: 'Centro',
     cep: 'CEP: 64255-000.',
     evento: '22 a 24 de maio.'
   }
@@ -247,8 +190,37 @@ const locais = [
 const localSelecionado = ref(locais[0])
 const userLocation = ref(null)
 const trackingAtivo = ref(false)
-const mensagemStatus = ref('Escolha um local. Sua localização só será usada se você ativar manualmente.')
+const mensagemStatus = ref('Pronto para navegar! Escolha um local ou ative sua localização.')
 const permissaoSolicitada = ref(false)
+
+// --- LÓGICA DE ARRASTAR O SCROLL ---
+const locationsContainer = ref(null)
+let isDown = false
+let startX
+let scrollLeft
+
+const iniciarArrasto = (e) => {
+  isDown = true
+  locationsContainer.value.classList.add('is-dragging')
+  startX = e.pageX - locationsContainer.value.offsetLeft
+  scrollLeft = locationsContainer.value.scrollLeft
+}
+
+const pararArrasto = () => {
+  isDown = false
+  if (locationsContainer.value) {
+    locationsContainer.value.classList.remove('is-dragging')
+  }
+}
+
+const arrastar = (e) => {
+  if (!isDown) return
+  e.preventDefault()
+  const x = e.pageX - locationsContainer.value.offsetLeft
+  const walk = (x - startX) * 2 // O multiplicador '2' dita a velocidade do arrasto
+  locationsContainer.value.scrollLeft = scrollLeft - walk
+}
+// -----------------------------------
 
 let map = null
 let destinoMarker = null
@@ -259,24 +231,22 @@ let watchId = null
 const destinoIcon = L.divIcon({
   className: 'custom-pin custom-pin--destino',
   html: '<span></span>',
-  iconSize: [22, 22],
-  iconAnchor: [11, 11]
+  iconSize: [28, 28],
+  iconAnchor: [14, 14]
 })
 
 const userIcon = L.divIcon({
-  className: 'custom-pin custom-pin--user',
+  className: 'custom-pin custom-pin--user pulse-anim',
   html: '<span></span>',
-  iconSize: [20, 20],
-  iconAnchor: [10, 10]
+  iconSize: [24, 24],
+  iconAnchor: [12, 12]
 })
 
 const googleMapsLink = computed(() => {
   const [lat, lng] = localSelecionado.value.coords
-
   if (userLocation.value) {
     return `https://www.google.com/maps/dir/?api=1&origin=${userLocation.value.lat},${userLocation.value.lng}&destination=${lat},${lng}&travelmode=driving`
   }
-
   return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`
 })
 
@@ -292,7 +262,7 @@ const distanciaMetros = computed(() => {
 })
 
 const distanciaFormatada = computed(() => {
-  if (distanciaMetros.value == null) return 'Ative sua localização'
+  if (distanciaMetros.value == null) return '--'
   if (distanciaMetros.value < 1000) return `${Math.round(distanciaMetros.value)} m`
   return `${(distanciaMetros.value / 1000).toFixed(2)} km`
 })
@@ -317,15 +287,17 @@ const direcaoCardinal = computed(() => {
 })
 
 const selecionarLocal = (local) => {
+  // Evita selecionar o local se o usuário apenas arrastou o mouse
+  if (isDown) return 
   localSelecionado.value = local
 }
 
 const copiarEndereco = async () => {
   const texto = `${localSelecionado.value.nome} - ${localSelecionado.value.endereco} ${localSelecionado.value.bairro} ${localSelecionado.value.cep}`
-
   try {
     await navigator.clipboard.writeText(texto)
-    mensagemStatus.value = 'Endereço copiado com sucesso.'
+    mensagemStatus.value = '✓ Endereço copiado para a área de transferência.'
+    setTimeout(() => { mensagemStatus.value = 'Pronto para navegar! Escolha um local ou ative sua localização.' }, 3000)
   } catch {
     mensagemStatus.value = 'Não foi possível copiar o endereço.'
   }
@@ -334,26 +306,18 @@ const copiarEndereco = async () => {
 const formatarTempo = (minutos) => {
   if (!Number.isFinite(minutos) || minutos <= 0) return '--'
   if (minutos < 60) return `${Math.max(1, Math.round(minutos))} min`
-
   const horas = Math.floor(minutos / 60)
   const mins = Math.round(minutos % 60)
   if (mins === 0) return `${horas}h`
-  return `${horas}h ${mins}min`
+  return `${horas}h ${mins}m`
 }
 
 const calcularDistancia = (lat1, lon1, lat2, lon2) => {
   const R = 6371000
   const toRad = (grau) => (grau * Math.PI) / 180
-
   const dLat = toRad(lat2 - lat1)
   const dLon = toRad(lon2 - lon1)
-
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) ** 2
-
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   return R * c
 }
@@ -361,13 +325,9 @@ const calcularDistancia = (lat1, lon1, lat2, lon2) => {
 const calcularDirecao = (lat1, lon1, lat2, lon2) => {
   const toRad = (grau) => (grau * Math.PI) / 180
   const toDeg = (rad) => (rad * 180) / Math.PI
-
   const dLon = toRad(lon2 - lon1)
   const y = Math.sin(dLon) * Math.cos(toRad(lat2))
-  const x =
-    Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-    Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLon)
-
+  const x = Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) - Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLon)
   const brng = toDeg(Math.atan2(y, x))
   return (brng + 360) % 360
 }
@@ -379,25 +339,17 @@ const converterGrausParaCardinal = (graus) => {
 
 const atualizarDestinoMarker = () => {
   if (!map) return
-
   const [lat, lng] = localSelecionado.value.coords
-
   if (!destinoMarker) {
     destinoMarker = L.marker([lat, lng], { icon: destinoIcon }).addTo(map)
   } else {
     destinoMarker.setLatLng([lat, lng])
   }
-
-  destinoMarker.bindPopup(`
-    <strong>${localSelecionado.value.nome}</strong><br>
-    ${localSelecionado.value.endereco}<br>
-    ${localSelecionado.value.bairro}
-  `)
+  destinoMarker.bindPopup(`<strong>${localSelecionado.value.nome}</strong>`)
 }
 
 const atualizarUserMarker = () => {
   if (!map) return
-
   if (!userLocation.value) {
     if (userMarker) {
       map.removeLayer(userMarker)
@@ -405,61 +357,52 @@ const atualizarUserMarker = () => {
     }
     return
   }
-
   const latlng = [userLocation.value.lat, userLocation.value.lng]
-
   if (!userMarker) {
     userMarker = L.marker(latlng, { icon: userIcon }).addTo(map)
   } else {
     userMarker.setLatLng(latlng)
   }
-
-  userMarker.bindPopup('Sua localização atual')
+  userMarker.bindPopup('Você está aqui!')
 }
 
 const atualizarLinha = () => {
   if (!map) return
-
   if (linhaRota) {
     map.removeLayer(linhaRota)
     linhaRota = null
   }
-
   if (!userLocation.value) return
-
   linhaRota = L.polyline(
     [
       [userLocation.value.lat, userLocation.value.lng],
       localSelecionado.value.coords
     ],
     {
-      color: '#2734AF',
+      color: '#4F46E5',
       weight: 4,
-      opacity: 0.86,
-      dashArray: '10 8',
-      lineCap: 'round',
-      lineJoin: 'round'
+      opacity: 0.8,
+      dashArray: '10 10',
+      className: 'animated-route'
     }
   ).addTo(map)
 }
 
 const centralizarDestino = () => {
   if (!map) return
-  map.setView(localSelecionado.value.coords, 17, { animate: true })
+  map.setView(localSelecionado.value.coords, 16, { animate: true, duration: 1 })
 }
 
 const centralizarTudo = () => {
   if (!map) return
-
   if (userLocation.value) {
     const bounds = L.latLngBounds([
       [userLocation.value.lat, userLocation.value.lng],
       localSelecionado.value.coords
     ])
-    map.fitBounds(bounds, { padding: [50, 50] })
+    map.fitBounds(bounds, { padding: [60, 60], animate: true, duration: 1 })
     return
   }
-
   centralizarDestino()
 }
 
@@ -467,10 +410,7 @@ const atualizarMapaCompleto = (centralizar = false) => {
   atualizarDestinoMarker()
   atualizarUserMarker()
   atualizarLinha()
-
-  if (centralizar) {
-    centralizarTudo()
-  }
+  if (centralizar) centralizarTudo()
 }
 
 const obterLocalizacaoUsuario = () => {
@@ -478,10 +418,8 @@ const obterLocalizacaoUsuario = () => {
     mensagemStatus.value = 'Seu navegador não suporta geolocalização.'
     return
   }
-
   permissaoSolicitada.value = true
-  mensagemStatus.value = 'Solicitando sua localização...'
-
+  mensagemStatus.value = 'Buscando satélites...'
   navigator.geolocation.getCurrentPosition(
     (position) => {
       userLocation.value = {
@@ -489,36 +427,24 @@ const obterLocalizacaoUsuario = () => {
         lng: position.coords.longitude,
         accuracy: position.coords.accuracy
       }
-
-      mensagemStatus.value = 'Localização ativada com sucesso.'
+      mensagemStatus.value = '✓ Localização encontrada!'
       atualizarMapaCompleto(true)
     },
     () => {
-      mensagemStatus.value = 'Você não permitiu o acesso à localização ou ela não pôde ser obtida.'
+      mensagemStatus.value = 'Ops! Não conseguimos acessar sua localização.'
     },
-    {
-      enableHighAccuracy: true,
-      timeout: 12000,
-      maximumAge: 5000
-    }
+    { enableHighAccuracy: true, timeout: 12000, maximumAge: 5000 }
   )
 }
 
 const iniciarTracking = () => {
-  if (!navigator.geolocation) {
-    mensagemStatus.value = 'Seu navegador não suporta geolocalização.'
-    return
-  }
-
+  if (!navigator.geolocation) return
   if (watchId !== null) return
-
   if (!userLocation.value && !permissaoSolicitada.value) {
     obterLocalizacaoUsuario()
   }
-
   trackingAtivo.value = true
-  mensagemStatus.value = 'Modo ao vivo ativado.'
-
+  mensagemStatus.value = 'Modo ao vivo: Acompanhando seus passos.'
   watchId = navigator.geolocation.watchPosition(
     (position) => {
       userLocation.value = {
@@ -526,19 +452,14 @@ const iniciarTracking = () => {
         lng: position.coords.longitude,
         accuracy: position.coords.accuracy
       }
-
       atualizarUserMarker()
       atualizarLinha()
     },
     () => {
-      mensagemStatus.value = 'Não foi possível acompanhar sua localização ao vivo.'
+      mensagemStatus.value = 'Sinal de GPS perdido.'
       pararTracking()
     },
-    {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 3000
-    }
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 3000 }
   )
 }
 
@@ -547,18 +468,12 @@ const pararTracking = () => {
     navigator.geolocation.clearWatch(watchId)
     watchId = null
   }
-
   trackingAtivo.value = false
-  mensagemStatus.value = 'Modo ao vivo desativado.'
+  mensagemStatus.value = 'Modo ao vivo pausado.'
 }
 
 const toggleTracking = () => {
-  if (trackingAtivo.value) {
-    pararTracking()
-    return
-  }
-
-  iniciarTracking()
+  trackingAtivo.value ? pararTracking() : iniciarTracking()
 }
 
 watch(localSelecionado, async () => {
@@ -568,444 +483,465 @@ watch(localSelecionado, async () => {
 
 onMounted(async () => {
   map = L.map('map', {
-    zoomControl: true,
+    zoomControl: false,
     scrollWheelZoom: false
   }).setView(localSelecionado.value.coords, 16)
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     maxZoom: 20,
-    attribution: '&copy; OpenStreetMap'
+    attribution: '© <a href="https://carto.com/">CARTO</a>'
   }).addTo(map)
+
+  L.control.zoom({ position: 'bottomright' }).addTo(map)
 
   atualizarDestinoMarker()
 
   await nextTick()
-  requestAnimationFrame(() => {
-    map?.invalidateSize()
-  })
+  requestAnimationFrame(() => { map?.invalidateSize() })
 })
 
 onBeforeUnmount(() => {
   pararTracking()
-
-  if (map) {
-    map.remove()
-    map = null
-  }
+  if (map) { map.remove(); map = null }
 })
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 * {
   box-sizing: border-box;
 }
 
 .map-route {
   position: relative;
-  overflow: hidden;
-  padding: 5rem 1.2rem;
-  background: linear-gradient(180deg, #fafbff 0%, #f4f6fc 100%);
-  font-family: 'Inter', sans-serif;
-  color: #1f2433;
+  padding: 4rem 1rem;
+  background: #f8fafc;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #0f172a;
 }
 
 .map-route__bg {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .blur {
   position: absolute;
-  border-radius: 999px;
-  filter: blur(90px);
-  opacity: 0.42;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.6;
 }
 
 .blur--a {
-  top: -8rem;
-  left: -7rem;
-  width: 22rem;
-  height: 22rem;
-  background: rgba(39, 52, 175, 0.11);
+  top: -10%; left: -5%;
+  width: 400px; height: 400px;
+  background: rgba(79, 70, 229, 0.15);
 }
 
 .blur--b {
-  right: -8rem;
-  bottom: -8rem;
-  width: 24rem;
-  height: 24rem;
-  background: rgba(39, 52, 175, 0.09);
-}
-
-.grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(39, 52, 175, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(39, 52, 175, 0.03) 1px, transparent 1px);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.22), transparent 85%);
+  right: -5%; bottom: -10%;
+  width: 500px; height: 500px;
+  background: rgba(14, 165, 233, 0.1);
 }
 
 .map-route__wrap {
   position: relative;
   z-index: 1;
-  width: min(1220px, 100%);
+  width: min(1200px, 100%);
   margin: 0 auto;
 }
 
+/* Header */
 .map-route__header {
   display: flex;
   justify-content: space-between;
-  align-items: end;
-  gap: 1.4rem;
-  margin-bottom: 1.6rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  gap: 1rem;
 }
 
 .map-route__kicker {
   display: inline-flex;
   align-items: center;
-  min-height: 38px;
-  padding: 0.65rem 0.95rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(39, 52, 175, 0.12);
-  color: #2734AF;
-  font-size: 0.88rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 0.85rem;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
   margin-bottom: 1rem;
-  box-shadow: 0 10px 24px rgba(25, 33, 92, 0.05);
 }
 
 .map-route__title {
-  margin: 0;
-  font-size: clamp(2rem, 4vw, 3.15rem);
-  line-height: 1.04;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  color: #1c2232;
-  max-width: 800px;
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #0f172a;
 }
 
 .map-route__desc {
-  margin: 1rem 0 0;
-  max-width: 760px;
-  color: #5f677a;
-  line-height: 1.78;
-  font-size: 1rem;
+  margin: 0;
+  color: #64748b;
+  font-size: 1.05rem;
+  max-width: 600px;
+  line-height: 1.6;
 }
 
-.map-route__status {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.7rem;
+/* Status Indicator */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 100px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
 }
 
-.status-pill {
-  min-height: 40px;
-  padding: 0.65rem 0.95rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(39, 52, 175, 0.1);
-  color: #2734AF;
-  font-size: 0.88rem;
-  font-weight: 700;
-  white-space: nowrap;
+.status-indicator.is-active {
+  border-color: #10b981;
+  color: #047857;
+  background: #ecfdf5;
 }
 
-.status-pill.is-live {
-  background: rgba(39, 52, 175, 0.12);
+.status-indicator__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  transition: all 0.3s ease;
 }
 
-.status-pill.is-ok {
-  border-color: rgba(39, 52, 175, 0.2);
+.is-active .status-indicator__dot {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  animation: pulse-dot 2s infinite;
 }
 
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Chips de Localização e Scrollbar Customizada */
 .map-route__locations {
   display: flex;
-  gap: 0.9rem;
+  gap: 1rem;
   overflow-x: auto;
-  padding-bottom: 0.4rem;
-  margin-bottom: 1.4rem;
+  padding-bottom: 1.2rem; /* Espaço para a scrollbar */
+  margin-bottom: 1rem;
+  cursor: grab;
+  /* Scrollbar para Firefox */
   scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.map-route__locations.is-dragging {
+  cursor: grabbing;
+}
+
+/* Scrollbar para Chrome/Safari/Edge */
+.map-route__locations::-webkit-scrollbar {
+  height: 6px;
+}
+.map-route__locations::-webkit-scrollbar-track {
+  background: transparent;
+}
+.map-route__locations::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+.map-route__locations::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
 }
 
 .location-chip {
-  min-width: 250px;
-  padding: 1rem;
-  border-radius: 22px;
-  border: 1px solid rgba(39, 52, 175, 0.1);
-  background: rgba(255, 255, 255, 0.86);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 280px;
+  padding: 1.2rem;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  background: white;
   text-align: left;
   cursor: pointer;
-  box-shadow: 0 10px 24px rgba(25, 33, 92, 0.05);
-  backdrop-filter: blur(8px);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none; /* Impede a seleção de texto ao arrastar */
 }
 
 .location-chip:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 26px rgba(25, 33, 92, 0.07);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
 }
 
 .location-chip.active {
-  border-color: rgba(39, 52, 175, 0.24);
-  background: linear-gradient(135deg, rgba(39, 52, 175, 0.11), rgba(255, 255, 255, 0.96));
+  border-color: #4f46e5;
+  background: #f8fafc;
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
+}
+
+.location-chip__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #64748b;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.location-chip.active .location-chip__icon {
+  background: #4f46e5;
+  color: white;
 }
 
 .location-chip__title {
   display: block;
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #1f2433;
-  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.2rem;
+  line-height: 1.3;
+  pointer-events: none; /* Melhora a experiência do arrasto */
 }
 
 .location-chip__meta {
   display: block;
-  margin-top: 0.45rem;
-  font-size: 0.86rem;
-  color: #667086;
-  line-height: 1.5;
+  font-size: 0.85rem;
+  color: #64748b;
+  pointer-events: none;
 }
 
+/* Layout Principal */
 .map-route__content {
   display: grid;
-  grid-template-columns: 1.35fr 0.9fr;
-  gap: 1.2rem;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
 }
 
-.map-route__map-card,
-.map-route__info-card {
-  border-radius: 28px;
-  border: 1px solid rgba(39, 52, 175, 0.1);
-  background: rgba(255, 255, 255, 0.84);
-  box-shadow: 0 18px 38px rgba(25, 33, 92, 0.08);
-  backdrop-filter: blur(10px);
+/* Mapa e Glassmorphism Toolbar */
+.map-wrapper {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+  height: 600px;
 }
 
-.map-route__map-card {
-  padding: 1rem;
+.map-container {
+  width: 100%;
+  height: 100%;
+  background: #e2e8f0;
 }
 
-.map-toolbar {
+.map-toolbar-floating {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 1000;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-bottom: 0.9rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 100px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
-.toolbar-btn {
-  min-height: 44px;
-  padding: 0.75rem 1rem;
-  border-radius: 999px;
-  border: 1px solid rgba(39, 52, 175, 0.12);
-  background: #fff;
-  color: #2734AF;
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 100px;
+  background: transparent;
+  color: #334155;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    opacity 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.toolbar-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(39, 52, 175, 0.08);
-  background: #f8f9ff;
+.glass-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f172a;
 }
 
-.toolbar-btn:disabled {
-  opacity: 0.55;
+.glass-btn.primary {
+  background: #4f46e5;
+  color: white;
+}
+.glass-btn.primary:hover { background: #4338ca; }
+
+.glass-btn.is-tracking {
+  background: #ef4444;
+  color: white;
+}
+
+.glass-btn.icon-only {
+  padding: 0.6rem;
+}
+
+.glass-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.toolbar-btn--primary {
-  background: linear-gradient(135deg, #2734AF 0%, #3647d6 100%);
-  color: #fff;
-  border-color: transparent;
-  box-shadow: 0 14px 28px rgba(39, 52, 175, 0.18);
-}
-
-.toolbar-btn--primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2330a1 0%, #3142ca 100%);
-}
-
-.map-permission-note {
-  margin-bottom: 0.9rem;
-  padding: 0.9rem 1rem;
-  border-radius: 16px;
-  background: rgba(39, 52, 175, 0.05);
-  color: #58627a;
-  font-size: 0.92rem;
-  line-height: 1.7;
-}
-
-#map {
-  width: 100%;
-  height: 520px;
-  border-radius: 22px;
-  overflow: hidden;
-  box-shadow: 0 8px 18px rgba(39, 52, 175, 0.08);
-}
-
-.map-note {
-  margin-top: 0.9rem;
-  padding: 0.95rem 1rem;
-  border-radius: 18px;
-  background: rgba(39, 52, 175, 0.05);
-  color: #54607a;
-  font-size: 0.92rem;
-  line-height: 1.7;
-}
-
+/* Painel de Informações Lateral */
 .map-route__info-card {
-  padding: 1.3rem;
-}
-
-.info-card__head {
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
 }
 
 .info-card__eyebrow {
-  margin: 0 0 0.45rem;
-  color: #2734AF;
+  margin: 0 0 0.5rem;
+  color: #4f46e5;
   font-size: 0.8rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .info-card__head h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.info-card__address {
   margin: 0;
-  font-size: 1.35rem;
-  line-height: 1.4;
-  color: #1f2433;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
-.info-card__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.8rem;
-  margin-bottom: 1rem;
-}
-
-.info-box {
-  padding: 0.95rem 1rem;
-  border-radius: 18px;
-  background: #fff;
-  border: 1px solid rgba(39, 52, 175, 0.08);
-}
-
-.info-box .label {
-  display: block;
-  margin-bottom: 0.38rem;
-  color: #667086;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.info-box strong {
-  color: #1f2433;
-  font-size: 0.96rem;
-  line-height: 1.6;
-}
-
-.stats-card {
+/* Grid de Status Moderno */
+.stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.stat-box {
+  display: flex;
+  align-items: center;
   gap: 0.8rem;
-  margin-bottom: 1rem;
-}
-
-.stat {
   padding: 1rem;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #ffffff 0%, #f9faff 100%);
-  border: 1px solid rgba(39, 52, 175, 0.08);
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
 }
 
-.stat__label {
+.stat-box.highlight {
+  grid-column: span 2;
+  background: #eef2ff;
+  border-color: #e0e7ff;
+}
+
+.stat-box svg {
+  color: #4f46e5;
+  flex-shrink: 0;
+}
+
+.stat-box__label {
   display: block;
-  margin-bottom: 0.45rem;
   font-size: 0.8rem;
-  color: #667086;
-  font-weight: 700;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
 }
 
-.stat__value {
-  font-size: 1rem;
-  color: #2734AF;
+.stat-box__value {
+  display: block;
+  font-size: 1.1rem;
+  color: #0f172a;
   font-weight: 800;
 }
 
+/* Botões de Ação */
 .actions {
+  margin-top: auto;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
 }
 
-.action-btn {
-  min-height: 52px;
-  padding: 0.9rem 1rem;
-  border-radius: 16px;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.94rem;
-  font-weight: 800;
+.actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.btn-modern {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
 }
 
-.action-btn:hover {
-  transform: translateY(-2px);
+.btn-modern--maps {
+  background: #0f172a;
+  color: white;
 }
+.btn-modern--maps:hover { background: #1e293b; transform: translateY(-2px); }
 
-.action-btn--primary {
-  background: linear-gradient(135deg, #2734AF 0%, #3647d6 100%);
-  color: #fff;
-  box-shadow: 0 14px 28px rgba(39, 52, 175, 0.18);
+.btn-modern--waze {
+  background: #f1f5f9;
+  color: #0f172a;
 }
+.btn-modern--waze:hover { background: #e2e8f0; transform: translateY(-2px); }
 
-.action-btn--ghost {
-  background: #fff;
-  color: #2734AF;
-  border: 1px solid rgba(39, 52, 175, 0.12);
+.btn-modern--ghost {
+  background: transparent;
+  color: #64748b;
+  border: 2px dashed #cbd5e1;
 }
-
-.action-btn--soft {
-  background: rgba(39, 52, 175, 0.08);
-  color: #2734AF;
-}
+.btn-modern--ghost:hover { border-color: #94a3b8; color: #0f172a; }
 
 .helper-text {
-  margin: 1rem 0 0;
-  color: #5f677a;
-  font-size: 0.92rem;
-  line-height: 1.7;
+  text-align: center;
+  margin: 1.5rem 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
 }
 
+/* Leaflet Custom Pins Modernos */
 :deep(.custom-pin) {
   background: transparent;
   border: 0;
@@ -1015,86 +951,56 @@ onBeforeUnmount(() => {
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 999px;
-  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.82), 0 10px 18px rgba(25, 33, 92, 0.18);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px white, 0 4px 10px rgba(0,0,0,0.2);
 }
 
 :deep(.custom-pin--destino span) {
-  background: #2734AF;
+  background: #4f46e5;
 }
 
 :deep(.custom-pin--user span) {
-  background: #12b981;
+  background: #10b981;
 }
 
-@media (max-width: 1080px) {
+:deep(.pulse-anim span) {
+  animation: pulse-pin 2s infinite;
+}
+
+@keyframes pulse-pin {
+  0% { box-shadow: 0 0 0 4px white, 0 0 0 4px rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 4px white, 0 0 0 15px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 4px white, 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+:deep(.animated-route) {
+  animation: dash 30s linear infinite;
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: -1000; }
+}
+
+/* Responsivo */
+@media (max-width: 992px) {
+  .map-route__content {
+    grid-template-columns: 1fr;
+  }
+  .map-wrapper { height: 400px; }
+}
+
+@media (max-width: 768px) {
   .map-route__header {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .map-route__status {
-    justify-content: flex-start;
-  }
-
-  .map-route__content {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .map-route {
-    padding: 4rem 1rem;
-  }
-
-  .location-chip {
-    min-width: 220px;
-  }
-
-  #map {
-    height: 420px;
-  }
-}
-
-@media (max-width: 640px) {
-  .map-route__title {
-    font-size: 1.9rem;
-  }
-
-  .map-route__desc {
-    font-size: 0.96rem;
-    line-height: 1.72;
-  }
-
-  .map-toolbar {
-    flex-direction: column;
-  }
-
-  .toolbar-btn,
-  .action-btn {
-    width: 100%;
-  }
-
-  #map {
-    height: 360px;
-    border-radius: 18px;
-  }
-
-  .stats-card {
-    grid-template-columns: 1fr;
-  }
-
-  .map-route__map-card,
-  .map-route__info-card {
-    border-radius: 22px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .location-chip,
-  .toolbar-btn,
-  .action-btn {
-    transition: none !important;
+  .location-chip { min-width: 240px; }
+  .map-toolbar-floating {
+    top: auto;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
   }
 }
 </style>

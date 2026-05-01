@@ -185,105 +185,539 @@
 import { ref, computed } from 'vue'
 
 // ── Estado ─────────────────────────────────────────────
-const busca       = ref('')
-const diaAtivo    = ref('22')
+const busca = ref('')
+const diaAtivo = ref('07')
 const categoriaAtiva = ref('todos')
-const eventoAberto   = ref(null)
+const eventoAberto = ref(null)
 
 // ── Dias ───────────────────────────────────────────────
 const dias = [
-  { value: '22', label: '22/05', diaSemana: 'Quinta' },
-  { value: '23', label: '23/05', diaSemana: 'Sexta'  },
-  { value: '24', label: '24/05', diaSemana: 'Sábado' },
+  { value: '07', label: '07/05', diaSemana: 'Quinta' },
+  { value: '08', label: '08/05', diaSemana: 'Sexta' },
+  { value: '09', label: '09/05', diaSemana: 'Sábado' },
 ]
 
 // ── Categorias ─────────────────────────────────────────
 const categorias = [
-  { value: 'todos',    label: 'Todos',         cor: '#64748b' },
-  { value: 'palestra', label: 'Palestras',      cor: '#0D1B5E' },
-  { value: 'show',     label: 'Shows',          cor: '#7C3AED' },
-  { value: 'oficina',  label: 'Oficinas',       cor: '#D97706' },
-  { value: 'infantil', label: 'Infantil',       cor: '#059669' },
-  { value: 'foto',     label: 'Fotografia',     cor: '#DB2777' },
+  { value: 'todos', label: 'Todos', cor: '#64748b' },
+  { value: 'abertura', label: 'Abertura', cor: '#0D1B5E' },
+  { value: 'acolhida', label: 'Acolhidas', cor: '#059669' },
+  { value: 'palestra', label: 'Palestras', cor: '#0D1B5E' },
+  { value: 'batepapo', label: 'Bate-papos', cor: '#D97706' },
+  { value: 'mesa', label: 'Mesas', cor: '#7C3AED' },
+  { value: 'lancamento', label: 'Lançamentos', cor: '#DB2777' },
+  { value: 'oficina', label: 'Oficinas', cor: '#2563EB' },
+  { value: 'show', label: 'Shows', cor: '#7C3AED' },
 ]
 
 const catMeta = {
-  palestra: { label: 'Palestra',    cor: '#0D1B5E' },
-  show:     { label: 'Show',        cor: '#7C3AED' },
-  oficina:  { label: 'Oficina',     cor: '#D97706' },
-  infantil: { label: 'Infantil',    cor: '#059669' },
-  foto:     { label: 'Fotografia',  cor: '#DB2777' },
-  abertura: { label: 'Abertura',    cor: '#0D1B5E' },
-  espetaculo: { label: 'Espetáculo', cor: '#7C3AED' },
-  roda:     { label: 'Roda de Conversa', cor: '#0D1B5E' },
-  encerramen: { label: 'Encerramento', cor: '#7C3AED' },
+  abertura: {
+    label: 'Abertura',
+    cor: '#0D1B5E',
+  },
+  acolhida: {
+    label: 'Acolhida',
+    cor: '#059669',
+  },
+  palestra: {
+    label: 'Palestra',
+    cor: '#0D1B5E',
+  },
+  batepapo: {
+    label: 'Bate-papo',
+    cor: '#D97706',
+  },
+  mesa: {
+    label: 'Mesa',
+    cor: '#7C3AED',
+  },
+  lancamento: {
+    label: 'Lançamento',
+    cor: '#DB2777',
+  },
+  oficina: {
+    label: 'Oficina',
+    cor: '#2563EB',
+  },
+  show: {
+    label: 'Show',
+    cor: '#7C3AED',
+  },
 }
 
 // ── Locais ─────────────────────────────────────────────
 const locais = {
-  ciro:    { nome: 'Centro de Eventos Dep. Ciro Nogueira', mapsUrl: 'https://maps.google.com/?q=Pedro+II+PI+Centro+de+Eventos' },
-  norberto:{ nome: 'Auditório Padre Norberto',            mapsUrl: 'https://maps.google.com/?q=Auditório+Padre+Norberto+Pedro+II+PI' },
-  praca:   { nome: 'Praça Domingos Mourão Filho',         mapsUrl: 'https://maps.google.com/?q=Praça+Domingos+Mourão+Filho+Pedro+II+PI' },
-  clube:   { nome: 'Clube 11 de Agosto',                  mapsUrl: 'https://maps.google.com/?q=Clube+11+de+Agosto+Pedro+II+PI' },
-  escola:  { nome: 'Escola José Teixeira Santos',         mapsUrl: 'https://maps.google.com/?q=Escola+José+Teixeira+Santos+Pedro+II+PI' },
+  ciro: {
+    nome: 'Espaço de Eventos Deputado Ciro Nogueira',
+    mapsUrl:
+      'https://maps.google.com/?q=Espaço+de+Eventos+Deputado+Ciro+Nogueira+Pedro+II+PI',
+  },
+
+  mgf: {
+    nome: 'Espaço MGF Eventos',
+    mapsUrl: 'https://maps.google.com/?q=Espaço+MGF+Eventos+Pedro+II+PI',
+  },
+
+  praca: {
+    nome: 'Praça Domingos Mourão',
+    mapsUrl: 'https://maps.google.com/?q=Praça+Domingos+Mourão+Pedro+II+PI',
+  },
+
+  pracaFilho: {
+    nome: 'Praça Domingos Mourão Filho',
+    mapsUrl:
+      'https://maps.google.com/?q=Praça+Domingos+Mourão+Filho+Pedro+II+PI',
+  },
+
+  joseTeixeira: {
+    nome: 'José Teixeira Santos',
+    mapsUrl: 'https://maps.google.com/?q=José+Teixeira+Santos+Pedro+II+PI',
+  },
 }
 
 // ── Dados ─────────────────────────────────────────────
 // campo _cat é a categoria para o filtro
 const todosEventos = [
-  // DIA 22
-  { dia:'22', horario:'18h30', periodo:'Noite',  _cat:'abertura',   titulo:'Solenidade Oficial de Abertura do 3º SALIP2',                       descricaoLimpa:'Discursos de autoridades e homenageados.',                                                                                             vagas:null,  _local: locais.ciro },
-  { dia:'22', horario:'19h00', periodo:'Noite',  _cat:'palestra',   titulo:'Palestra de Abertura: Fabrício Carpinejar (RS)',                     descricaoLimpa:'Palestra de abertura com o escritor e colunista Fabrício Carpinejar, vindo do Rio Grande do Sul.',                                       vagas:null,  _local: locais.ciro },
-  { dia:'22', horario:'21h00', periodo:'Noite',  _cat:'show',       titulo:'Show com Soraya Castelo Branco (PI)',                               descricaoLimpa:'Apresentação musical de Soraya Castelo Branco.',                                                                                        vagas:null,  _local: locais.ciro },
-  // DIA 23 MANHÃ
-  { dia:'23', horario:'8h00',  periodo:'Manhã',  _cat:'palestra',   titulo:'Acolhida: Gilciê Memória',                                         descricaoLimpa:'Abertura da programação matinal com Gilciê Memória.',                                                                                   vagas:null,  _local: locais.norberto },
-  { dia:'23', horario:'8h30',  periodo:'Manhã',  _cat:'palestra',   titulo:'A Voz de Esperança Garcia — Bernardo Aurélio e João P. Luiz (PI)',  descricaoLimpa:'Mediação: Wáleria Rubens.',                                                                                                            vagas:null,  _local: locais.norberto },
-  { dia:'23', horario:'9h00',  periodo:'Manhã',  _cat:'foto',       titulo:'Exposição Fotográfica "Reviver Pedro II" — Turma 1',               descricaoLimpa:'Curadoria: Historiador Afonso Celso.',                                                                                                  vagas:'40 vagas', _local: locais.clube },
-  { dia:'23', horario:'9h00',  periodo:'Manhã',  _cat:'infantil',   titulo:'Contação de Histórias / Teatro de Bonecos',                        descricaoLimpa:'Apresentação: Chagas Vale e Talitha do Monte.',                                                                                         vagas:null,  _local: locais.praca },
-  { dia:'23', horario:'9h00',  periodo:'Manhã',  _cat:'oficina',    titulo:'Oficina de Literatura de Cordel — Joames (PI) · Turma 01',         descricaoLimpa:'Ministrante: Joaquim Mendes (Joames).',                                                                                                vagas:'20 vagas', _local: locais.escola },
-  { dia:'23', horario:'9h00',  periodo:'Manhã',  _cat:'oficina',    titulo:'Oficina de Fanzine — Jerciane Lima (PI) · Turma 01',               descricaoLimpa:'Introdução ao universo do fanzine como ferramenta de expressão literária.',                                                             vagas:'20 vagas', _local: locais.escola },
-  { dia:'23', horario:'9h00',  periodo:'Manhã',  _cat:'oficina',    titulo:'Oficina Poética "Escrever com Outros Passos" — Marina Campelo (PI) · Turma 01', descricaoLimpa:'Escrita criativa com foco na poesia e no movimento.',                                                                     vagas:'20 vagas', _local: locais.escola },
-  { dia:'23', horario:'9h00',  periodo:'Manhã',  _cat:'oficina',    titulo:'Oficina "Comida é Memória" — Nutricionista Renata Luiza · Turma 01', descricaoLimpa:'Relação entre gastronomia, memória afetiva e literatura.',                                                                           vagas:'20 vagas', _local: locais.escola },
-  { dia:'23', horario:'10h00', periodo:'Manhã',  _cat:'foto',       titulo:'Exposição Fotográfica "Reviver Pedro II" — Turma 2',               descricaoLimpa:'Curadoria: Historiador Afonso Celso.',                                                                                                  vagas:'40 vagas', _local: locais.clube },
-  { dia:'23', horario:'10h00', periodo:'Manhã',  _cat:'infantil',   titulo:'Lenda da Sereia do Pirapora — Grupo Urutau',                       descricaoLimpa:'Espetáculo infantil baseado em lenda regional.',                                                                                        vagas:null,  _local: locais.praca },
-  { dia:'23', horario:'10h30', periodo:'Manhã',  _cat:'palestra',   titulo:'Música e Letra, Instrumentos de Educação — Grupo Cocares',         descricaoLimpa:'Palestra/Show. Mediação: Socorrinha Almeida.',                                                                                          vagas:null,  _local: locais.norberto },
-  // DIA 23 TARDE
-  { dia:'23', horario:'14h00', periodo:'Tarde',  _cat:'palestra',   titulo:'Acolhida: Jair Paulo e Julie',                                     descricaoLimpa:'Abertura do período da tarde.',                                                                                                         vagas:null,  _local: locais.norberto },
-  { dia:'23', horario:'14h30', periodo:'Tarde',  _cat:'palestra',   titulo:'O Cânone Literário — O Sublime Piauiense · Luiz Romero (PI)',      descricaoLimpa:'Mediação: Wilson Brandão.',                                                                                                             vagas:null,  _local: locais.norberto },
-  { dia:'23', horario:'14h30', periodo:'Tarde',  _cat:'foto',       titulo:'Exposição Fotográfica "Reviver Pedro II" — Turma 3',               descricaoLimpa:'Curadoria: Historiador Afonso Celso.',                                                                                                  vagas:'40 vagas', _local: locais.clube },
-  { dia:'23', horario:'16h30', periodo:'Tarde',  _cat:'palestra',   titulo:'A Literatura de Pedro II: da Pré-história aos Dias Atuais · Ernâni Getirana (PI)', descricaoLimpa:'Mediação: Claisse Sales.',                                                                                             vagas:null,  _local: locais.norberto },
-  { dia:'23', horario:'16h30', periodo:'Tarde',  _cat:'foto',       titulo:'Exposição Fotográfica "Reviver Pedro II" — Turma 4',               descricaoLimpa:'Curadoria: Historiador Afonso Celso.',                                                                                                  vagas:'40 vagas', _local: locais.clube },
-  // DIA 23 NOITE
-  { dia:'23', horario:'18h30', periodo:'Noite',  _cat:'palestra',   titulo:'Acolhida: Marcos Aurélio',                                         descricaoLimpa:'Abertura da programação noturna.',                                                                                                      vagas:null,  _local: locais.norberto },
-  { dia:'23', horario:'19h00', periodo:'Noite',  _cat:'espetaculo', titulo:'Espetáculo Esperando Godot — Grupo Harém de Teatro (PI)',          descricaoLimpa:'Texto: Samuel Beckett. Mediação: Helany Max.',                                                                                          vagas:null,  _local: locais.norberto },
-  { dia:'23', horario:'21h00', periodo:'Noite',  _cat:'show',       titulo:'Show com Sonayra',                                                 descricaoLimpa:'Apresentação musical na praça.',                                                                                                        vagas:null,  _local: locais.praca },
-  // DIA 24 MANHÃ
-  { dia:'24', horario:'8h00',  periodo:'Manhã',  _cat:'palestra',   titulo:'Acolhida: Marcus Aurélio',                                         descricaoLimpa:'Abertura da programação matinal.',                                                                                                      vagas:null,  _local: locais.norberto },
-  { dia:'24', horario:'8h30',  periodo:'Manhã',  _cat:'palestra',   titulo:'A Lírica de Manuel Bandeira — José de Nicola (SP) e Cineas Santos (PI)', descricaoLimpa:'Mediação: Wilson Brandão.',                                                                                                      vagas:null,  _local: locais.norberto },
-  { dia:'24', horario:'9h00',  periodo:'Manhã',  _cat:'foto',       titulo:'Exposição Fotográfica "Reviver Pedro II" — Turma 5',               descricaoLimpa:'Curadoria: Historiador Afonso Celso.',                                                                                                  vagas:'40 vagas', _local: locais.clube },
-  { dia:'24', horario:'9h00',  periodo:'Manhã',  _cat:'infantil',   titulo:'Contação de Histórias / Teatro de Bonecos',                        descricaoLimpa:'Apresentação: Chagas Vale e Talitha do Monte.',                                                                                         vagas:null,  _local: locais.praca },
-  { dia:'24', horario:'10h00', periodo:'Manhã',  _cat:'foto',       titulo:'Exposição Fotográfica "Reviver Pedro II" — Turma 6',               descricaoLimpa:'Curadoria: Historiador Afonso Celso.',                                                                                                  vagas:'40 vagas', _local: locais.clube },
-  { dia:'24', horario:'10h00', periodo:'Manhã',  _cat:'infantil',   titulo:'Sítio do Pica-Pau Amarelo — Grupo Urutau',                         descricaoLimpa:'Espetáculo infantil inspirado na obra de Monteiro Lobato.',                                                                             vagas:null,  _local: locais.praca },
-  { dia:'24', horario:'10h30', periodo:'Manhã',  _cat:'palestra',   titulo:'Piauienses Escritoras — Gênese Histórica · Jasmine Malta (PI)',    descricaoLimpa:'Mediação: Kássio Gomes (PI).',                                                                                                          vagas:null,  _local: locais.norberto },
-  // DIA 24 TARDE
-  { dia:'24', horario:'14h00', periodo:'Tarde',  _cat:'palestra',   titulo:'Acolhida: Grupo da APAE',                                          descricaoLimpa:'Abertura da programação da tarde.',                                                                                                     vagas:null,  _local: locais.norberto },
-  { dia:'24', horario:'14h30', periodo:'Tarde',  _cat:'palestra',   titulo:'Poesia, Música e Sala de Aula — Adriano Lobão Aragão e Vagner Ribeiro (PI)', descricaoLimpa:'Integração entre literatura, música e prática pedagógica.',                                                                  vagas:null,  _local: locais.norberto },
-  { dia:'24', horario:'14h30', periodo:'Tarde',  _cat:'foto',       titulo:'Exposição Fotográfica "Reviver Pedro II" — Turma 7',               descricaoLimpa:'Curadoria: Historiador Afonso Celso.',                                                                                                  vagas:'40 vagas', _local: locais.clube },
-  { dia:'24', horario:'16h30', periodo:'Tarde',  _cat:'roda',       titulo:'Roda de Conversa: A Mulher na Literatura de Pedro II',             descricaoLimpa:'Convidadas: Marina Campelo, Adeodata dos Anjos, Aldenira Martins, Dayse Benício, Margarete Gomes e Socorro Almeida. Mediação: Ernani Getirana (PI).', vagas:null, _local: locais.norberto },
-  { dia:'24', horario:'16h30', periodo:'Tarde',  _cat:'foto',       titulo:'Exposição Fotográfica "Reviver Pedro II" — Turma 8',               descricaoLimpa:'Curadoria: Historiador Afonso Celso.',                                                                                                  vagas:'40 vagas', _local: locais.clube },
-  // DIA 24 NOITE
-  { dia:'24', horario:'20h00', periodo:'Noite',  _cat:'encerramen', titulo:'Show de Humor de Encerramento — Selma de Nieta',                   descricaoLimpa:'Encerramento oficial do 3º SALIP2.',                                                                                                    vagas:null,  _local: locais.norberto },
-  { dia:'24', horario:'21h00', periodo:'Noite',  _cat:'show',       titulo:'Show de Encerramento — Gonzaga Lu e Trio Asa Branca',             descricaoLimpa:'Show musical de encerramento na praça.',                                                                                                vagas:null,  _local: locais.praca },
+  // DIA 07/05/2026 — QUINTA-FEIRA — NOITE
+  {
+    dia: '07',
+    horario: '18h30',
+    periodo: 'Noite',
+    _cat: 'abertura',
+    titulo: 'Solenidade Oficial de Abertura do 4º SaLiP2',
+    descricaoLimpa:
+      'Abertura oficial do 4º Salão do Livro de Pedro II, com discursos de autoridades e homenageados.',
+    vagas: null,
+    _local: locais.ciro,
+  },
+  {
+    dia: '07',
+    horario: '19h00',
+    periodo: 'Noite',
+    _cat: 'palestra',
+    titulo: 'Palestra de abertura: O desafio das grandes reportagens',
+    descricaoLimpa:
+      'Palestrante: Francisco José. Apresentação/Mediação: Wilson Brandão.',
+    vagas: null,
+    _local: locais.ciro,
+  },
+  {
+    dia: '07',
+    horario: '21h00',
+    periodo: 'Noite',
+    _cat: 'show',
+    titulo: 'Show musical com Marcos Aurélio',
+    descricaoLimpa: 'Apresentação musical de Marcos Aurélio.',
+    vagas: null,
+    _local: locais.ciro,
+  },
+
+  // DIA 08/05/2026 — SEXTA-FEIRA — MANHÃ
+  {
+    dia: '08',
+    horario: '07h30',
+    periodo: 'Manhã',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Marcos Aurélio',
+    descricaoLimpa: 'Abertura da programação da manhã com Marcos Aurélio.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 1',
+    descricaoLimpa: 'Ministrante: Dinael Viana.',
+    vagas: 25,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 2',
+    descricaoLimpa: 'Ministrante: Genary Viana Barroso.',
+    vagas: 20,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura Acrílica',
+    descricaoLimpa: 'Ministrante: José de Arimatéa.',
+    vagas: 10,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Produção de Caricatura',
+    descricaoLimpa: 'Ministrante: Juniel Sousa.',
+    vagas: 15,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Desenho a Óleo',
+    descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
+    vagas: 3,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '08h30',
+    periodo: 'Manhã',
+    _cat: 'lancamento',
+    titulo:
+      'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    descricaoLimpa:
+      'Convidados: Amadeu Messias, Aldenira Martins e Claísse Sales. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '09h00',
+    periodo: 'Manhã',
+    _cat: 'batepapo',
+    titulo:
+      'Bate-papo e exibição do filme: O Sacro e o Profano de Araújo e Verônica',
+    descricaoLimpa:
+      'Palestrante: Rivanildo Feitosa. Apresentação/Mediação: Wilson Brandão.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '10h30',
+    periodo: 'Manhã',
+    _cat: 'palestra',
+    titulo: 'Pedro II, 200 anos: um homem, uma cidade',
+    descricaoLimpa:
+      'Palestrante: Fonseca Neto. Apresentação/Mediação: Wilson Brandão.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+
+  // DIA 08/05/2026 — SEXTA-FEIRA — TARDE
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Marcos Aurélio',
+    descricaoLimpa: 'Abertura da programação da tarde com Marcos Aurélio.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 1',
+    descricaoLimpa: 'Ministrante: Dinael Viana.',
+    vagas: 25,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 2',
+    descricaoLimpa: 'Ministrante: Genary Viana Barroso.',
+    vagas: 20,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura Acrílica',
+    descricaoLimpa: 'Ministrante: José de Arimatéa.',
+    vagas: 10,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Produção de Caricatura',
+    descricaoLimpa: 'Ministrante: Juniel Sousa.',
+    vagas: 15,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Desenho a Óleo',
+    descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
+    vagas: 3,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '14h30',
+    periodo: 'Tarde',
+    _cat: 'lancamento',
+    titulo:
+      'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    descricaoLimpa:
+      'Convidados: Rameiro Junior, Eduardo Albuquerque, Ernâni Getirana e Gerciane Lima. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '15h00',
+    periodo: 'Tarde',
+    _cat: 'palestra',
+    titulo:
+      'Educar com IA ou se educar para a IA? O futuro dos jovens nesta desafiante era',
+    descricaoLimpa:
+      'Palestrante: Dr. Marcelo Mesquita. Apresentação/Mediação: Helany Max.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '16h30',
+    periodo: 'Tarde',
+    _cat: 'mesa',
+    titulo:
+      'Mulheres que Escrevem: A Literatura de Marina Campelo, Lúcia Ana e Graça Targino',
+    descricaoLimpa:
+      'Mesa com Marina Campelo, Lúcia Ana e Graça Targino. Apresentação/Mediação: Ernâni Getirana.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+
+  // DIA 08/05/2026 — SEXTA-FEIRA — NOITE
+  {
+    dia: '08',
+    horario: '18h30',
+    periodo: 'Noite',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Marcos Aurélio',
+    descricaoLimpa: 'Abertura da programação da noite com Marcos Aurélio.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '19h00',
+    periodo: 'Noite',
+    _cat: 'palestra',
+    titulo: 'Quando o professor acredita, a educação acontece',
+    descricaoLimpa:
+      'Palestrante: Hamilton Werneck. Apresentação/Mediação: Wilson Brandão.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '21h00',
+    periodo: 'Noite',
+    _cat: 'show',
+    titulo: 'Show com a Banda Mistura Fina',
+    descricaoLimpa: 'Apresentação musical da Banda Mistura Fina, de Piripiri.',
+    vagas: null,
+    _local: locais.praca,
+  },
+
+  // DIA 09/05/2026 — SÁBADO — MANHÃ
+  {
+    dia: '09',
+    horario: '07h30',
+    periodo: 'Manhã',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Sonayra',
+    descricaoLimpa: 'Abertura da programação da manhã com Sonayra.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 1',
+    descricaoLimpa: 'Ministrante: Dinael Viana.',
+    vagas: 25,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 2',
+    descricaoLimpa: 'Ministrante: Genary Viana Barroso.',
+    vagas: 20,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura Acrílica',
+    descricaoLimpa: 'Ministrante: José de Arimatéa.',
+    vagas: 10,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Produção de Caricatura',
+    descricaoLimpa: 'Ministrante: Juniel Sousa.',
+    vagas: 15,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Desenho a Óleo',
+    descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
+    vagas: 3,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'lancamento',
+    titulo:
+      'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    descricaoLimpa:
+      'Convidados: Humberto Cordeiro, Ioman Malaquias, Raimundo Silva e Dayse Benício. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '08h30',
+    periodo: 'Manhã',
+    _cat: 'mesa',
+    titulo: 'Tempo e memória na literatura de Sérgia Alves',
+    descricaoLimpa:
+      'Mesa com Algemira Mendes e Sérgia Alves. Apresentação/Mediação: Marleide Lins.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '10h30',
+    periodo: 'Manhã',
+    _cat: 'palestra',
+    titulo:
+      'A estratégia do matuto: criação e técnica literária na poética de Genuíno Sales',
+    descricaoLimpa:
+      'Palestrante: Ernâni Getirana. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+
+  // DIA 09/05/2026 — SÁBADO — TARDE
+  {
+    dia: '09',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Sonayra',
+    descricaoLimpa: 'Abertura da programação da tarde com Sonayra.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '14h30',
+    periodo: 'Tarde',
+    _cat: 'lancamento',
+    titulo:
+      'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    descricaoLimpa:
+      'Convidados: Ricardo Resende, Socorro Almeida, Cleandro Oliveira e Wilson Brandão, em parceria com Zózimo Tavares. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '15h30',
+    periodo: 'Tarde',
+    _cat: 'palestra',
+    titulo:
+      'Casal de escritores: gênese de escrita literária de ficção investigativa',
+    descricaoLimpa:
+      'Palestrantes: Normandes Malta e Jasmine Malta. Apresentação/Mediação: Helany Max.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+
+  // DIA 09/05/2026 — SÁBADO — NOITE
+  {
+    dia: '09',
+    horario: '18h30',
+    periodo: 'Noite',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Sonayra',
+    descricaoLimpa: 'Abertura da programação da noite com Sonayra.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '19h00',
+    periodo: 'Noite',
+    _cat: 'palestra',
+    titulo: 'A crise invisível na educação',
+    descricaoLimpa:
+      'Palestrante: Márcio Lima. Apresentação/Mediação: Kássio Gomes.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '21h00',
+    periodo: 'Noite',
+    _cat: 'show',
+    titulo: 'Show com Gonzaga Lu e Trio Asa Branca',
+    descricaoLimpa: 'Show musical com Gonzaga Lu e Trio Asa Branca.',
+    vagas: null,
+    _local: locais.praca,
+  },
 ]
 
-// Mapa de cat para grupo de filtro
+// Mapa de categoria para filtro
 const catParaFiltro = {
-  palestra: 'palestra', show: 'show', oficina: 'oficina',
-  infantil: 'infantil', foto: 'foto',
-  abertura: 'palestra', espetaculo: 'show',
-  roda: 'palestra', encerramen: 'show',
+  abertura: 'abertura',
+  acolhida: 'acolhida',
+  palestra: 'palestra',
+  batepapo: 'batepapo',
+  mesa: 'mesa',
+  lancamento: 'lancamento',
+  oficina: 'oficina',
+  show: 'show',
 }
-
 // ── Computed ───────────────────────────────────────────
 const normalizar = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
@@ -331,8 +765,8 @@ const resetFiltros = () => { busca.value = ''; categoriaAtiva.value = 'todos'; d
 
 const baixarArquivo = () => {
   const link = document.createElement('a')
-  link.href = '/ARQ/FolderPrograma.pdf'
-  link.download = 'Folder-SALIP2.pdf'
+  link.href = '/ARQ/FolderPrograma.doc'
+  link.download = 'Folder-SALIP2.dpc'
   link.target = '_blank'
   document.body.appendChild(link)
   link.click()

@@ -26,6 +26,7 @@ declare module 'vue' {
     Hero: typeof import('./src/components/hero.vue')['default']
     Homen: typeof import('./src/components/homen.vue')['default']
     Inscricao: typeof import('./src/components/inscricao.vue')['default']
+    ListAvalia: typeof import('./src/components/listAvalia.vue')['default']
     ListUsers: typeof import('./src/components/listUsers.vue')['default']
     Local: typeof import('./src/components/local.vue')['default']
     MidiaSa: typeof import('./src/components/midiaSa.vue')['default']

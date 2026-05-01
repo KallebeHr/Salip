@@ -17,8 +17,8 @@
   padding: 4rem 1.5rem;
   min-height: 100vh;
   height: auto;
-  background-image: url('/IMG/backCadastro.png');
   background-size: cover;
+  background: #2734AF;
   background-position: center;
   background-repeat: no-repeat;
     }
