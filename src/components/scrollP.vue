@@ -1,259 +1,234 @@
 <template>
   <section class="sponsors">
-    <div class="container">
-      <div class="viewport" :style="maskStyle">
-        <div class="track">
-          <!-- GROUP A -->
-          <div class="group">
-            <div
-              v-for="(s, i) in sponsors"
-              :key="'a' + i"
-              class="item"
-            >
-              <img
-                v-if="s.logo"
-                :src="s.logo"
-                :alt="s.name"
-                class="logo"
-                loading="lazy"
-              />
+    <div class="viewport" :style="maskStyle">
+      <div class="track" ref="trackRef">
 
-              <span v-else class="text">
-                {{ s.name }}
-              </span>
+        <template v-for="clone in 2" :key="clone">
+          <div
+            v-for="(section, i) in sections"
+            :key="clone + '-' + i"
+            class="section-card"
+            :aria-hidden="clone === 2"
+          >
+            <span class="section-label">{{ section.label }}</span>
+            <div class="section-divider" />
+
+            <div class="logos-row">
+              <div
+                v-for="(item, j) in section.items"
+                :key="j"
+                class="logo-item"
+              >
+                <img
+                  v-if="item.src"
+                  :src="item.src"
+                  :alt="item.name"
+                  class="logo-img"
+                  loading="lazy"
+                />
+                <span v-else class="logo-text">{{ item.name }}</span>
+              </div>
             </div>
           </div>
 
-          <!-- GROUP B -->
-          <div class="group" aria-hidden="true">
-            <div
-              v-for="(s, i) in sponsors"
-              :key="'b' + i"
-              class="item"
-            >
-              <img
-                v-if="s.logo"
-                :src="s.logo"
-                :alt="s.name"
-                class="logo"
-                loading="lazy"
-              />
+          <!-- Separador vertical entre os blocos de seções -->
+          <div
+            v-if="clone === 1"
+            class="block-sep"
+            aria-hidden="true"
+          />
+        </template>
 
-              <span v-else class="text">
-                {{ s.name }}
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-const sponsors = [
-  { name: "Prefeitura de Pedro II" },
-  { name: "7 a 9 de Maio" },
-  { name: "Prefeitura de Pedro II" },
-  { name: "Nome Patrocinio" },
-  { Name:"", linkSRc: "/"}
+const sections = [
+  {
+    label: "REALIZAÇÃO",
+    items: [
+      { name: "Secretaria da Cultura", src: "/LOGOS/secult.png" },
+    ],
+  },
+  {
+    label: "ORGANIZAÇÃO E CURADORIA",
+    items: [
+      { name: "Fundação Quixote", src: "/LOGOS/quixote.png" },
+    ],
+  },
+  {
+    label: "APOIO",
+    items: [
+      { name: "Secretaria de Educação", src: "/LOGOS/semed.png" },
+      { name: "Wilson Brandão", src: "/LOGOS/wilson.png" },
+    ],
+  },
 ]
 
 const maskStyle = `
-  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
 `
 </script>
 
 <style scoped>
 @import url('https://fonts.cdnfonts.com/css/rawline');
 
+/* ── Wrapper ─────────────────────────────────────── */
 .sponsors {
-  position: relative;
-  padding: 5px 0;
   overflow: hidden;
+  background: transparent; /* herda o fundo da página */
 }
 
-.container {
-  width: min(1280px, calc(100% - 10px));
-  margin: 0 auto;
-}
-
-.head {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.title {
-  margin: 0;
-  color: rgba(0, 0, 0, 0.96);
-  font-family: 'Rawline', sans-serif;
-  font-size: clamp(1.55rem, 2.3vw, 2.45rem);
-
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1;
-}
-
-.sub {
-  margin: 12px auto 0;
-  max-width: 640px;
-  color: rgba(0, 0, 0, 0.56);
-    font-family: 'Rawline', sans-serif;
-  font-size: 0.98rem;
-  line-height: 1.6;
-}
-.confirmed-section__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--accent);
-  font: 800 11px/1 var(--sans);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #316eb9;
-}
-
-.confirmed-section__eyebrow::before,
-.confirmed-section__eyebrow::after {
-  content: "";
-  width: 22px;
-  height: 1.5px;
-  border-radius: 999px;
-  background: currentColor;
-  opacity: 0.65;
-}
+/* ── Viewport com máscara ────────────────────────── */
 .viewport {
   position: relative;
   overflow: hidden;
-  padding: 10px 0;
+
+  /* ALTURA FIXA — ajuste esse valor conforme seu design */
+  height: 158px;
 }
 
+/* ── Trilha animada ──────────────────────────────── */
 .track {
-  display: flex;
-  align-items: center;
-  width: max-content;
-  animation: ticker 24s linear infinite;
+  display: inline-flex;    /* largura = soma dos filhos */
+  align-items: stretch;
+  height: 100%;
+  animation: ticker 8s linear infinite;
   will-change: transform;
+  white-space: nowrap;
 }
 
 .viewport:hover .track {
   animation-play-state: paused;
 }
 
-.group {
-  display: flex;
-  align-items: center;
-  gap: 44px;
-  padding-right: 40px;
+/* ── Cartão de seção ─────────────────────────────── */
+.section-card {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 40px;
+  gap: 6px;
+  flex-shrink: 0;
+  height: 100%;
 }
 
-.item {
+/* ── Label da seção ──────────────────────────────── */
+.section-label {
+  display: block;
+  font-family: 'Rawline', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ── Linha separadora ────────────────────────────── */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+/* ── Linha de logos ──────────────────────────────── */
+.logos-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+/* ── Item individual ─────────────────────────────── */
+.logo-item {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 72px;
-  opacity: 0.72;
-  transform: translateY(0);
-  transition:
-    opacity 220ms ease,
-    transform 220ms ease,
-    filter 220ms ease;
+  opacity: 0.75;
+  transition: opacity 200ms ease, transform 200ms ease;
 }
 
-.item:hover {
+.logo-item:hover {
   opacity: 1;
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
-.text {
-  display: inline-block;
-  white-space: nowrap;
-
-  color: rgba(97, 97, 97, 0.65);
-
-  font-family: 'Anton', sans-serif;
-
-  font-size: clamp(1.8rem, 2.6vw, 3rem);
-  font-weight: 900; 
-
-  letter-spacing: 0.04em;
-  line-height: 1;
-
-  text-transform: uppercase;
-
-  opacity: 0.6;
-
-  transform: translateZ(0);
-}
-
-.logo {
-  height: 42px;
-  width: auto;
-  max-width: 200px;
+/* ── Imagem de logo — largura AUTO, altura fixa ──── */
+.logo-img {
+  height: 86px;   /* altura fixa → largura se ajusta automaticamente */
+  width: auto;    /* ← preserva proporção sem corte */
+  max-width: 160px;
   object-fit: contain;
-  opacity: 0.72;
-  filter:
-    grayscale(100%)
-    brightness(1.8)
-    contrast(1.05)
-    drop-shadow(0 8px 24px rgba(0, 0, 0, 0.2));
 }
 
+/* ── Logo em texto (fallback) ────────────────────── */
+.logo-text {
+  font-family: 'Rawline', sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+/* ── Separador vertical entre os blocos ──────────── */
+.block-sep {
+  flex-shrink: 0;
+  width: 1px;
+  height: 60%;
+  align-self: center;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 8px;
+}
+
+/* ── Animação ────────────────────────────────────── */
 @keyframes ticker {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
+/* ── Responsivo ──────────────────────────────────── */
 @media (max-width: 768px) {
-  .sponsors {
+  .viewport {
+    height: 72px;
   }
 
-  .container {
-    width: min(1280px, calc(100% - 24px));
+  .section-card {
+    padding: 0 24px;
+    gap: 5px;
   }
 
-  .head {
-    margin-bottom: 20px;
+  .logos-row {
+    gap: 16px;
   }
 
-  .sub {
-    font-size: 0.92rem;
+  .logo-img {
+    height: 26px;
   }
 
-  .group {
-    gap: 28px;
-    padding-right: 28px;
-  }
-
-  .item {
-    min-height: 58px;
-  }
-
-  .text {
-    font-size: clamp(1.15rem, 6vw, 1.8rem);
-  }
-
-  .logo {
-    height: 30px;
-    max-width: 140px;
+  .logo-label {
+    font-size: 0.55rem;
   }
 
   .track {
-    animation-duration: 18s;
+    animation-duration: 20s;
   }
 }
 
+/* ── Sem animação (acessibilidade) ───────────────── */
 @media (prefers-reduced-motion: reduce) {
   .track {
     animation: none;
   }
-
   .viewport {
     overflow-x: auto;
     mask-image: none !important;
