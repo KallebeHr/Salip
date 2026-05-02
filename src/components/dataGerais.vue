@@ -208,6 +208,7 @@ const categorias = [
   { value: 'lancamento', label: 'Lançamentos', cor: '#DB2777' },
   { value: 'oficina', label: 'Oficinas', cor: '#2563EB' },
   { value: 'show', label: 'Shows', cor: '#7C3AED' },
+  { value: 'exposicao', label: 'Exposição', cor: '#D97706' },
 ]
 
 const catMeta = {
@@ -243,6 +244,10 @@ const catMeta = {
     label: 'Show',
     cor: '#7C3AED',
   },
+  exposicao: {
+    label: 'Exposicao',
+    cor: '#D97706',
+  },
 }
 
 // ── Locais ─────────────────────────────────────────────
@@ -259,7 +264,7 @@ const locais = {
   },
 
   praca: {
-    nome: 'Praça Domingos Mourão',
+    nome: 'Praça Domingos Mourão Filho',
     mapsUrl: 'https://maps.google.com/?q=Praça+Domingos+Mourão+Pedro+II+PI',
   },
 
@@ -272,6 +277,10 @@ const locais = {
   joseTeixeira: {
     nome: 'José Teixeira Santos',
     mapsUrl: 'https://maps.google.com/?q=José+Teixeira+Santos+Pedro+II+PI',
+  },
+  memorialBrandaoTertulianoFilho: {
+    nome: 'Memorial Tertuliano Brandão Filho',
+    mapsUrl: 'https://www.google.com/maps/place/Memorial+Tertuliano+Filho/@-4.426702,-41.4619606,17z/data=!3m1!4b1!4m6!3m5!1s0x7939b178bebddf1:0x95960a0d41967966!8m2!3d-4.4267074!4d-41.4593857!16s%2Fg%2F11g_ydb6l9?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D',
   },
 }
 
@@ -313,6 +322,16 @@ const todosEventos = [
   },
 
   // DIA 08/05/2026 — SEXTA-FEIRA — MANHÃ
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'exposicao',
+    titulo: 'Exposição de acervos históricos do Núcleo de Memória do Tribunal de Justiça do Piauí - TJ/PI',
+    descricaoLimpa: ' ',
+    vagas: null,
+    _local: locais.memorialBrandaoTertulianoFilho,
+  },
   {
     dia: '08',
     horario: '07h30',
@@ -358,7 +377,7 @@ const todosEventos = [
     horario: '08h00',
     periodo: 'Manhã',
     _cat: 'oficina',
-    titulo: 'Oficina de Produção de Caricatura',
+    titulo: 'Oficina de Produção de Caricaturas',
     descricaoLimpa: 'Ministrante: Juniel Sousa.',
     vagas: 15,
     _local: locais.pracaFilho,
@@ -368,7 +387,7 @@ const todosEventos = [
     horario: '08h00',
     periodo: 'Manhã',
     _cat: 'oficina',
-    titulo: 'Oficina de Desenho a Óleo',
+    titulo: 'Oficina de Pintura a Óleo',
     descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
     vagas: 3,
     _local: locais.pracaFilho,
@@ -455,7 +474,7 @@ const todosEventos = [
     horario: '14h00',
     periodo: 'Tarde',
     _cat: 'oficina',
-    titulo: 'Oficina de Produção de Caricatura',
+    titulo: 'Oficina de Produção de Caricaturas',
     descricaoLimpa: 'Ministrante: Juniel Sousa.',
     vagas: 15,
     _local: locais.pracaFilho,
@@ -465,7 +484,7 @@ const todosEventos = [
     horario: '14h00',
     periodo: 'Tarde',
     _cat: 'oficina',
-    titulo: 'Oficina de Desenho a Óleo',
+    titulo: 'Oficina de Pintura a Óleo',
     descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
     vagas: 3,
     _local: locais.pracaFilho,
@@ -586,7 +605,7 @@ const todosEventos = [
     horario: '08h00',
     periodo: 'Manhã',
     _cat: 'oficina',
-    titulo: 'Oficina de Produção de Caricatura',
+    titulo: 'Oficina de Produção de Caricaturas',
     descricaoLimpa: 'Ministrante: Juniel Sousa.',
     vagas: 15,
     _local: locais.pracaFilho,
@@ -596,7 +615,7 @@ const todosEventos = [
     horario: '08h00',
     periodo: 'Manhã',
     _cat: 'oficina',
-    titulo: 'Oficina de Desenho a Óleo',
+    titulo: 'Oficina de Pintura a Óleo',
     descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
     vagas: 3,
     _local: locais.pracaFilho,
@@ -697,7 +716,7 @@ const todosEventos = [
   },
   {
     dia: '09',
-    horario: '21h00',
+    horario: '20h00',
     periodo: 'Noite',
     _cat: 'show',
     titulo: 'Show com Gonzaga Lu e Trio Asa Branca',
@@ -717,6 +736,7 @@ const catParaFiltro = {
   lancamento: 'lancamento',
   oficina: 'oficina',
   show: 'show',
+  exposicao: "exposicao"
 }
 // ── Computed ───────────────────────────────────────────
 const normalizar = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')

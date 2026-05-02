@@ -62,7 +62,7 @@ const sections = [
     label: "APOIO",
     items: [
       { name: "Secretaria de Educação", src: "/LOGOS/semed.png" },
-      { name: "Wilson Brandão", src: "/LOGOS/wilson.png" },
+      { name: "Wilson Brandão", src: "/LOGOS/wilson2.png" },
     ],
   },
 ]
