@@ -28,7 +28,7 @@
 
       <router-link to="/" class="logo-link">
         <div class="logo-wrapper">
-          <img src="/IMG/LOGONAMEPRIMARIO.png" alt="Logo" class="logoIMG" />
+          <img src="/LOGOS/logoSalip.svg" alt="Logo" class="logoIMG" />
           <div class="logo-shimmer"></div>
         </div>
       </router-link>

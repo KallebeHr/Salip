@@ -1,6 +1,6 @@
 <template>
   <div class='container'>
-    <hero/>
+    <hero />
     <inscricao />
     <DataGerais />
     <Local />
@@ -11,7 +11,6 @@
 <script setup>
 import DatasOficina from '@/components/datasOficina.vue';
 import DataGerais from '@/components/dataGerais.vue';
-
 </script>
 
 <style scoped>
