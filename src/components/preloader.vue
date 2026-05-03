@@ -1,24 +1,16 @@
 <template>
-  <transition name="fade">
-    <div class="loader-overlay" v-if="!isloaded">
-      <div class="loading-container">
-        
-        <div class="loading-text">
-          <span style="--i:1">S</span>
-          <span style="--i:2">A</span>
-          <span style="--i:3">L</span>
-          <span style="--i:4">I</span>
-          <span style="--i:5">P</span>
-          <span style="--i:6">2</span>
-        </div>
+  <div class="body">
+<!-- From Uiverse.io by anand_4957 --> 
+<div class="book">
+  <div class="book__pg-shadow"></div>
+  <div class="book__pg"></div>
+  <div class="book__pg book__pg--2"></div>
+  <div class="book__pg book__pg--3"></div>
+  <div class="book__pg book__pg--4"></div>
+  <div class="book__pg book__pg--5"></div>
+</div>
+</div>
 
-        <div class="glow-track">
-          <div class="glow-line"></div>
-        </div>
-
-      </div>
-    </div>
-  </transition>
 </template>
 
 <script>
@@ -49,119 +41,339 @@ export default {
 </script>
 
 <style scoped>
-/* Peso 700 para a fonte ficar mais imponente e moderna */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* --- ANIMAÇÃO DE SAÍDA DO VUE (FADE) --- */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.fade-leave-to {
-  opacity: 0;
-  transform: scale(1.05); /* Dá um leve zoom out ao sumir */
-}
-
-/* --- OVERLAY PRINCIPAL --- */
-.loader-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  /* Gradiente moderno substituindo a cor sólida */
-  background: linear-gradient(135deg, #161e6d 0%, #2734af 100%);
+/* From Uiverse.io by anand_4957 */ 
+.body{
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  font-family: 'Montserrat', sans-serif;
-  z-index: 99999; /* Garante que fique por cima de tudo */
-}
+  height: 70vh;
+  background-color: aliceblue;
 
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
 }
-
-/* --- TEXTO E EFEITO DE ONDA --- */
-.loading-text {
-  display: flex;
-  gap: 8px; /* Espaçamento consistente entre as letras */
-  font-size: 4rem; /* Tamanho ajustado e responsivo */
-  color: #ffffff;
-  letter-spacing: 5px;
+.book,
+.book__pg-shadow,
+.book__pg {
+  animation: cover 5s ease-in-out infinite;
 }
-
-.loading-text span {
-  display: inline-block;
-  opacity: 0;
-  /* A animação usa o valor da variável --i definida no HTML para o delay */
-  animation: floatBounce 2s infinite ease-in-out;
-  animation-delay: calc(0.15s * var(--i)); 
-}
-
-@keyframes floatBounce {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.3;
-    text-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-  }
-  50% {
-    transform: translateY(-20px) scale(1.1);
-    opacity: 1;
-    /* Efeito de neon azul claro quando a letra sobe */
-    text-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4), 0 0 20px #00d2ff; 
-  }
-}
-
-/* --- LINHA DE CARREGAMENTO (ESTILO SCANNER) --- */
-.glow-track {
-  width: 250px;
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.1); /* Trilho de fundo sutil */
-  border-radius: 10px;
+.book {
+  background:
+    radial-gradient(circle at 12% 20%, rgba(216, 223, 82, 0.15), transparent 28%),
+    radial-gradient(circle at 85% 12%, rgba(255, 255, 255, 0.12), transparent 24%),
+    linear-gradient(135deg, #1d2787 0%, #2634aa 48%, #1a247f 100%);
+  
+  border-radius: 0.25em;
+  box-shadow:
+    0 0.25em 0.5em hsla(0, 0%, 0%, 0.3),
+    0 0 0 0.25em #E6FB03 inset;
+  padding: 0.25em;
+  perspective: 37.5em;
   position: relative;
-  overflow: hidden;
+  width: 16em;
+  height: 16em;
+  transform: translate3d(0, 0, 0);
+  transform-style: preserve-3d;
 }
-
-.glow-line {
+.book__pg-shadow,
+.book__pg {
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  /* Gradiente na linha que viaja de um lado para o outro */
-  background: linear-gradient(90deg, transparent, #00d2ff, #ffffff, transparent);
-  animation: scanLine 2s infinite ease-in-out;
+  left: 0.25em;
+  width: calc(50% - 0.25em);
+}
+.book__pg-shadow {
+  animation-name: shadow;
+  background-image: linear-gradient(
+    -45deg,
+    hsla(0, 0%, 0%, 0) 50%,
+    hsla(0, 0%, 0%, 0.3) 50%
+  );
+  filter: blur(0.25em);
+  top: calc(100% - 0.25em);
+  height: 3.75em;
+  transform: scaleY(0);
+  transform-origin: 100% 0%;
+}
+.book__pg {
+  animation-name: pg1;
+  background-color: hsl(223, 10%, 100%);
+  background-image: linear-gradient(
+    90deg,
+    hsla(223, 10%, 90%, 0) 87.5%,
+    hsl(223, 10%, 90%)
+  );
+  height: calc(100% - 0.5em);
+  transform-origin: 100% 50%;
+}
+.book__pg--2,
+.book__pg--3,
+.book__pg--4 {
+  background-image: repeating-linear-gradient(
+      hsl(223, 10%, 10%) 0 0.125em,
+      hsla(223, 10%, 10%, 0) 0.125em 0.5em
+    ),
+    linear-gradient(90deg, hsla(223, 10%, 90%, 0) 87.5%, hsl(223, 10%, 90%));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size:
+    2.5em 4.125em,
+    100% 100%;
+}
+.book__pg--2 {
+  animation-name: pg2;
+}
+.book__pg--3 {
+  animation-name: pg3;
+}
+.book__pg--4 {
+  animation-name: pg4;
+}
+.book__pg--5 {
+  animation-name: pg5;
 }
 
-@keyframes scanLine {
-  0% {
-    left: -100%;
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: hsl(223, 10%, 30%);
+    --fg: hsl(223, 10%, 90%);
+  }
+}
+
+/* Animations */
+@keyframes cover {
+  from,
+  5%,
+  45%,
+  55%,
+  95%,
+  to {
+    animation-timing-function: ease-out;
+    background-color: hsl(278, 84%, 67%);
+  }
+  10%,
+  40%,
+  60%,
+  90% {
+    animation-timing-function: ease-in;
+    background-color: hsl(271, 90%, 45%);
+  }
+}
+@keyframes shadow {
+  from,
+  10.01%,
+  20.01%,
+  30.01%,
+  40.01% {
+    animation-timing-function: ease-in;
+    transform: translate3d(0, 0, 1px) scaleY(0) rotateY(0);
+  }
+  5%,
+  15%,
+  25%,
+  35%,
+  45%,
+  55%,
+  65%,
+  75%,
+  85%,
+  95% {
+    animation-timing-function: ease-out;
+    transform: translate3d(0, 0, 1px) scaleY(0.2) rotateY(90deg);
+  }
+  10%,
+  20%,
+  30%,
+  40%,
+  50%,
+  to {
+    animation-timing-function: ease-out;
+    transform: translate3d(0, 0, 1px) scaleY(0) rotateY(180deg);
+  }
+  50.01%,
+  60.01%,
+  70.01%,
+  80.01%,
+  90.01% {
+    animation-timing-function: ease-in;
+    transform: translate3d(0, 0, 1px) scaleY(0) rotateY(180deg);
+  }
+  60%,
+  70%,
+  80%,
+  90%,
+  to {
+    animation-timing-function: ease-out;
+    transform: translate3d(0, 0, 1px) scaleY(0) rotateY(0);
+  }
+}
+@keyframes pg1 {
+  from,
+  to {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0.4deg);
+  }
+  10%,
+  15% {
+    animation-timing-function: ease-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(180deg);
+  }
+  20%,
+  80% {
+    animation-timing-function: ease-in;
+    background-color: hsl(223, 10%, 45%);
+    transform: translate3d(0, 0, 1px) rotateY(180deg);
+  }
+  85%,
+  90% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(180deg);
+  }
+}
+@keyframes pg2 {
+  from,
+  to {
+    animation-timing-function: ease-in;
+    background-color: hsl(223, 10%, 45%);
+    transform: translate3d(0, 0, 1px) rotateY(0.3deg);
+  }
+  5%,
+  10% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0.3deg);
+  }
+  20%,
+  25% {
+    animation-timing-function: ease-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(179.9deg);
+  }
+  30%,
+  70% {
+    animation-timing-function: ease-in;
+    background-color: hsl(223, 10%, 45%);
+    transform: translate3d(0, 0, 1px) rotateY(179.9deg);
+  }
+  75%,
+  80% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(179.9deg);
+  }
+  90%,
+  95% {
+    animation-timing-function: ease-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0.3deg);
+  }
+}
+@keyframes pg3 {
+  from,
+  10%,
+  90%,
+  to {
+    animation-timing-function: ease-in;
+    background-color: hsl(223, 10%, 45%);
+    transform: translate3d(0, 0, 1px) rotateY(0.2deg);
+  }
+  15%,
+  20% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0.2deg);
+  }
+  30%,
+  35% {
+    animation-timing-function: ease-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(179.8deg);
+  }
+  40%,
+  60% {
+    animation-timing-function: ease-in;
+    background-color: hsl(223, 10%, 45%);
+    transform: translate3d(0, 0, 1px) rotateY(179.8deg);
+  }
+  65%,
+  70% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(179.8deg);
+  }
+  80%,
+  85% {
+    animation-timing-function: ease-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0.2deg);
+  }
+}
+@keyframes pg4 {
+  from,
+  20%,
+  80%,
+  to {
+    animation-timing-function: ease-in;
+    background-color: hsl(223, 10%, 45%);
+    transform: translate3d(0, 0, 1px) rotateY(0.1deg);
+  }
+  25%,
+  30% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0.1deg);
+  }
+  40%,
+  45% {
+    animation-timing-function: ease-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(179.7deg);
   }
   50% {
-    left: 150%;
+    animation-timing-function: ease-in;
+    background-color: hsl(223, 10%, 45%);
+    transform: translate3d(0, 0, 1px) rotateY(179.7deg);
   }
-  100% {
-    left: -100%;
+  55%,
+  60% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(179.7deg);
+  }
+  70%,
+  75% {
+    animation-timing-function: ease-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0.1deg);
+  }
+}
+@keyframes pg5 {
+  from,
+  30%,
+  70%,
+  to {
+    animation-timing-function: ease-in;
+    background-color: hsl(223, 10%, 45%);
+    transform: translate3d(0, 0, 1px) rotateY(0);
+  }
+  35%,
+  40% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0deg);
+  }
+  50% {
+    animation-timing-function: ease-in-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(179.6deg);
+  }
+  60%,
+  65% {
+    animation-timing-function: ease-out;
+    background-color: hsl(223, 10%, 100%);
+    transform: translate3d(0, 0, 1px) rotateY(0);
   }
 }
 
-/* --- RESPONSIVIDADE --- */
-@media (max-width: 600px) {
-  .loading-text {
-    font-size: 2.5rem;
-    gap: 4px;
-  }
-  .glow-track {
-    width: 200px;
-  }
-}
 </style>
