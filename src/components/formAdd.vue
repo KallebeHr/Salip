@@ -32,7 +32,7 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             >
-              <polyline points="20 6 9 17 4 12" />
+              <polyline points="20 6 9 17 4 12" class="tt"/>
             </svg>
             <span v-else>{{ i + 1 }}</span>
           </div>
@@ -2053,7 +2053,7 @@ O participante poderá solicitar correção ou remoção de seus dados entrando 
 * {
   box-sizing: border-box;
   margin: 0;
-  color: #334155;
+  color: black;
   padding: 0;
 }
 
@@ -2104,7 +2104,7 @@ button:disabled {
 .brand-logo {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 800;
-  color: var(--c-blue);
+  color: #b8c9df;
   letter-spacing: -0.06em;
   line-height: 1;
 }
@@ -2112,12 +2112,15 @@ button:disabled {
 .brand-subtitle {
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--c-muted);
+  color: #b8c9df;
+
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-top: 0.55rem;
 }
-
+.tt{
+  color: #16a34a;
+}
 .progress-wrap {
   width: 100%;
   max-width: 680px;
@@ -2147,6 +2150,7 @@ button:disabled {
   background: linear-gradient(90deg, var(--c-blue), #2563eb);
   transition: width 0.4s ease;
   border-radius: 999px;
+
 }
 
 .step-item {
@@ -2156,44 +2160,46 @@ button:disabled {
   gap: 0.65rem;
   z-index: 1;
   flex: 1;
+
 }
 
 .step-circle {
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  background: var(--c-white);
+  background: #0651c1;
   border: 3px solid #dce7f5;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.82rem;
   font-weight: 800;
-  color: #7c8ba1;
+  color: #0651c1;
   transition: all 0.25s ease;
 }
 
 .step-item.active .step-circle {
-  border-color: var(--c-blue);
-  color: var(--c-blue);
+  border-color: #b8c9df;
+  color: #b8c9df;
   box-shadow: 0 0 0 5px rgba(20, 65, 129, 0.1);
 }
 
 .step-item.done .step-circle {
-  background: var(--c-blue);
+  background: #b8c9df;
   border-color: var(--c-blue);
-  color: var(--c-white);
+  color: #16a34a;
+
 }
 
 .step-label {
   font-size: 0.76rem;
   font-weight: 700;
-  color: var(--c-muted);
+  color: #b8c9df;
   transition: color 0.25s ease;
 }
 
 .step-item.active .step-label {
-  color: var(--c-blue);
+  color: #7d8500;
 }
 
 .form-card {
@@ -2205,6 +2211,7 @@ button:disabled {
   border: 1px solid rgba(20, 65, 129, 0.1);
   overflow: hidden;
   position: relative;
+
 }
 
 .etapa {
@@ -2212,6 +2219,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
 }
 
 .etapa-header {
@@ -2266,7 +2274,7 @@ button:disabled {
 
 .tipo-card:hover,
 .tipo-card:focus-within {
-  border-color: #b8c9df;
+  border-color: #396196;
   background: var(--c-white);
   transform: translateY(-2px);
 }
@@ -2277,6 +2285,8 @@ button:disabled {
   border-color: var(--c-blue);
   background: var(--c-blue-soft);
   box-shadow: 0 12px 28px rgba(20, 65, 129, 0.12);
+  border: 2px solid #16a34a;
+
 }
 
 .tipo-icon {
@@ -2309,7 +2319,7 @@ button:disabled {
   width: 1.55rem;
   height: 1.55rem;
   border-radius: 999px;
-  background: var(--c-blue);
+  background: #16a34a;
   color: var(--c-white);
   display: flex;
   align-items: center;
@@ -2322,6 +2332,7 @@ button:disabled {
 .tipo-card.selected .tipo-check {
   opacity: 1;
   transform: scale(1);
+  
 }
 
 .fields-col {
