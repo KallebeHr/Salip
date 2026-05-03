@@ -820,7 +820,7 @@
         <div class="story-content-box">
           <div class="story-event-brand">
             <div class="story-icon">
-              <img src="/IMG/LOGONAMEPRIMARIO.png" alt="SALIP 2" />
+              <img src="/LOGOS/logoSalip.svg" alt="SALIP 2" />
             </div>
           </div>
 
@@ -894,6 +894,545 @@ const form = reactive({
 
 const erros = reactive({})
 
+const dias = [
+  { value: '07', label: '07/05', diaSemana: 'Quinta' },
+  { value: '08', label: '08/05', diaSemana: 'Sexta' },
+  { value: '09', label: '09/05', diaSemana: 'Sábado' },
+]
+
+const categorias = [
+  { value: 'todos', label: 'Todos', cor: '#64748b' },
+  { value: 'abertura', label: 'Abertura', cor: '#0D1B5E' },
+  { value: 'acolhida', label: 'Acolhidas', cor: '#059669' },
+  { value: 'palestra', label: 'Palestras', cor: '#0D1B5E' },
+  { value: 'batepapo', label: 'Bate-papos', cor: '#D97706' },
+  { value: 'mesa', label: 'Mesas', cor: '#7C3AED' },
+  { value: 'lancamento', label: 'Lançamentos', cor: '#DB2777' },
+  { value: 'oficina', label: 'Oficinas', cor: '#2563EB' },
+  { value: 'show', label: 'Shows', cor: '#7C3AED' },
+  { value: 'exposicao', label: 'Exposição', cor: '#D97706' },
+]
+
+const catMeta = {
+  abertura: {
+    label: 'Abertura',
+    cor: '#0D1B5E',
+  },
+  acolhida: {
+    label: 'Acolhida',
+    cor: '#059669',
+  },
+  palestra: {
+    label: 'Palestra',
+    cor: '#0D1B5E',
+  },
+  batepapo: {
+    label: 'Bate-papo',
+    cor: '#D97706',
+  },
+  mesa: {
+    label: 'Mesa',
+    cor: '#7C3AED',
+  },
+  lancamento: {
+    label: 'Lançamento',
+    cor: '#DB2777',
+  },
+  oficina: {
+    label: 'Oficina',
+    cor: '#2563EB',
+  },
+  show: {
+    label: 'Show',
+    cor: '#7C3AED',
+  },
+  exposicao: {
+    label: 'Exposição',
+    cor: '#D97706',
+  },
+}
+
+const locais = {
+  ciro: {
+    nome: 'Espaço de Eventos Deputado Ciro Nogueira',
+    mapsUrl:
+      'https://maps.google.com/?q=Espaço+de+Eventos+Deputado+Ciro+Nogueira+Pedro+II+PI',
+  },
+
+  mgf: {
+    nome: 'Espaço MGF Eventos',
+    mapsUrl: 'https://maps.google.com/?q=Espaço+MGF+Eventos+Pedro+II+PI',
+  },
+
+  praca: {
+    nome: 'Praça Domingos Mourão Filho',
+    mapsUrl: 'https://maps.google.com/?q=Praça+Domingos+Mourão+Pedro+II+PI',
+  },
+
+  pracaFilho: {
+    nome: 'Praça Domingos Mourão Filho',
+    mapsUrl:
+      'https://maps.google.com/?q=Praça+Domingos+Mourão+Filho+Pedro+II+PI',
+  },
+
+  joseTeixeira: {
+    nome: 'José Teixeira Santos',
+    mapsUrl: 'https://maps.google.com/?q=José+Teixeira+Santos+Pedro+II+PI',
+  },
+
+  memorialBrandaoTertulianoFilho: {
+    nome: 'Memorial Tertuliano Brandão Filho',
+    mapsUrl:
+      'https://www.google.com/maps/place/Memorial+Tertuliano+Filho/@-4.426702,-41.4619606,17z/data=!3m1!4b1!4m6!3m5!1s0x7939b178bebddf1:0x95960a0d41967966!8m2!3d-4.4267074!4d-41.4593857!16s%2Fg%2F11g_ydb6l9?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D',
+  },
+}
+
+const todosEventos = [
+  {
+    dia: '07',
+    horario: '18h30',
+    periodo: 'Noite',
+    _cat: 'abertura',
+    titulo: 'Solenidade Oficial de Abertura do 4º SaLiP2',
+    descricaoLimpa:
+      'Abertura oficial do 4º Salão do Livro de Pedro II, com discursos de autoridades e homenageados.',
+    vagas: null,
+    _local: locais.ciro,
+  },
+  {
+    dia: '07',
+    horario: '19h00',
+    periodo: 'Noite',
+    _cat: 'palestra',
+    titulo: 'Palestra de abertura: O desafio das grandes reportagens',
+    descricaoLimpa:
+      'Palestrante: Francisco José. Apresentação/Mediação: Wilson Brandão.',
+    vagas: null,
+    _local: locais.ciro,
+  },
+  {
+    dia: '07',
+    horario: '21h00',
+    periodo: 'Noite',
+    _cat: 'show',
+    titulo: 'Show musical com Marcos Aurélio',
+    descricaoLimpa: 'Apresentação musical de Marcos Aurélio.',
+    vagas: null,
+    _local: locais.ciro,
+  },
+
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'exposicao',
+    titulo:
+      'Exposição de acervos históricos do Núcleo de Memória do Tribunal de Justiça do Piauí - TJ/PI',
+    descricaoLimpa: '',
+    vagas: null,
+    _local: locais.memorialBrandaoTertulianoFilho,
+  },
+  {
+    dia: '08',
+    horario: '07h30',
+    periodo: 'Manhã',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Marcos Aurélio',
+    descricaoLimpa: 'Abertura da programação da manhã com Marcos Aurélio.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 1',
+    descricaoLimpa: 'Ministrante: Dinael Viana.',
+    vagas: 25,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 2',
+    descricaoLimpa: 'Ministrante: Genary Viana Barroso.',
+    vagas: 20,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura Acrílica',
+    descricaoLimpa: 'Ministrante: José de Arimatéa.',
+    vagas: 10,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Produção de Caricaturas',
+    descricaoLimpa: 'Ministrante: Juniel Sousa.',
+    vagas: 15,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura a Óleo',
+    descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
+    vagas: 3,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '08h30',
+    periodo: 'Manhã',
+    _cat: 'lancamento',
+    titulo:
+      'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    descricaoLimpa:
+      'Convidados: Amadeu Messias, Aldenira Martins e Claísse Sales. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '09h00',
+    periodo: 'Manhã',
+    _cat: 'batepapo',
+    titulo:
+      'Bate-papo e exibição do filme: O Sacro e o Profano de Araújo e Verônica',
+    descricaoLimpa:
+      'Palestrante: Rivanildo Feitosa. Apresentação/Mediação: Wilson Brandão.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '10h30',
+    periodo: 'Manhã',
+    _cat: 'palestra',
+    titulo: 'Pedro II, 200 anos: um homem, uma cidade',
+    descricaoLimpa:
+      'Palestrante: Fonseca Neto. Apresentação/Mediação: Wilson Brandão.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Marcos Aurélio',
+    descricaoLimpa: 'Abertura da programação da tarde com Marcos Aurélio.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 1',
+    descricaoLimpa: 'Ministrante: Dinael Viana.',
+    vagas: 25,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 2',
+    descricaoLimpa: 'Ministrante: Genary Viana Barroso.',
+    vagas: 20,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura Acrílica',
+    descricaoLimpa: 'Ministrante: José de Arimatéa.',
+    vagas: 10,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Produção de Caricaturas',
+    descricaoLimpa: 'Ministrante: Juniel Sousa.',
+    vagas: 15,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura a Óleo',
+    descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
+    vagas: 3,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '08',
+    horario: '14h30',
+    periodo: 'Tarde',
+    _cat: 'lancamento',
+    titulo:
+      'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    descricaoLimpa:
+      'Convidados: Rameiro Junior, Eduardo Albuquerque, Ernâni Getirana e Gerciane Lima. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '15h00',
+    periodo: 'Tarde',
+    _cat: 'palestra',
+    titulo:
+      'Educar com IA ou se educar para a IA? O futuro dos jovens nesta desafiante era',
+    descricaoLimpa:
+      'Palestrante: Dr. Marcelo Mesquita. Apresentação/Mediação: Helany Max.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '16h30',
+    periodo: 'Tarde',
+    _cat: 'mesa',
+    titulo:
+      'Mulheres que Escrevem: A Literatura de Marina Campelo, Lúcia Ana e Graça Targino',
+    descricaoLimpa:
+      'Mesa com Marina Campelo, Lúcia Ana e Graça Targino. Apresentação/Mediação: Ernâni Getirana.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+
+  {
+    dia: '08',
+    horario: '18h30',
+    periodo: 'Noite',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Marcos Aurélio',
+    descricaoLimpa: 'Abertura da programação da noite com Marcos Aurélio.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '19h00',
+    periodo: 'Noite',
+    _cat: 'palestra',
+    titulo: 'Quando o professor acredita, a educação acontece',
+    descricaoLimpa:
+      'Palestrante: Hamilton Werneck. Apresentação/Mediação: Wilson Brandão.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '08',
+    horario: '21h00',
+    periodo: 'Noite',
+    _cat: 'show',
+    titulo: 'Show com a Banda Mistura Fina',
+    descricaoLimpa: 'Apresentação musical da Banda Mistura Fina, de Piripiri.',
+    vagas: null,
+    _local: locais.praca,
+  },
+
+  {
+    dia: '09',
+    horario: '07h30',
+    periodo: 'Manhã',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Sonayra',
+    descricaoLimpa: 'Abertura da programação da manhã com Sonayra.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 1',
+    descricaoLimpa: 'Ministrante: Dinael Viana.',
+    vagas: 25,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Experimentos Científicos - 2',
+    descricaoLimpa: 'Ministrante: Genary Viana Barroso.',
+    vagas: 20,
+    _local: locais.joseTeixeira,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura Acrílica',
+    descricaoLimpa: 'Ministrante: José de Arimatéa.',
+    vagas: 10,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Produção de Caricaturas',
+    descricaoLimpa: 'Ministrante: Juniel Sousa.',
+    vagas: 15,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'oficina',
+    titulo: 'Oficina de Pintura a Óleo',
+    descricaoLimpa: 'Ministrante: Gilsiê Coelho.',
+    vagas: 3,
+    _local: locais.pracaFilho,
+  },
+  {
+    dia: '09',
+    horario: '08h00',
+    periodo: 'Manhã',
+    _cat: 'lancamento',
+    titulo:
+      'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    descricaoLimpa:
+      'Convidados: Humberto Cordeiro, Ioman Malaquias, Raimundo Silva e Dayse Benício. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '08h30',
+    periodo: 'Manhã',
+    _cat: 'mesa',
+    titulo: 'Tempo e memória na literatura de Sérgia Alves',
+    descricaoLimpa:
+      'Mesa com Algemira Mendes e Sérgia Alves. Apresentação/Mediação: Marleide Lins.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '10h30',
+    periodo: 'Manhã',
+    _cat: 'palestra',
+    titulo:
+      'A estratégia do matuto: criação e técnica literária na poética de Genuíno Sales',
+    descricaoLimpa:
+      'Palestrante: Ernâni Getirana. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+
+  {
+    dia: '09',
+    horario: '14h00',
+    periodo: 'Tarde',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Sonayra',
+    descricaoLimpa: 'Abertura da programação da tarde com Sonayra.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '14h30',
+    periodo: 'Tarde',
+    _cat: 'lancamento',
+    titulo:
+      'Bate-papo e lançamentos de livros de escritoras e escritores pedro-segundenses',
+    descricaoLimpa:
+      'Convidados: Ricardo Resende, Socorro Almeida, Cleandro Oliveira e Wilson Brandão, em parceria com Zózimo Tavares. Apresentação/Mediação: APLA.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '15h30',
+    periodo: 'Tarde',
+    _cat: 'palestra',
+    titulo:
+      'Casal de escritores: gênese de escrita literária de ficção investigativa',
+    descricaoLimpa:
+      'Palestrantes: Normandes Malta e Jasmine Malta. Apresentação/Mediação: Helany Max.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+
+  {
+    dia: '09',
+    horario: '18h30',
+    periodo: 'Noite',
+    _cat: 'acolhida',
+    titulo: 'Acolhida: Sonayra',
+    descricaoLimpa: 'Abertura da programação da noite com Sonayra.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '19h00',
+    periodo: 'Noite',
+    _cat: 'palestra',
+    titulo: 'A crise invisível na educação',
+    descricaoLimpa:
+      'Palestrante: Márcio Lima. Apresentação/Mediação: Kássio Gomes.',
+    vagas: null,
+    _local: locais.mgf,
+  },
+  {
+    dia: '09',
+    horario: '20h00',
+    periodo: 'Noite',
+    _cat: 'show',
+    titulo: 'Show com Gonzaga Lu e Trio Asa Branca',
+    descricaoLimpa: 'Show musical com Gonzaga Lu e Trio Asa Branca.',
+    vagas: null,
+    _local: locais.praca,
+  },
+]
+
+const catParaFiltro = {
+  abertura: 'abertura',
+  acolhida: 'acolhida',
+  palestra: 'palestra',
+  batepapo: 'batepapo',
+  mesa: 'mesa',
+  lancamento: 'lancamento',
+  oficina: 'oficina',
+  show: 'show',
+  exposicao: 'exposicao',
+}
+
 const opcoesTipo = [
   {
     valor: 'aluno',
@@ -939,52 +1478,87 @@ const cidadesAgrupadas = [
     cidades: ['Fortaleza', 'Sobral', 'Juazeiro do Norte'],
   },
   {
+    estado: 'Maranhão',
+    cidades: ['São Luís'],
+  },
+  {
     estado: 'Outros',
-    cidades: ['São Luís', 'Outra cidade'],
+    cidades: ['Outra cidade'],
   },
 ]
+
+const escolas = [
+  'Escola Municipal Monsenhor Lotário Weber',
+  'Escola Municipal José Teixeira Santos',
+  'Unidade Escolar Tertuliano Brandão Filho',
+  'IFPI — Instituto Federal do Piauí',
+  'Rede Estadual de Ensino',
+  'Rede Municipal de Ensino',
+  'Rede Privada de Ensino',
+  'Outra escola',
+]
+
+function getDiaLabel(dia) {
+  const encontrado = dias.find((item) => item.value === dia)
+  return encontrado ? `${encontrado.label} • ${encontrado.diaSemana}` : dia
+}
+
+function ordenarPorDiaHorario(a, b) {
+  const dataA = `${a.dia}${a.horario.replace(/\D/g, '').padEnd(4, '0')}`
+  const dataB = `${b.dia}${b.horario.replace(/\D/g, '').padEnd(4, '0')}`
+
+  return dataA.localeCompare(dataB)
+}
+
+function formatarEventoParaOpcao(evento) {
+  const vagasTexto = evento.vagas ? ` • ${evento.vagas} vagas` : ''
+  const localTexto = evento._local?.nome ? ` • ${evento._local.nome}` : ''
+
+  return `${getDiaLabel(evento.dia)} • ${evento.horario} • ${evento.titulo}${vagasTexto}${localTexto}`
+}
+
+function eventosPorCategoria(categoria) {
+  return todosEventos
+    .filter((evento) => evento._cat === categoria)
+    .sort(ordenarPorDiaHorario)
+    .map(formatarEventoParaOpcao)
+}
+
+const oficinas = eventosPorCategoria('oficina')
+const exposicoes = eventosPorCategoria('exposicao')
+const palestras = eventosPorCategoria('palestra')
+
+const batepapos = eventosPorCategoria('batepapo')
+const mesas = eventosPorCategoria('mesa')
+const lancamentos = eventosPorCategoria('lancamento')
+const shows = eventosPorCategoria('show')
 
 const categoriasAtividades = [
   {
     id: 'oficinas',
-    label: 'Oficinas Literárias',
+    label: 'Oficinas',
     icon: '🎨',
+    total: oficinas.length,
   },
   {
     id: 'exposicoes',
-    label: 'Exposições de Arte',
-    icon: '📷',
+    label: 'Exposição Histórica',
+    icon: '🏛️',
+    total: exposicoes.length,
   },
   {
     id: 'palestras',
     label: 'Palestras Oficiais',
     icon: '🎤',
+    total: palestras.length,
   },
 ]
 
-const exposicoes = ['23/05 — 9h', '23/05 — 14h30', '24/05 — 10h']
-
-const palestras = [
-  'Abertura com Fabrício Carpinejar',
-  'A voz de Esperança Garcia',
-  'O cânone literário piauiense',
-  'A lírica de Manuel Bandeira',
-]
-
-const oficinas = [
-  'Oficina de Literatura de Cordel',
-  'Oficina de Fanzine',
-  'Comida é Memória',
-]
-
-const escolas = [
-  'Escola Municipal Monsenhor Lotário Weber',
-  'IFPI — Instituto Federal do Piauí',
-  'Outra escola',
-]
-
 const labelTipo = computed(() => {
-  return opcoesTipo.find((opcao) => opcao.valor === tipoParticipante.value)?.label || 'Participante'
+  return (
+    opcoesTipo.find((opcao) => opcao.valor === tipoParticipante.value)?.label ||
+    'Participante'
+  )
 })
 
 watch(
@@ -1018,23 +1592,23 @@ watch(tipoParticipante, () => {
 
 watch(
   () => [...form.categorias],
-  (categorias) => {
-    if (!categorias.includes('oficinas')) {
+  (categoriasSelecionadas) => {
+    if (!categoriasSelecionadas.includes('oficinas')) {
       form.oficinasSelecionadas = []
       delete erros.oficinas
     }
 
-    if (!categorias.includes('exposicoes')) {
+    if (!categoriasSelecionadas.includes('exposicoes')) {
       form.exposicoesSelecionadas = []
       delete erros.exposicoes
     }
 
-    if (!categorias.includes('palestras')) {
+    if (!categoriasSelecionadas.includes('palestras')) {
       form.palestrasSelecionadas = []
       delete erros.palestras
     }
 
-    if (categorias.length === 0) {
+    if (categoriasSelecionadas.length === 0) {
       form.telefone = ''
       delete erros.telefone
     }
@@ -1081,6 +1655,14 @@ function montarDadosUsuario(idUsuario) {
   return {
     idUsuario,
 
+    evento: {
+      nome: '4º SaLiP2 — Salão do Livro de Pedro II',
+      ano: 2026,
+      periodo: '07 a 09 de maio de 2026',
+      cidade: 'Pedro II',
+      uf: 'PI',
+    },
+
     participante: {
       tipo: tipoParticipante.value,
       tipoLabel: labelTipo.value,
@@ -1106,9 +1688,17 @@ function montarDadosUsuario(idUsuario) {
       palestras: [...form.palestrasSelecionadas],
     },
 
+    programacaoBase: {
+      totalEventos: todosEventos.length,
+      totalOficinas: oficinas.length,
+      totalExposicoes: exposicoes.length,
+      totalPalestras: palestras.length,
+      versao: 'SALIP2-2026-programacao-atualizada-v2',
+    },
+
     consentimento: {
       aceitouTermos: aceitaTermos.value,
-      textoTermosVersao: 'SALIP2-2026-v1',
+      textoTermosVersao: 'SALIP2-2026-v2',
       aceitoEm: serverTimestamp(),
     },
 
@@ -1169,7 +1759,10 @@ function validarCampo(campo) {
   if (campo === 'telefone') {
     if (form.categorias.length > 0 && !form.telefone.trim()) {
       erros.telefone = 'Informe seu WhatsApp.'
-    } else if (form.telefone.trim() && form.telefone.replace(/\D/g, '').length < 10) {
+    } else if (
+      form.telefone.trim() &&
+      form.telefone.replace(/\D/g, '').length < 10
+    ) {
       erros.telefone = 'Informe um telefone válido.'
     }
   }
@@ -1188,6 +1781,8 @@ function validarEtapa2() {
 
   if (Object.keys(erros).length === 0) {
     irParaEtapa(3)
+  } else {
+    $toast.error('Revise os campos destacados antes de continuar.')
   }
 }
 
@@ -1218,7 +1813,7 @@ function validarEtapa3() {
       form.categorias.includes('exposicoes') &&
       form.exposicoesSelecionadas.length === 0
     ) {
-      erros.exposicoes = 'Selecione um horário para visita.'
+      erros.exposicoes = 'Selecione ao menos um horário da exposição.'
       hasError = true
     }
 
@@ -1233,6 +1828,8 @@ function validarEtapa3() {
 
   if (!hasError) {
     irParaEtapa(4)
+  } else {
+    $toast.error('Escolha as atividades marcadas ou corrija o WhatsApp.')
   }
 }
 
@@ -1246,6 +1843,7 @@ async function handleSubmit() {
 
   if (!aceitaTermos.value) {
     erros.termos = 'Você precisa aceitar os termos de uso para continuar.'
+    $toast.error('Aceite os termos para confirmar sua inscrição.')
     return
   }
 
@@ -1273,7 +1871,9 @@ async function handleSubmit() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } catch (err) {
     console.error(err)
-    $toast.error('Não foi possível confirmar sua inscrição. Verifique sua conexão e tente novamente.')
+    $toast.error(
+      'Não foi possível confirmar sua inscrição. Verifique sua conexão e tente novamente.'
+    )
   } finally {
     isSubmitting.value = false
   }
@@ -1320,7 +1920,7 @@ async function gerarStory() {
     const canvas = await html2canvas(storyNode.value, {
       scale: 2,
       useCORS: true,
-      backgroundColor: '#144181',
+      backgroundColor: '#0D1B5E',
       width: 1080,
       height: 1920,
     })
@@ -1335,8 +1935,8 @@ async function gerarStory() {
         })
 
         await navigator.share({
-          title: 'Meu Ingresso SALIP 2',
-          text: 'Minha inscrição no SALIP 2 está confirmada! #EuNoSalip2',
+          title: 'Minha inscrição no SaLiP2',
+          text: 'Minha inscrição no 4º SaLiP2 está confirmada! #EuNoSalip2',
           files: [file],
         })
 
@@ -1406,13 +2006,13 @@ function mascararTelefone(valor) {
 const textoTermos = `TERMOS DE USO E POLÍTICA DE PRIVACIDADE – SALIP 2
 
 1. Finalidade
-Os dados informados neste formulário serão utilizados exclusivamente para organização da inscrição, controle de participação, emissão de crachás, certificados e comunicação sobre atividades do SALIP 2.
+Os dados informados neste formulário serão utilizados exclusivamente para organização da inscrição, controle de participação, emissão de crachás, certificados e comunicação sobre atividades do 4º SaLiP2 — Salão do Livro de Pedro II.
 
 2. Dados coletados
 Podemos coletar nome completo, cidade, UF, data de nascimento, tipo de participante, escola, local de trabalho, telefone e atividades selecionadas.
 
 3. Uso das informações
-As informações serão usadas para identificação do participante, organização da agenda, confirmação de inscrição e comunicação relacionada ao evento.
+As informações serão usadas para identificação do participante, organização da agenda, confirmação de inscrição, emissão de certificado e comunicação relacionada ao evento.
 
 4. Compartilhamento
 Os dados não serão vendidos. Poderão ser acessados apenas pela equipe organizadora e por prestadores envolvidos diretamente na realização do evento.
