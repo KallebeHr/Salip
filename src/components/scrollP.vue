@@ -49,20 +49,28 @@ const sections = [
   {
     label: "REALIZAÇÃO",
     items: [
-      { name: "Secretaria da Cultura", src: "/LOGOS/secult.png" },
+      { name: "Secretaria da Cultura", src: "/LOGOS/secultBranco.svg" },
+      { name: "Pedro II", src: "/LOGOS/pedroiiBranco.svg" },
     ],
   },
   {
     label: "ORGANIZAÇÃO E CURADORIA",
     items: [
-      { name: "Fundação Quixote", src: "/LOGOS/quixote.png" },
+      { name: "Fundação Quixote", src: "/LOGOS/quixoteBranco.svg" },
     ],
   },
   {
     label: "APOIO",
     items: [
-      { name: "Secretaria de Educação", src: "/LOGOS/semed.png" },
-      { name: "Wilson Brandão", src: "/LOGOS/wilson2.png" },
+      { name: "Secretaria de Educação", src: "/LOGOS/semedBranco.svg" },
+      { name: "Secretaria Municipal de Comercio e Desenvolvimento Economico", src: "/LOGOS/SEMCODEC.svg" },
+      { name: "APLA - ACADEMIA PEDRO - SEGUNDENSE DE LETRAS E ARTES", src: "/LOGOS/apla.svg" },
+    ],
+  },
+  {
+    label: "EMENDA PARLAMENTAR",
+    items: [
+      { name: "Wilson Brandão", src: "/LOGOS/wilson2.svg" },
     ],
   },
 ]
@@ -96,7 +104,7 @@ const maskStyle = `
   display: inline-flex;    /* largura = soma dos filhos */
   align-items: stretch;
   height: 100%;
-  animation: ticker 8s linear infinite;
+  animation: ticker 9s linear infinite;
   will-change: transform;
   white-space: nowrap;
 }
@@ -165,7 +173,7 @@ const maskStyle = `
 .logo-img {
   height: 86px;   /* altura fixa → largura se ajusta automaticamente */
   width: auto;    /* ← preserva proporção sem corte */
-  max-width: 160px;
+  max-width: 300px;
   object-fit: contain;
 }
 

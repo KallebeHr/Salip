@@ -57,7 +57,7 @@
                 O que deseja fazer?
               </div>
 
-              <router-link to="/addUser" class="dropdown-link" @click="closeAll">
+              <router-link to="/" class="dropdown-link" @click="closeAll">
                 <div class="dropdown-item">
                   <div class="dropdown-item-icon inscricao-icon">
                     <span class="mdi mdi-pencil-plus-outline"></span>
