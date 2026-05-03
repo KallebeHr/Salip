@@ -96,7 +96,7 @@ const maskStyle = `
   overflow: hidden;
 
   /* ALTURA FIXA — ajuste esse valor conforme seu design */
-  height: 158px;
+  height: 178px;
 }
 
 /* ── Trilha animada ──────────────────────────────── */
@@ -171,7 +171,7 @@ const maskStyle = `
 
 /* ── Imagem de logo — largura AUTO, altura fixa ──── */
 .logo-img {
-  height: 86px;   /* altura fixa → largura se ajusta automaticamente */
+  height: 66px;   /* altura fixa → largura se ajusta automaticamente */
   width: auto;    /* ← preserva proporção sem corte */
   max-width: 300px;
   object-fit: contain;
@@ -207,7 +207,7 @@ const maskStyle = `
 /* ── Responsivo ──────────────────────────────────── */
 @media (max-width: 768px) {
   .viewport {
-    height: 72px;
+    height: 102px;
   }
 
   .section-card {
@@ -220,7 +220,7 @@ const maskStyle = `
   }
 
   .logo-img {
-    height: 26px;
+    height: 38px;
   }
 
   .logo-label {

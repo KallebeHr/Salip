@@ -10,7 +10,7 @@
           <span class="sp-kicker">Simpósio de Literatura do Piauí</span>
           <h1 class="sp-hero__title">
             Homenageados
-            <em class="sp-hero__title-em">SALIP</em>
+            <em class="sp-hero__title-em">SALIP2</em>
           </h1>
           <p class="sp-hero__desc">Personalidades que marcaram a cultura e a história do Piauí</p>
         </div>
