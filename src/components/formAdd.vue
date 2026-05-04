@@ -825,10 +825,10 @@
           </div>
 
           <div class="story-badge">PRESENÇA CONFIRMADA</div>
-
-          <h2 class="story-title">
+              <img src="/LOGOS/artP.png" alt="SALIP 2" />
+          <!-- <h2 class="story-title">
             Eu vou para o maior evento literário de Pedro II!
-          </h2>
+          </h2> -->
 
           <div class="story-ticket">
             <span class="user-label">Participante</span>
@@ -3089,7 +3089,7 @@ select.field-input {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #0f2c59 0%, #144181 100%);
+  background: #2734AF;
   padding: 100px;
   box-sizing: border-box;
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -3147,8 +3147,8 @@ select.field-input {
 }
 
 .story-icon img {
-  max-width: 360px;
-  max-height: 180px;
+  max-width: 580px;
+  max-height: 320px;
   object-fit: contain;
 }
 
