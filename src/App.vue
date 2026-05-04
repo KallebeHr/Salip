@@ -10,6 +10,8 @@
     </div>
       <Footer />
     </div>
+    <VLibras position="right" />
+
   </v-app>
 </template>
 
