@@ -331,7 +331,7 @@ const edicoes = ref([
         nome: 'Antonia Rosa da Silva Castro',
         foto: '/IMG/pessoa4.svg',
         area: 'Professora',
-        nascimento: 'Sem informações',
+        nascimento: '17/11/1932',
         falecimento: '',
         naturalidade: 'Pedro II, Piauí',
         formacao: 'Sexta pedro-segundense a forma-se professora',
