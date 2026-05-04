@@ -9,8 +9,9 @@
         <div class="sp-hero__text">
           <span class="sp-kicker">SALIP · Semana de Arte e Literatura</span>
           <h1 class="sp-hero__title">
-            Palestrantes<br />
-            <em class="sp-hero__title-em">&amp; Artistas</em>
+            Palestrantes,<br />
+            <em class="sp-hero__title-em">Artistas &amp;</em>
+            oficineiros<br />
           </h1>
           <p class="sp-hero__desc">Todas as edições · todos os participantes</p>
         </div>

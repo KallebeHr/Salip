@@ -7,7 +7,7 @@
         <router-link to="/midiasalipi" class="no-style-link">
           <li>
             <span class="mdi mdi-microphone-variant"></span>
-            <span class="nav-label">PALESTRANTES/SHOWS</span>
+            <span class="nav-label">CONVIDADOS</span>
           </li>
         </router-link>
 
@@ -143,7 +143,7 @@
       <nav v-if="menuAberto" class="menu-mobile mobile-only" aria-label="Menu mobile">
         <ul>
           <router-link to="/midiasalipi" class="no-style-link" @click="closeAll">
-            <li><span class="mdi mdi-microphone-variant"></span> PALESTRANTES/SHOWS</li>
+            <li><span class="mdi mdi-microphone-variant"></span>CONVIDADOS</li>
           </router-link>
 
           <router-link to="/edicoes" class="no-style-link" @click="closeAll">
