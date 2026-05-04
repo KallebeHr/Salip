@@ -13,6 +13,7 @@
     "@fontsource/roboto": "5.2.5",
     "@mdi/font": "7.4.47",
     "@mdi/js": "^7.4.47",
+    "@vue-a11y/vlibras": "^1.0.4",
     "chart.js": "^4.5.1",
     "file-saver": "^2.0.5",
     "firebase": "^11.7.1",
