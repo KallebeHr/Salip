@@ -3,7 +3,7 @@
     <div class="footer-container">
       
       <div class="footer-brand">
-        <img src="/IMG/LOGONAMEPRIMARIO.png" alt="Logo SALIP2" class="footer-logo" />
+        <img src="/LOGOS/logoSalip.svg" alt="Logo SALIP2" class="footer-logo" />
         <p class="brand-desc">
           O maior evento literário de Pedro II. Cultura, arte, música e conhecimento reunidos em um só lugar.
         </p>
