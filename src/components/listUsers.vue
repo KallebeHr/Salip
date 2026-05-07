@@ -5,7 +5,7 @@
         <div class="logo-mark">
           <span>S2</span>
         </div>
-
+ 
         <div>
           <h1 class="topbar-title">Painel Administrativo</h1>
           <p class="topbar-sub">
@@ -13,13 +13,13 @@
           </p>
         </div>
       </div>
-
+ 
       <div class="topbar-right">
         <span class="online-badge">
           <span class="dot-pulse"></span>
           {{ usuariosOrdenados.length }} inscritos · {{ avaliacoesOrdenadas.length }} avaliações
         </span>
-
+ 
         <button class="btn-logout" type="button" @click="logout">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -30,7 +30,7 @@
         </button>
       </div>
     </header>
-
+ 
     <main class="content">
       <section class="status-card" v-if="loadingUsuarios || loadingAvaliacoes || erroUsuarios || erroAvaliacoes">
         <div v-if="loadingUsuarios || loadingAvaliacoes" class="status-content">
@@ -40,18 +40,18 @@
             <p>Buscando inscrições e avaliações no Firebase.</p>
           </div>
         </div>
-
+ 
         <div v-else class="status-content error">
           <strong>Algum dado não foi carregado</strong>
           <p v-if="erroUsuarios">{{ erroUsuarios }}</p>
           <p v-if="erroAvaliacoes">{{ erroAvaliacoes }}</p>
-
+ 
           <button class="btn-action blue" type="button" @click="carregarTudo">
             Tentar novamente
           </button>
         </div>
       </section>
-
+ 
       <!-- KPIs USUÁRIOS -->
       <section class="kpi-grid">
         <button
@@ -67,64 +67,64 @@
             <span class="kpi-icon" v-html="card.icon"></span>
             <span class="kpi-delta" v-if="filtroUsuarioTipo === card.tipo">selecionado</span>
           </div>
-
+ 
           <div class="kpi-number">{{ card.count }}</div>
           <div class="kpi-label">{{ card.label }}</div>
-
+ 
           <div class="kpi-bar">
             <div
               class="kpi-bar-fill"
               :style="{ width: card.pct + '%', background: card.color }"
             ></div>
           </div>
-
+ 
           <div class="kpi-pct">{{ card.pct }}% do total</div>
         </button>
       </section>
-
+ 
       <!-- ESTATÍSTICAS USUÁRIOS -->
       <section class="stats-row">
         <div class="chart-card">
           <h2 class="card-title">Por UF</h2>
-
+ 
           <div class="stat-list" v-if="statsPorUF.length">
             <div v-for="item in statsPorUF" :key="item.label" class="stat-item">
               <span class="stat-name">{{ item.label }}</span>
-
+ 
               <div class="stat-track">
                 <div class="stat-fill" :style="{ width: item.barPct + '%' }"></div>
               </div>
-
+ 
               <span class="stat-count">{{ item.count }}</span>
               <span class="stat-pct">{{ item.pct }}%</span>
             </div>
           </div>
-
+ 
           <p v-else class="empty-card">Nenhum dado de UF.</p>
         </div>
-
+ 
         <div class="chart-card">
           <h2 class="card-title">Atividades populares</h2>
-
+ 
           <div class="stat-list" v-if="statsEventos.length">
             <div v-for="item in statsEventos" :key="item.label" class="stat-item">
               <span class="stat-name">{{ item.label }}</span>
-
+ 
               <div class="stat-track">
                 <div class="stat-fill green" :style="{ width: item.barPct + '%' }"></div>
               </div>
-
+ 
               <span class="stat-count">{{ item.count }}</span>
               <span class="stat-pct">{{ item.pct }}%</span>
             </div>
           </div>
-
+ 
           <p v-else class="empty-card">Nenhuma atividade selecionada.</p>
         </div>
-
+ 
         <div class="chart-card">
           <h2 class="card-title">Escola / Trabalho</h2>
-
+ 
           <div class="stat-list" v-if="statsInstituicoes.length">
             <div
               v-for="item in statsInstituicoes"
@@ -134,20 +134,405 @@
               <span class="stat-name stat-name-marquee" :title="item.label">
                 <span>{{ item.label }}</span>
               </span>
-
+ 
               <div class="stat-track">
                 <div class="stat-fill amber" :style="{ width: item.barPct + '%' }"></div>
               </div>
-
+ 
               <span class="stat-count">{{ item.count }}</span>
               <span class="stat-pct">{{ item.pct }}%</span>
             </div>
           </div>
-
+ 
           <p v-else class="empty-card">Nenhum vínculo informado.</p>
         </div>
       </section>
+ 
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- PRESENÇA NO EVENTO — NOVA SEÇÃO               -->
+      <!-- ══════════════════════════════════════════════ -->
+      <section class="presenca-section">
+        <div class="section-header presenca-header">
+          <div>
+            <span class="section-kicker kicker-presenca">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              Presença
+            </span>
+            <h2>Controle de Presença</h2>
+            <p>
+              Confirme a presença dos participantes por evento em tempo real. Todos os dados são sincronizados instantaneamente com o Firebase.
+            </p>
+          </div>
+ 
+          <div class="section-actions">
+            <button class="btn-action teal" type="button" @click="baixarExcelPresencas">
+              Excel · Presenças
+            </button>
+            <button class="btn-action neutral" type="button" @click="carregarPresencas">
+              Atualizar
+            </button>
+          </div>
+        </div>
+ 
+        <!-- KPIs de Presença -->
+        <div class="presenca-kpis">
+          <div class="pkpi-card pkpi-total">
+            <div class="pkpi-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="pkpi-info">
+              <strong class="pkpi-number">{{ totalPresencasConfirmadas }}</strong>
+              <span class="pkpi-label">Presenças confirmadas</span>
+            </div>
+            <div class="pkpi-sublabel">de {{ usuariosOrdenados.length }} inscritos</div>
+          </div>
+ 
+          <div class="pkpi-card pkpi-eventos">
+            <div class="pkpi-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="pkpi-info">
+              <strong class="pkpi-number">{{ eventosDisponiveisParaPresenca.length }}</strong>
+              <span class="pkpi-label">Eventos ativos</span>
+            </div>
+            <div class="pkpi-sublabel">com controle de presença</div>
+          </div>
+ 
+          <div class="pkpi-card pkpi-taxa">
+            <div class="pkpi-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+            </div>
+            <div class="pkpi-info">
+              <strong class="pkpi-number">{{ taxaPresencaGeral }}%</strong>
+              <span class="pkpi-label">Taxa de presença</span>
+            </div>
+            <div class="pkpi-progress-mini">
+              <div class="pkpi-progress-fill" :style="{ width: taxaPresencaGeral + '%' }"></div>
+            </div>
+          </div>
+ 
+          <div class="pkpi-card pkpi-hoje">
+            <div class="pkpi-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="pkpi-info">
+              <strong class="pkpi-number">{{ presencasHoje }}</strong>
+              <span class="pkpi-label">Confirmadas hoje</span>
+            </div>
+            <div class="pkpi-sublabel">{{ new Date().toLocaleDateString('pt-BR') }}</div>
+          </div>
+        </div>
+ 
+        <!-- Seletor de Evento + Tabela de Presenças -->
+        <div class="presenca-painel">
+          <div class="presenca-evento-selector">
+            <label class="selector-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              Visualizar presença por evento
+            </label>
+            <div class="selector-row">
+              <select v-model="eventoPresencaSelecionado" class="evento-select-big">
+                <option value="">— Selecione um evento —</option>
+                <optgroup label="Evento Geral">
+                  <option :value="EVENTO_GERAL_ID">🎪 Evento Geral (presença no evento)</option>
+                </optgroup>
+                <optgroup label="Oficinas" v-if="todasOficinasParsed.length">
+                  <option
+                    v-for="of in todasOficinasParsed"
+                    :key="of.key"
+                    :value="'oficina::' + of.key"
+                  >
+                    📚 {{ of.nome }} · {{ of.data }} {{ of.horario }}
+                  </option>
+                </optgroup>
+                <optgroup label="Palestras por turno" v-if="palestrasPorTurno.length">
+                  <option
+                    v-for="grupo in palestrasPorTurno"
+                    :key="grupo.id"
+                    :value="grupo.id"
+                  >
+                    🎤 {{ grupo.data }} · {{ grupo.turnoLabel }} — {{ grupo.palestras.length }} palestra{{ grupo.palestras.length !== 1 ? 's' : '' }}
+                  </option>
+                </optgroup>
+              </select>
+              <div class="evento-stats-inline" v-if="eventoPresencaSelecionado">
+                <span class="esi-confirmados">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  {{ presencasDoEventoSelecionado.confirmados }} confirmados
+                </span>
+                <span class="esi-ausentes">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                  </svg>
+                  {{ presencasDoEventoSelecionado.ausentes }} não confirmados
+                </span>
+                <span class="esi-taxa">{{ presencasDoEventoSelecionado.taxa }}% taxa</span>
+              </div>
+            </div>
+          </div>
+ 
+          <div v-if="eventoPresencaSelecionado" class="presenca-lista-wrap">
+            <div class="presenca-lista-toolbar">
+              <div class="toolbar-left">
+                <h3 class="presenca-lista-titulo">
+                  {{ eventoPresencaSelecionado === EVENTO_GERAL_ID ? 'Evento Geral' : presencaEventoNome }}
+                </h3>
+                <span class="result-count">
+                  {{ usuariosDoEventoFiltrados.length }} resultado{{ usuariosDoEventoFiltrados.length !== 1 ? 's' : '' }}
+                  <small v-if="usuariosDoEventoFiltrados.length !== usuariosDoEventoSelecionado.length">
+                    · de {{ usuariosDoEventoSelecionado.length }} participante{{ usuariosDoEventoSelecionado.length !== 1 ? 's' : '' }}
+                  </small>
+                </span>
+              </div>
+              <div class="toolbar-right">
+                <div class="search-wrap">
+                  <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  <input v-model="buscaPresenca" class="search-input" placeholder="Buscar participante..." />
+                </div>
+                <select v-model="filtroPresencaStatus" class="filter-select">
+                  <option value="todos">Todos</option>
+                  <option value="confirmado">Confirmados</option>
+                  <option value="ausente">Não confirmados</option>
+                </select>
+              </div>
+            </div>
+ 
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Participante</th>
+                    <th>Tipo</th>
+                    <th>Escola / Trabalho</th>
+                    <th>Cidade</th>
+                    <th>Inscrito em</th>
+                    <th>Presença</th>
+                    <th>Confirmado em</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="usuariosDoEventoFiltrados.length === 0">
+                    <td colspan="9" class="empty-row">Nenhum participante encontrado.</td>
+                  </tr>
+                  <tr
+                    v-for="(u, idx) in usuariosPresencaPaginados"
+                    :key="u.idUsuario"
+                    class="data-row presenca-row"
+                    :class="{
+                      'row-presente': getPresencaUsuario(u, eventoPresencaSelecionado),
+                      'row-ausente': !getPresencaUsuario(u, eventoPresencaSelecionado)
+                    }"
+                  >
+                    <td><span class="posicao-num" :class="getPresencaUsuario(u, eventoPresencaSelecionado) ? 'pos-confirmado' : ''">{{ ((paginaPresenca - 1) * itensPorPaginaPresenca) + idx + 1 }}</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar" :style="{ background: getColor(u.tipoParticipante).light, color: getColor(u.tipoParticipante).text }">
+                          {{ getInitials(u.nomeCompleto) }}
+                        </div>
+                        <div class="user-info-cell">
+                          <span class="user-name">{{ u.nomeCompleto || '—' }}</span>
+                          <small>{{ u.idUsuario }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge" :class="'badge-' + (u.tipoParticipante || 'outro')">
+                        {{ formatarTipoUsuario(u.tipoParticipante) }}
+                      </span>
+                    </td>
+                    <td class="td-muted td-trunc">{{ u.escola || u.localTrabalho || '—' }}</td>
+                    <td class="td-muted">{{ u.cidade || '—' }}</td>
+                    <td class="td-muted" style="font-size:0.74rem;white-space:nowrap">{{ formatarDataHora(u.criadoEm) || '—' }}</td>
+                    <td>
+                      <span
+                        class="presenca-status-pill"
+                        :class="getPresencaUsuario(u, eventoPresencaSelecionado) ? 'psp-presente' : 'psp-ausente'"
+                      >
+                        <svg v-if="getPresencaUsuario(u, eventoPresencaSelecionado)" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <svg v-else width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="12" cy="12" r="10"/>
+                          <line x1="15" y1="9" x2="9" y2="15"/>
+                          <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                        {{ getPresencaUsuario(u, eventoPresencaSelecionado) ? 'Presente' : 'Ausente' }}
+                      </span>
+                    </td>
+                    <td class="td-muted" style="font-size:0.73rem;white-space:nowrap">
+                      {{ getPresencaTimestamp(u, eventoPresencaSelecionado) || '—' }}
+                    </td>
+                    <td>
+                      <div v-if="!updatingPresenca[u.idUsuario + '_' + eventoPresencaSelecionado]">
+                        <button
+                          v-if="!getPresencaUsuario(u, eventoPresencaSelecionado)"
+                          class="btn-presenca-confirm"
+                          type="button"
+                          @click="confirmarPresenca(u, eventoPresencaSelecionado)"
+                        >
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12"/>
+                          </svg>
+                          Confirmar
+                        </button>
+                        <button
+                          v-else
+                          class="btn-presenca-desfazer"
+                          type="button"
+                          @click="desfazerPresenca(u, eventoPresencaSelecionado)"
+                        >
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                          </svg>
+                          Desfazer
+                        </button>
+                      </div>
+                      <span v-else class="loader-small"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
+            <div class="pagination presenca-pagination" v-if="usuariosDoEventoFiltrados.length > 0">
+              <span class="pag-info">
+                Página {{ paginaPresenca }} de {{ totalPaginasPresenca || 1 }} ·
+                Exibindo {{ usuariosPresencaPaginados.length }} de {{ usuariosDoEventoFiltrados.length }}
+              </span>
+
+              <div class="pag-btns">
+                <button
+                  class="pag-btn"
+                  type="button"
+                  :disabled="paginaPresenca === 1"
+                  @click="paginaPresenca = 1"
+                >«</button>
+
+                <button
+                  class="pag-btn"
+                  type="button"
+                  :disabled="paginaPresenca === 1"
+                  @click="paginaPresenca--"
+                >‹</button>
+
+                <button
+                  v-for="p in paginasPresencaVisiveis"
+                  :key="'presenca-page-' + p"
+                  type="button"
+                  class="pag-btn"
+                  :class="{ current: p === paginaPresenca }"
+                  @click="paginaPresenca = p"
+                >
+                  {{ p }}
+                </button>
+
+                <button
+                  class="pag-btn"
+                  type="button"
+                  :disabled="paginaPresenca === totalPaginasPresenca || totalPaginasPresenca === 0"
+                  @click="paginaPresenca++"
+                >›</button>
+
+                <button
+                  class="pag-btn"
+                  type="button"
+                  :disabled="paginaPresenca === totalPaginasPresenca || totalPaginasPresenca === 0"
+                  @click="paginaPresenca = totalPaginasPresenca"
+                >»</button>
+              </div>
+
+              <select
+                v-model.number="itensPorPaginaPresenca"
+                class="pag-select"
+                @change="paginaPresenca = 1"
+              >
+                <option :value="10">10 por página</option>
+                <option :value="20">20 por página</option>
+                <option :value="30">30 por página</option>
+                <option :value="50">50 por página</option>
+                <option :value="100">100 por página</option>
+              </select>
+            </div>
+          </div>
+ 
+          <div v-else class="presenca-empty-state">
+            <div class="pes-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <p>Selecione um evento acima para visualizar e gerenciar as presenças.</p>
+          </div>
+        </div>
+ 
+        <!-- Resumo por evento (cards) -->
+        <div class="presenca-resumo-eventos" v-if="resumoPresencaPorEvento.length">
+          <h3 class="resumo-titulo">Resumo por evento</h3>
+          <div class="resumo-grid">
+            <div
+              v-for="ev in resumoPresencaPorEvento"
+              :key="ev.id"
+              class="resumo-card"
+              :class="{ 'resumo-card-active': eventoPresencaSelecionado === ev.id }"
+              @click="eventoPresencaSelecionado = ev.id"
+            >
+              <div class="resumo-card-header">
+                <span class="resumo-tipo-badge" :class="'rtb-' + ev.tipo">{{ ev.tipoLabel }}</span>
+                <span class="resumo-taxa" :class="ev.taxa >= 80 ? 'taxa-alta' : ev.taxa >= 50 ? 'taxa-media' : 'taxa-baixa'">
+                  {{ ev.taxa }}%
+                </span>
+              </div>
+              <div class="resumo-nome">{{ ev.nome }}</div>
+              <div class="resumo-progress">
+                <div class="resumo-progress-fill" :style="{ width: ev.taxa + '%', background: ev.taxa >= 80 ? '#16a34a' : ev.taxa >= 50 ? '#d97706' : '#dc2626' }"></div>
+              </div>
+              <div class="resumo-nums">
+                <span class="rn-confirmados">{{ ev.confirmados }} presentes</span>
+                <span class="rn-total">/ {{ ev.total }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+ 
       <!-- ══════════════════════════════════════════════ -->
       <!-- GESTÃO DE OFICINAS                            -->
       <!-- ══════════════════════════════════════════════ -->
@@ -161,7 +546,7 @@
               O sistema calcula automaticamente os status com base na ordem de inscrição.
             </p>
           </div>
-
+ 
           <div class="section-actions">
             <button class="btn-action teal" type="button" @click="baixarExcelTodasOficinas">
               Excel · Todas oficinas
@@ -171,7 +556,7 @@
             </button>
           </div>
         </div>
-
+ 
         <!-- KPIs OFICINAS -->
         <div class="oficinas-kpis">
           <div class="okpi-card">
@@ -200,7 +585,7 @@
             <small>disponíveis</small>
           </div>
         </div>
-
+ 
         <!-- BARRA DE BUSCA -->
         <div class="table-toolbar inner">
           <div class="toolbar-left">
@@ -223,7 +608,7 @@
             </select>
           </div>
         </div>
-
+ 
         <!-- GRID DE OFICINAS -->
         <div class="oficinas-grid" v-if="oficinasFiltradasGestao.length">
           <div
@@ -239,9 +624,9 @@
               </div>
               <div class="ocard-hora-badge">{{ of.horario }}</div>
             </div>
-
+ 
             <div class="ocard-nome">{{ of.nome }}</div>
-
+ 
             <div class="ocard-professor" v-if="professoresMap[of.nome]">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -256,7 +641,7 @@
               </svg>
               Professor não definido
             </div>
-
+ 
             <div class="ocard-local" :title="of.local">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
@@ -264,7 +649,7 @@
               </svg>
               {{ of.local }}
             </div>
-
+ 
             <div class="ocard-vagas-row">
               <div class="ocard-vagas-bar-wrap">
                 <div
@@ -281,14 +666,14 @@
                 <span v-else-if="getConfirmados(of) < of.vagas" class="ocard-livre-badge">{{ of.vagas - getConfirmados(of) }} livre{{ of.vagas - getConfirmados(of) !== 1 ? 's' : '' }}</span>
               </div>
             </div>
-
+ 
             <div class="ocard-footer">
               <span class="ocard-total-inscritos">{{ of.alunos.length }} inscrito{{ of.alunos.length !== 1 ? 's' : '' }}</span>
               <span class="ocard-ver-btn">Ver lista →</span>
             </div>
           </div>
         </div>
-
+ 
         <div class="empty-oficinas" v-else>
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
@@ -297,7 +682,7 @@
           <p>Nenhuma oficina encontrada.</p>
         </div>
       </section>
-
+ 
       <!-- ÁREA AVALIAÇÕES -->
       <section class="avaliacoes-section">
         <div class="section-header">
@@ -309,67 +694,67 @@
               As avaliações anônimas aparecem sem nome.
             </p>
           </div>
-
+ 
           <div class="section-actions">
             <button class="btn-action green" type="button" @click="baixarExcelAvaliacoes">
               Excel avaliações
             </button>
-
+ 
             <button class="btn-action blue" type="button" @click="baixarCSVAvaliacoes">
               CSV avaliações
             </button>
           </div>
         </div>
-
+ 
         <div class="reviews-summary">
           <div class="review-summary-card main">
             <span>Nota média</span>
             <strong>{{ mediaGeralAvaliacoes }}</strong>
             <small>/10</small>
           </div>
-
+ 
           <div class="review-summary-card">
             <span>Total</span>
             <strong>{{ avaliacoesOrdenadas.length }}</strong>
             <small>avaliações</small>
           </div>
-
+ 
           <div class="review-summary-card">
             <span>Anônimas</span>
             <strong>{{ totalAvaliacoesAnonimas }}</strong>
             <small>{{ pctAvaliacoesAnonimas }}%</small>
           </div>
-
+ 
           <div class="review-summary-card">
             <span>Com comentário</span>
             <strong>{{ totalAvaliacoesComComentario }}</strong>
             <small>{{ pctAvaliacoesComComentario }}%</small>
           </div>
         </div>
-
+ 
         <div class="table-toolbar inner">
           <div class="toolbar-left">
             <h2 class="card-title no-margin">Lista de avaliações</h2>
-
+ 
             <span class="result-count">
               {{ avaliacoesFiltradas.length }} resultado{{ avaliacoesFiltradas.length !== 1 ? 's' : '' }}
             </span>
           </div>
-
+ 
           <div class="toolbar-right">
             <div class="search-wrap">
               <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-
+ 
               <input
                 v-model="buscaAvaliacoes"
                 class="search-input"
                 placeholder="Buscar avaliação, atividade, comentário..."
               />
             </div>
-
+ 
             <select v-model="filtroAvaliacaoTipo" class="filter-select">
               <option value="todos">Todos os tipos</option>
               <option value="evento_geral">Evento geral</option>
@@ -377,13 +762,13 @@
               <option value="palestra">Palestras</option>
               <option value="exposicao">Exposições</option>
             </select>
-
+ 
             <select v-model="filtroAvaliacaoIdentificacao" class="filter-select">
               <option value="todos">Todas</option>
               <option value="anonima">Anônimas</option>
               <option value="identificada">Identificadas</option>
             </select>
-
+ 
             <select v-model="filtroAvaliacaoNota" class="filter-select">
               <option value="todas">Todas as notas</option>
               <option value="baixas">Notas 1 a 6</option>
@@ -392,7 +777,7 @@
             </select>
           </div>
         </div>
-
+ 
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -418,12 +803,12 @@
                 <th>Ações</th>
               </tr>
             </thead>
-
+ 
             <tbody>
               <tr v-if="avaliacoesFiltradas.length === 0">
                 <td colspan="9" class="empty-row">Nenhuma avaliação encontrada.</td>
               </tr>
-
+ 
               <tr
                 v-for="avaliacao in avaliacoesPaginadas"
                 :key="avaliacao.idAvaliacao"
@@ -433,13 +818,13 @@
                 <td>
                   <span class="id-chip">{{ avaliacao.idAvaliacao }}</span>
                 </td>
-
+ 
                 <td>
                   <div class="user-cell">
                     <div class="avatar" :class="{ anonymous: avaliacao.anonimo }">
                       {{ avaliacao.anonimo ? 'A' : getInitials(avaliacao.nome) }}
                     </div>
-
+ 
                     <div class="user-info-cell">
                       <span class="user-name">
                         {{ avaliacao.anonimo ? 'Anônimo' : avaliacao.nome }}
@@ -448,35 +833,35 @@
                     </div>
                   </div>
                 </td>
-
+ 
                 <td>
                   <span class="badge-review" :class="'review-' + avaliacao.tipo">
                     {{ avaliacao.tipoLabel }}
                   </span>
                 </td>
-
+ 
                 <td class="td-muted td-trunc">
                   {{ avaliacao.atividadeTitulo || '—' }}
                 </td>
-
+ 
                 <td>
                   <span class="score-pill" :class="getScoreClass(avaliacao.notaGeral)">
                     {{ avaliacao.notaGeral }}/10
                   </span>
                 </td>
-
+ 
                 <td>
                   <span class="aspect-pill">{{ avaliacao.mediaAspectos || 0 }}/5</span>
                 </td>
-
+ 
                 <td class="td-muted td-trunc">
                   {{ avaliacao.comentario || 'Sem comentário' }}
                 </td>
-
+ 
                 <td class="td-muted">
                   {{ formatarDataHora(avaliacao.criadoEm) || '—' }}
                 </td>
-
+ 
                 <td>
                   <button class="btn-detail" type="button" @click.stop="abrirModalAvaliacao(avaliacao)">
                     Ver
@@ -486,16 +871,16 @@
             </tbody>
           </table>
         </div>
-
+ 
         <div class="pagination">
           <span class="pag-info">
             Página {{ paginaAvaliacoes }} de {{ totalPaginasAvaliacoes || 1 }}
           </span>
-
+ 
           <div class="pag-btns">
             <button class="pag-btn" type="button" :disabled="paginaAvaliacoes === 1" @click="paginaAvaliacoes = 1">«</button>
             <button class="pag-btn" type="button" :disabled="paginaAvaliacoes === 1" @click="paginaAvaliacoes--">‹</button>
-
+ 
             <button
               v-for="p in paginasAvaliacoesVisiveis"
               :key="p"
@@ -506,7 +891,7 @@
             >
               {{ p }}
             </button>
-
+ 
             <button
               class="pag-btn"
               type="button"
@@ -515,7 +900,7 @@
             >
               ›
             </button>
-
+ 
             <button
               class="pag-btn"
               type="button"
@@ -525,7 +910,7 @@
               »
             </button>
           </div>
-
+ 
           <select v-model.number="itensPorPaginaAvaliacoes" class="pag-select" @change="paginaAvaliacoes = 1">
             <option :value="5">5 por página</option>
             <option :value="10">10 por página</option>
@@ -534,32 +919,32 @@
           </select>
         </div>
       </section>
-
+ 
       <!-- TABELA USUÁRIOS -->
       <section class="table-section">
         <div class="table-toolbar">
           <div class="toolbar-left">
             <h2 class="card-title no-margin">Participantes cadastrados</h2>
-
+ 
             <span class="result-count">
               {{ usuariosFiltrados.length }} resultado{{ usuariosFiltrados.length !== 1 ? 's' : '' }}
             </span>
           </div>
-
+ 
           <div class="toolbar-right">
             <div class="search-wrap">
               <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-
+ 
               <input
                 v-model="buscaUsuarios"
                 class="search-input"
                 placeholder="Buscar ID, nome, cidade, escola..."
               />
             </div>
-
+ 
             <div class="filter-pills">
               <button
                 v-for="f in filtrosUsuarios"
@@ -574,42 +959,43 @@
             </div>
           </div>
         </div>
-
+ 
         <div class="table-wrap">
           <table class="data-table">
             <thead>
               <tr>
                 <th>ID</th>
-
+ 
                 <th class="sortable" @click="toggleSortUsuario('nomeCompleto')">
                   Nome
                   <span class="sort-arrow">
                     {{ sortUsuarioCol === 'nomeCompleto' ? (sortUsuarioDir === 1 ? '↑' : '↓') : '↕' }}
                   </span>
                 </th>
-
+ 
                 <th class="sortable" @click="toggleSortUsuario('cidade')">
                   Cidade
                   <span class="sort-arrow">
                     {{ sortUsuarioCol === 'cidade' ? (sortUsuarioDir === 1 ? '↑' : '↓') : '↕' }}
                   </span>
                 </th>
-
+ 
                 <th>UF</th>
                 <th>Tipo</th>
                 <th>Idade</th>
                 <th>Escola / Trabalho</th>
                 <th>Atividades</th>
+                <th>Presença</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
             </thead>
-
+ 
             <tbody>
               <tr v-if="usuariosFiltrados.length === 0">
-                <td colspan="10" class="empty-row">Nenhum participante encontrado.</td>
+                <td colspan="11" class="empty-row">Nenhum participante encontrado.</td>
               </tr>
-
+ 
               <tr
                 v-for="(u, i) in usuariosPaginados"
                 :key="u.idUsuario"
@@ -620,7 +1006,7 @@
                 <td>
                   <span class="id-chip">{{ u.idUsuario }}</span>
                 </td>
-
+ 
                 <td>
                   <div class="user-cell">
                     <div
@@ -632,39 +1018,54 @@
                     >
                       {{ getInitials(u.nomeCompleto) }}
                     </div>
-
+ 
                     <div class="user-info-cell">
                       <span class="user-name">{{ u.nomeCompleto || '—' }}</span>
                       <small>{{ formatarDataHora(u.criadoEm) }}</small>
                     </div>
                   </div>
                 </td>
-
+ 
                 <td class="td-muted">{{ u.cidade || '—' }}</td>
                 <td class="td-muted">{{ u.uf || '—' }}</td>
-
+ 
                 <td>
                   <span class="badge" :class="'badge-' + (u.tipoParticipante || 'outro')">
                     {{ formatarTipoUsuario(u.tipoParticipante) }}
                   </span>
                 </td>
-
+ 
                 <td class="td-muted">{{ u.idade || calcIdade(u.dataNascimento) || '—' }}</td>
-
+ 
                 <td class="td-muted td-trunc">
                   {{ u.escola || u.localTrabalho || '—' }}
                 </td>
-
+ 
                 <td class="td-muted td-trunc">
                   {{ resumoAtividades(u) }}
                 </td>
-
+ 
+                <!-- Coluna Presença nova -->
+                <td>
+                  <span
+                    v-if="getPresencaUsuario(u, EVENTO_GERAL_ID)"
+                    class="presenca-status-pill psp-presente"
+                    style="font-size:0.68rem"
+                  >
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Presente
+                  </span>
+                  <span v-else class="td-muted" style="font-size:0.72rem">—</span>
+                </td>
+ 
                 <td>
                   <span class="status-badge" :class="'status-' + (u.status || 'confirmada')">
                     {{ u.status || 'confirmada' }}
                   </span>
                 </td>
-
+ 
                 <td>
                   <button class="btn-detail" type="button" @click.stop="abrirModalUsuario(u)">
                     Ver
@@ -674,16 +1075,16 @@
             </tbody>
           </table>
         </div>
-
+ 
         <div class="pagination">
           <span class="pag-info">
             Página {{ paginaUsuarios }} de {{ totalPaginasUsuarios || 1 }}
           </span>
-
+ 
           <div class="pag-btns">
             <button class="pag-btn" type="button" :disabled="paginaUsuarios === 1" @click="paginaUsuarios = 1">«</button>
             <button class="pag-btn" type="button" :disabled="paginaUsuarios === 1" @click="paginaUsuarios--">‹</button>
-
+ 
             <button
               v-for="p in paginasUsuariosVisiveis"
               :key="p"
@@ -694,7 +1095,7 @@
             >
               {{ p }}
             </button>
-
+ 
             <button
               class="pag-btn"
               type="button"
@@ -703,7 +1104,7 @@
             >
               ›
             </button>
-
+ 
             <button
               class="pag-btn"
               type="button"
@@ -713,7 +1114,7 @@
               »
             </button>
           </div>
-
+ 
           <select v-model.number="itensPorPaginaUsuarios" class="pag-select" @change="paginaUsuarios = 1">
             <option :value="10">10 por página</option>
             <option :value="20">20 por página</option>
@@ -722,32 +1123,32 @@
           </select>
         </div>
       </section>
-
+ 
       <section class="actions-bar">
         <div class="actions-left">
           <button class="btn-action green" type="button" @click="baixarExcelUsuarios">
             Baixar Excel inscritos
           </button>
-
+ 
           <button class="btn-action blue" type="button" @click="baixarCSVUsuarios">
             Baixar CSV inscritos
           </button>
-
+ 
           <button class="btn-action neutral" type="button" @click="carregarTudo">
             Atualizar tudo
           </button>
-
+ 
           <span class="export-note">
             Inscritos: {{ usuariosFiltrados.length }} · Avaliações: {{ avaliacoesFiltradas.length }}
           </span>
         </div>
-
+ 
         <button class="btn-logout-footer" type="button" @click="logout">
           Sair da Administração
         </button>
       </section>
     </main>
-
+ 
     <!-- ══════════════════════════════════════════════ -->
     <!-- MODAL GESTÃO DE OFICINA                       -->
     <!-- ══════════════════════════════════════════════ -->
@@ -761,7 +1162,7 @@
                 <path d="M6 12v5c3 3 9 3 12 0v-5"/>
               </svg>
             </div>
-
+ 
             <div class="modal-info" style="flex:1">
               <h2 class="modal-name">{{ oficinaSelecionadaGestao?.nome }}</h2>
               <div class="modal-badges" style="flex-wrap:wrap;gap:0.35rem">
@@ -780,13 +1181,12 @@
                 </span>
               </div>
             </div>
-
+ 
             <button class="modal-close-btn" type="button" @click="modalOficinaGestaoAberto = false">
               ×
             </button>
           </div>
-
-          <!-- Infos da oficina + professor -->
+ 
           <div class="oficina-modal-meta" v-if="oficinaSelecionadaGestao">
             <div class="meta-item">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -795,7 +1195,7 @@
               </svg>
               {{ oficinaSelecionadaGestao.local || '—' }}
             </div>
-
+ 
             <div class="meta-item professor-edit-row">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -821,8 +1221,7 @@
               </template>
             </div>
           </div>
-
-          <!-- Legenda + download -->
+ 
           <div class="oficina-modal-toolbar">
             <div class="omt-legend">
               <span class="leg-chip confirmado">● Confirmado — com vaga garantida</span>
@@ -837,8 +1236,7 @@
               </button>
             </div>
           </div>
-
-          <!-- Tabela de alunos -->
+ 
           <div class="table-wrap oficina-table-wrap" v-if="oficinaSelecionadaGestao">
             <table class="data-table">
               <thead>
@@ -857,7 +1255,7 @@
                 <tr v-if="oficinaSelecionadaGestao.alunos.length === 0">
                   <td colspan="8" class="empty-row">Nenhum inscrito nesta oficina.</td>
                 </tr>
-
+ 
                 <tr
                   v-for="(u, idx) in oficinaSelecionadaGestao.alunos"
                   :key="u.idUsuario"
@@ -878,7 +1276,7 @@
                       {{ idx + 1 }}
                     </span>
                   </td>
-
+ 
                   <td>
                     <div class="user-cell">
                       <div
@@ -900,12 +1298,12 @@
                       </div>
                     </div>
                   </td>
-
+ 
                   <td class="td-muted td-trunc">{{ u.escola || u.localTrabalho || '—' }}</td>
                   <td class="td-muted">{{ u.cidade || '—' }}<span v-if="u.uf"> · {{ u.uf }}</span></td>
                   <td class="td-muted">{{ u.telefone || '—' }}</td>
                   <td class="td-muted" style="white-space:nowrap;font-size:0.74rem;">{{ formatarDataHora(u.criadoEm) || '—' }}</td>
-
+ 
                   <td>
                     <span
                       class="status-oficina-pill"
@@ -919,7 +1317,7 @@
                       title="Status alterado manualmente pelo admin"
                     >manual</span>
                   </td>
-
+ 
                   <td>
                     <div class="toggle-btns" v-if="!updatingOficinaStatus[getLoadingKey(u, oficinaSelecionadaGestao)]">
                       <button
@@ -954,7 +1352,7 @@
               </tbody>
             </table>
           </div>
-
+ 
           <div class="modal-footer" style="justify-content:space-between;align-items:center">
             <p class="footer-note" v-if="oficinaSelecionadaGestao">
               Os primeiros <strong>{{ oficinaSelecionadaGestao.vagas }}</strong> inscritos por data de cadastro recebem vaga automaticamente.
@@ -967,11 +1365,13 @@
         </div>
       </div>
     </Transition>
-
-    <!-- MODAL USUÁRIO -->
+ 
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- MODAL USUÁRIO — COM PRESENÇA                  -->
+    <!-- ══════════════════════════════════════════════ -->
     <Transition name="fade">
-      <div v-if="modalUsuarioAberto" class="modal-overlay" @click.self="modalUsuarioAberto = false">
-        <div class="modal">
+      <div v-if="modalUsuarioAberto" class="modal-overlay" @click.self="fecharModalUsuario">
+        <div class="modal modal-usuario-presenca">
           <div class="modal-header">
             <div
               class="modal-avatar"
@@ -982,37 +1382,297 @@
             >
               {{ getInitials(usuarioSelecionado?.nomeCompleto || '') }}
             </div>
-
+ 
             <div class="modal-info">
               <h2 class="modal-name">{{ usuarioSelecionado?.nomeCompleto }}</h2>
-
+ 
               <div class="modal-badges">
                 <span class="id-chip">{{ usuarioSelecionado?.idUsuario }}</span>
                 <span class="badge" :class="'badge-' + (usuarioSelecionado?.tipoParticipante || 'outro')">
                   {{ formatarTipoUsuario(usuarioSelecionado?.tipoParticipante) }}
                 </span>
+                <!-- Indicador de presença no evento geral -->
+                <span
+                  v-if="usuarioSelecionado && getPresencaUsuario(usuarioSelecionado, EVENTO_GERAL_ID)"
+                  class="presenca-status-pill psp-presente"
+                  style="font-size:0.68rem"
+                >
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Presente no evento
+                </span>
               </div>
             </div>
-
-            <button class="modal-close-btn" type="button" @click="modalUsuarioAberto = false">
+ 
+            <button class="modal-close-btn" type="button" @click="fecharModalUsuario">
               ×
             </button>
           </div>
-
+ 
+          <!-- ════════════════════════════════════════ -->
+          <!-- SEÇÃO DE PRESENÇA — DESTAQUE VISUAL      -->
+          <!-- ════════════════════════════════════════ -->
+          <div class="presenca-modal-block" v-if="usuarioSelecionado">
+            <div class="pmb-header">
+              <div class="pmb-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                Confirmar Presença
+              </div>
+              <div class="pmb-desc">Registre a presença do participante nos eventos do SALIP 2</div>
+            </div>
+ 
+            <div class="pmb-events-grid">
+              <!-- Evento Geral sempre disponível -->
+              <div
+                class="pmb-event-item"
+                :class="{ 'pmb-event-confirmado': getPresencaUsuario(usuarioSelecionado, EVENTO_GERAL_ID) }"
+              >
+                <div class="pmb-event-info">
+                  <div class="pmb-event-tipo">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                      <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    Evento Geral
+                  </div>
+                  <div class="pmb-event-nome">🎪 SALIP 2 — Presença geral no evento</div>
+                  <div class="pmb-event-ts" v-if="getPresencaTimestamp(usuarioSelecionado, EVENTO_GERAL_ID)">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    Confirmado em {{ getPresencaTimestamp(usuarioSelecionado, EVENTO_GERAL_ID) }}
+                  </div>
+                </div>
+                <div class="pmb-event-actions">
+                  <div v-if="updatingPresenca[usuarioSelecionado.idUsuario + '_' + EVENTO_GERAL_ID]">
+                    <span class="loader-small"></span>
+                  </div>
+                  <template v-else>
+                    <button
+                      v-if="!getPresencaUsuario(usuarioSelecionado, EVENTO_GERAL_ID)"
+                      class="btn-presenca-confirm pmb-btn"
+                      type="button"
+                      @click="confirmarPresenca(usuarioSelecionado, EVENTO_GERAL_ID)"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      Confirmar presença
+                    </button>
+                    <div v-else class="pmb-confirmed-state">
+                      <span class="pmb-confirmed-label">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Presente
+                      </span>
+                      <button
+                        class="btn-presenca-desfazer pmb-btn-desfazer"
+                        type="button"
+                        @click="desfazerPresenca(usuarioSelecionado, EVENTO_GERAL_ID)"
+                      >
+                        Desfazer
+                      </button>
+                    </div>
+                  </template>
+                </div>
+              </div>
+ 
+              <!-- Oficinas inscritas -->
+              <div
+                v-for="ofStr in usuarioSelecionado.oficinas"
+                :key="'of_' + ofStr"
+                class="pmb-event-item"
+                :class="{ 'pmb-event-confirmado': getPresencaUsuario(usuarioSelecionado, 'oficina::' + ofStr) }"
+              >
+                <div class="pmb-event-info">
+                  <div class="pmb-event-tipo">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                    Oficina
+                    <span class="pmb-status-ofic" :class="getStatusOficinaUsuarioByStr(usuarioSelecionado, ofStr) === 'confirmado' ? 'sof-ok' : 'sof-reserva'">
+                      · {{ getStatusOficinaUsuarioByStr(usuarioSelecionado, ofStr) === 'confirmado' ? 'com vaga' : 'reserva' }}
+                    </span>
+                  </div>
+                  <div class="pmb-event-nome">{{ parsearOficina(ofStr).nome }}</div>
+                  <div class="pmb-event-sub">{{ parsearOficina(ofStr).data }} · {{ parsearOficina(ofStr).horario }}</div>
+                  <div class="pmb-event-ts" v-if="getPresencaTimestamp(usuarioSelecionado, 'oficina::' + ofStr)">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    {{ getPresencaTimestamp(usuarioSelecionado, 'oficina::' + ofStr) }}
+                  </div>
+                </div>
+                <div class="pmb-event-actions">
+                  <div v-if="updatingPresenca[usuarioSelecionado.idUsuario + '_oficina::' + ofStr]">
+                    <span class="loader-small"></span>
+                  </div>
+                  <template v-else>
+                    <button
+                      v-if="!getPresencaUsuario(usuarioSelecionado, 'oficina::' + ofStr)"
+                      class="btn-presenca-confirm pmb-btn"
+                      type="button"
+                      @click="confirmarPresenca(usuarioSelecionado, 'oficina::' + ofStr)"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      Confirmar presença
+                    </button>
+                    <div v-else class="pmb-confirmed-state">
+                      <span class="pmb-confirmed-label">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Presente
+                      </span>
+                      <button
+                        class="btn-presenca-desfazer pmb-btn-desfazer"
+                        type="button"
+                        @click="desfazerPresenca(usuarioSelecionado, 'oficina::' + ofStr)"
+                      >
+                        Desfazer
+                      </button>
+                    </div>
+                  </template>
+                </div>
+              </div>
+ 
+              <!-- Palestras por turno do participante -->
+              <div
+                v-for="grupo in getPalestrasTurnosDoUsuario(usuarioSelecionado)"
+                :key="'palestra_turno_usuario_' + grupo.id"
+                class="pmb-event-item"
+                :class="{ 'pmb-event-confirmado': getPresencaUsuario(usuarioSelecionado, grupo.id) }"
+              >
+                <div class="pmb-event-info">
+                  <div class="pmb-event-tipo">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 1v22"/>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    Palestras · {{ grupo.turnoLabel }}
+                  </div>
+                  <div class="pmb-event-nome">🎤 {{ grupo.data }} — {{ grupo.palestras.length }} palestra{{ grupo.palestras.length !== 1 ? 's' : '' }} no turno</div>
+                  <div class="pmb-event-sub">
+                    {{ grupo.palestras.map((p) => p.nome).join(' + ') }}
+                  </div>
+                  <div class="pmb-event-ts" v-if="getPresencaTimestamp(usuarioSelecionado, grupo.id)">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    {{ getPresencaTimestamp(usuarioSelecionado, grupo.id) }}
+                  </div>
+                </div>
+                <div class="pmb-event-actions">
+                  <div v-if="updatingPresenca[usuarioSelecionado.idUsuario + '_' + normalizarEventoId(grupo.id)]">
+                    <span class="loader-small"></span>
+                  </div>
+                  <template v-else>
+                    <button
+                      v-if="!getPresencaUsuario(usuarioSelecionado, grupo.id)"
+                      class="btn-presenca-confirm pmb-btn"
+                      type="button"
+                      @click="confirmarPresenca(usuarioSelecionado, grupo.id)"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      Confirmar turno
+                    </button>
+                    <div v-else class="pmb-confirmed-state">
+                      <span class="pmb-confirmed-label">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Presente no turno
+                      </span>
+                      <button
+                        class="btn-presenca-desfazer pmb-btn-desfazer"
+                        type="button"
+                        @click="desfazerPresenca(usuarioSelecionado, grupo.id)"
+                      >
+                        Desfazer
+                      </button>
+                    </div>
+                  </template>
+                </div>
+              </div>
+ 
+              <!-- Confirmar em outro evento (selector) -->
+              <div class="pmb-event-item pmb-event-outro">
+                <div class="pmb-event-info">
+                  <div class="pmb-event-tipo">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="8" x2="12" y2="16"/>
+                      <line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                    Outro evento
+                  </div>
+                  <div class="pmb-event-nome" style="font-size:0.78rem;color:var(--text-muted)">Confirmar presença em evento não inscrito</div>
+                </div>
+                <div class="pmb-event-actions pmb-outro-actions">
+                  <select v-model="eventoOutroSelecionado[usuarioSelecionado?.idUsuario]" class="filter-select pmb-select">
+                    <option value="">Selecionar evento...</option>
+                    <optgroup label="Evento Geral">
+                      <option :value="EVENTO_GERAL_ID">🎪 Evento Geral</option>
+                    </optgroup>
+                    <optgroup label="Oficinas">
+                      <option
+                        v-for="of in todasOficinasParsed"
+                        :key="of.key"
+                        :value="'oficina::' + of.key"
+                      >
+                        📚 {{ of.nome }} · {{ of.data }}
+                      </option>
+                    </optgroup>
+                    <optgroup label="Palestras por turno" v-if="palestrasPorTurno.length">
+                      <option
+                        v-for="grupo in palestrasPorTurno"
+                        :key="'outro_' + grupo.id"
+                        :value="grupo.id"
+                      >
+                        🎤 {{ grupo.data }} · {{ grupo.turnoLabel }} — {{ grupo.palestras.length }} palestra{{ grupo.palestras.length !== 1 ? 's' : '' }}
+                      </option>
+                    </optgroup>
+                  </select>
+                  <button
+                    v-if="eventoOutroSelecionado[usuarioSelecionado?.idUsuario]"
+                    class="btn-presenca-confirm pmb-btn"
+                    type="button"
+                    @click="confirmarPresencaOutro(usuarioSelecionado)"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Confirmar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+ 
           <div class="modal-body" v-if="usuarioSelecionado">
             <div class="modal-section">
               <div class="modal-section-title">Dados pessoais</div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">ID</span>
                 <span class="modal-val">{{ usuarioSelecionado.idUsuario }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Nome</span>
                 <span class="modal-val">{{ usuarioSelecionado.nomeCompleto || '—' }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Cidade</span>
                 <span class="modal-val">
@@ -1020,7 +1680,7 @@
                   {{ usuarioSelecionado.uf ? ' — ' + usuarioSelecionado.uf : '' }}
                 </span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Nascimento</span>
                 <span class="modal-val">
@@ -1030,65 +1690,64 @@
                   </span>
                 </span>
               </div>
-
+ 
               <div class="modal-row" v-if="usuarioSelecionado.telefone">
                 <span class="modal-label">WhatsApp</span>
                 <span class="modal-val">{{ usuarioSelecionado.telefone }}</span>
               </div>
             </div>
-
+ 
             <div class="modal-section" v-if="usuarioSelecionado.escola || usuarioSelecionado.localTrabalho">
               <div class="modal-section-title">Vínculo</div>
-
+ 
               <div class="modal-row" v-if="usuarioSelecionado.escola">
                 <span class="modal-label">Escola</span>
                 <span class="modal-val">{{ usuarioSelecionado.escola }}</span>
               </div>
-
+ 
               <div class="modal-row" v-if="usuarioSelecionado.localTrabalho">
                 <span class="modal-label">Trabalho</span>
                 <span class="modal-val">{{ usuarioSelecionado.localTrabalho }}</span>
               </div>
             </div>
-
+ 
             <div class="modal-section">
               <div class="modal-section-title">Agenda</div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Tem atividades?</span>
                 <span class="modal-val">{{ usuarioSelecionado.possuiAtividadesExtras ? 'Sim' : 'Não' }}</span>
               </div>
-
+ 
               <div class="modal-row" v-if="usuarioSelecionado.categorias.length">
                 <span class="modal-label">Categorias</span>
                 <span class="modal-val">{{ usuarioSelecionado.categorias.join(', ') }}</span>
               </div>
-
+ 
               <div class="modal-row" v-if="usuarioSelecionado.oficinas.length">
                 <span class="modal-label">Oficinas</span>
                 <span class="modal-val">{{ usuarioSelecionado.oficinas.join(', ') }}</span>
               </div>
-
+ 
               <div class="modal-row" v-if="usuarioSelecionado.exposicoes.length">
                 <span class="modal-label">Exposições</span>
                 <span class="modal-val">{{ usuarioSelecionado.exposicoes.join(', ') }}</span>
               </div>
-
+ 
               <div class="modal-row" v-if="usuarioSelecionado.palestras.length">
                 <span class="modal-label">Palestras</span>
                 <span class="modal-val">{{ usuarioSelecionado.palestras.join(', ') }}</span>
               </div>
-
+ 
               <div class="modal-row" v-if="!temAtividades(usuarioSelecionado)">
                 <span class="modal-label">Atividades</span>
                 <span class="modal-val">Acesso geral ao evento</span>
               </div>
             </div>
-
-            <!-- STATUS OFICINAS DO USUÁRIO -->
+ 
             <div class="modal-section" v-if="usuarioSelecionado.oficinas.length">
               <div class="modal-section-title">Status nas oficinas</div>
-
+ 
               <div
                 v-for="ofStr in usuarioSelecionado.oficinas"
                 :key="ofStr"
@@ -1103,41 +1762,41 @@
                 </span>
               </div>
             </div>
-
+ 
             <div class="modal-section">
               <div class="modal-section-title">Controle</div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Status</span>
                 <span class="modal-val">{{ usuarioSelecionado.status || 'confirmada' }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Origem</span>
                 <span class="modal-val">{{ usuarioSelecionado.origem || '—' }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Criado em</span>
                 <span class="modal-val">{{ formatarDataHora(usuarioSelecionado.criadoEm) || '—' }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Termos</span>
                 <span class="modal-val">{{ usuarioSelecionado.aceitouTermos ? 'Aceitos' : 'Não informado' }}</span>
               </div>
             </div>
           </div>
-
+ 
           <div class="modal-footer">
-            <button class="btn-action blue" type="button" @click="modalUsuarioAberto = false">
+            <button class="btn-action blue" type="button" @click="fecharModalUsuario">
               Fechar
             </button>
           </div>
         </div>
       </div>
     </Transition>
-
+ 
     <!-- MODAL AVALIAÇÃO -->
     <Transition name="fade">
       <div v-if="modalAvaliacaoAberto" class="modal-overlay" @click.self="modalAvaliacaoAberto = false">
@@ -1146,12 +1805,12 @@
             <div class="modal-avatar" :class="{ anonymous: avaliacaoSelecionada?.anonimo }">
               {{ avaliacaoSelecionada?.anonimo ? 'A' : getInitials(avaliacaoSelecionada?.nome) }}
             </div>
-
+ 
             <div class="modal-info">
               <h2 class="modal-name">
                 {{ avaliacaoSelecionada?.anonimo ? 'Avaliação anônima' : avaliacaoSelecionada?.nome }}
               </h2>
-
+ 
               <div class="modal-badges">
                 <span class="id-chip">{{ avaliacaoSelecionada?.idAvaliacao }}</span>
                 <span class="badge-review" :class="'review-' + avaliacaoSelecionada?.tipo">
@@ -1162,96 +1821,96 @@
                 </span>
               </div>
             </div>
-
+ 
             <button class="modal-close-btn" type="button" @click="modalAvaliacaoAberto = false">
               ×
             </button>
           </div>
-
+ 
           <div class="modal-body" v-if="avaliacaoSelecionada">
             <div class="modal-section">
               <div class="modal-section-title">Avaliação</div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Tipo</span>
                 <span class="modal-val">{{ avaliacaoSelecionada.tipoLabel }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Atividade</span>
                 <span class="modal-val">{{ avaliacaoSelecionada.atividadeTitulo || '—' }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Nota geral</span>
                 <span class="modal-val">{{ avaliacaoSelecionada.notaGeral }}/10</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Identificação</span>
                 <span class="modal-val">{{ avaliacaoSelecionada.modoIdentificacaoLabel }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Data</span>
                 <span class="modal-val">{{ formatarDataHora(avaliacaoSelecionada.criadoEm) || '—' }}</span>
               </div>
             </div>
-
+ 
             <div class="modal-section">
               <div class="modal-section-title">Aspectos</div>
-
+ 
               <div class="aspect-detail">
                 <div>
                   <span>Organização</span>
                   <strong>{{ avaliacaoSelecionada.aspectos.organizacao || 0 }}/5</strong>
                 </div>
-
+ 
                 <div>
                   <span>Estrutura</span>
                   <strong>{{ avaliacaoSelecionada.aspectos.estrutura || 0 }}/5</strong>
                 </div>
-
+ 
                 <div>
                   <span>Conteúdo</span>
                   <strong>{{ avaliacaoSelecionada.aspectos.conteudo || 0 }}/5</strong>
                 </div>
-
+ 
                 <div>
                   <span>Atendimento</span>
                   <strong>{{ avaliacaoSelecionada.aspectos.atendimento || 0 }}/5</strong>
                 </div>
               </div>
             </div>
-
+ 
             <div class="modal-section">
               <div class="modal-section-title">Comentário</div>
-
+ 
               <p class="comment-box">
                 {{ avaliacaoSelecionada.comentario || 'O participante não deixou comentário.' }}
               </p>
             </div>
-
+ 
             <div class="modal-section">
               <div class="modal-section-title">Controle</div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Status</span>
                 <span class="modal-val">{{ avaliacaoSelecionada.status || 'recebida' }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Origem</span>
                 <span class="modal-val">{{ avaliacaoSelecionada.origem || '—' }}</span>
               </div>
-
+ 
               <div class="modal-row">
                 <span class="modal-label">Autorizou uso</span>
                 <span class="modal-val">{{ avaliacaoSelecionada.autorizouUso ? 'Sim' : 'Não informado' }}</span>
               </div>
             </div>
           </div>
-
+ 
           <div class="modal-footer">
             <button class="btn-action blue" type="button" @click="modalAvaliacaoAberto = false">
               Fechar
@@ -1260,32 +1919,50 @@
         </div>
       </div>
     </Transition>
+ 
+    <!-- TOAST DE NOTIFICAÇÃO -->
+    <Transition name="toast-slide">
+      <div v-if="toastAtivo" class="toast-notification" :class="'toast-' + toastTipo">
+        <svg v-if="toastTipo === 'success'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <svg v-else-if="toastTipo === 'error'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+        {{ toastMensagem }}
+      </div>
+    </Transition>
   </div>
 </template>
-
+ 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { collection, getDocs, query, orderBy, updateDoc, doc, setDoc, getDoc } from 'firebase/firestore'
+import {
+  collection, getDocs, query, orderBy, updateDoc, doc, setDoc, getDoc,
+  onSnapshot, serverTimestamp
+} from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
 import { auth, db } from '@/firebase'
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
-
+ 
 const router = useRouter()
-
+ 
 // ─────────────────────────────────────────────────────
 // STATE — Dados principais
 // ─────────────────────────────────────────────────────
 const usuariosOrdenados = ref([])
 const avaliacoesOrdenadas = ref([])
-
+ 
 const loadingUsuarios = ref(false)
 const loadingAvaliacoes = ref(false)
 const erroUsuarios = ref('')
 const erroAvaliacoes = ref('')
 const atualizadoEm = ref('')
-
+ 
 // ─────────────────────────────────────────────────────
 // STATE — Filtros / Busca / Paginação USUÁRIOS
 // ─────────────────────────────────────────────────────
@@ -1295,7 +1972,7 @@ const sortUsuarioCol = ref('nomeCompleto')
 const sortUsuarioDir = ref(1)
 const paginaUsuarios = ref(1)
 const itensPorPaginaUsuarios = ref(20)
-
+ 
 // ─────────────────────────────────────────────────────
 // STATE — Filtros / Busca / Paginação AVALIAÇÕES
 // ─────────────────────────────────────────────────────
@@ -1307,7 +1984,7 @@ const sortAvaliacaoCol = ref('criadoEmMs')
 const sortAvaliacaoDir = ref(-1)
 const paginaAvaliacoes = ref(1)
 const itensPorPaginaAvaliacoes = ref(10)
-
+ 
 // ─────────────────────────────────────────────────────
 // STATE — Modais
 // ─────────────────────────────────────────────────────
@@ -1315,7 +1992,7 @@ const modalUsuarioAberto = ref(false)
 const usuarioSelecionado = ref(null)
 const modalAvaliacaoAberto = ref(false)
 const avaliacaoSelecionada = ref(null)
-
+ 
 // ─────────────────────────────────────────────────────
 // STATE — Gestão de Oficinas
 // ─────────────────────────────────────────────────────
@@ -1324,37 +2001,67 @@ const oficinaSelecionadaGestao = ref(null)
 const buscaOficinas = ref('')
 const filtroOficinaStatus = ref('todas')
 const updatingOficinaStatus = ref({})
-
-// Mapa de professores: { nomeDaOficina: 'Nome do Professor' }
-// Carregado/salvo no Firestore em config_salip2/professores
+ 
 const professoresMap = ref({})
 const editandoProfessorOficina = ref(null)
 const novoProfessorNome = ref('')
-
+ 
+// ─────────────────────────────────────────────────────
+// STATE — PRESENÇA (NOVO)
+// ─────────────────────────────────────────────────────
+// Estrutura: { [idUsuario]: { [eventoId]: { confirmado: bool, timestamp: string } } }
+const presencasMap = ref({})
+const updatingPresenca = ref({})
+const eventoPresencaSelecionado = ref('')
+const buscaPresenca = ref('')
+const filtroPresencaStatus = ref('todos')
+const paginaPresenca = ref(1)
+const itensPorPaginaPresenca = ref(20)
+const eventoOutroSelecionado = ref({})
+ 
+// Real-time listener unsubscribe
+let unsubscribePresencas = null
+ 
+// ─────────────────────────────────────────────────────
+// STATE — Toast
+// ─────────────────────────────────────────────────────
+const toastAtivo = ref(false)
+const toastMensagem = ref('')
+const toastTipo = ref('success')
+let toastTimer = null
+ 
 // ─────────────────────────────────────────────────────
 // CONSTANTES
 // ─────────────────────────────────────────────────────
+const EVENTO_GERAL_ID = 'evento_geral'
+const PALESTRA_TURNO_PREFIX = 'palestra_turno::'
+ 
 const COLORS = {
   aluno: { bg: '#2563eb', light: '#dbeafe', text: '#1e40af' },
   funcionario: { bg: '#16a34a', light: '#dcfce7', text: '#166534' },
   visitante: { bg: '#d97706', light: '#fef3c7', text: '#92400e' },
   outro: { bg: '#64748b', light: '#f1f5f9', text: '#334155' },
 }
-
+ 
 const filtrosUsuarios = [
   { label: 'Todos', value: 'todos' },
   { label: 'Alunos', value: 'aluno' },
   { label: 'Funcionários', value: 'funcionario' },
   { label: 'Visitantes', value: 'visitante' },
 ]
-
+ 
 // ─────────────────────────────────────────────────────
 // LIFECYCLE
 // ─────────────────────────────────────────────────────
 onMounted(async () => {
   await carregarTudo()
+  iniciarListenerPresencas()
 })
-
+ 
+onUnmounted(() => {
+  if (unsubscribePresencas) unsubscribePresencas()
+})
+ 
 // ─────────────────────────────────────────────────────
 // CARREGAMENTO
 // ─────────────────────────────────────────────────────
@@ -1362,7 +2069,7 @@ async function carregarTudo() {
   await Promise.all([carregarInscricoes(), carregarAvaliacoes(), carregarProfessores()])
   atualizadoEm.value = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
 }
-
+ 
 async function carregarInscricoes() {
   loadingUsuarios.value = true
   erroUsuarios.value = ''
@@ -1379,7 +2086,7 @@ async function carregarInscricoes() {
     loadingUsuarios.value = false
   }
 }
-
+ 
 async function carregarAvaliacoes() {
   loadingAvaliacoes.value = true
   erroAvaliacoes.value = ''
@@ -1396,7 +2103,7 @@ async function carregarAvaliacoes() {
     loadingAvaliacoes.value = false
   }
 }
-
+ 
 async function carregarProfessores() {
   try {
     const docRef = doc(db, 'config_salip2', 'professores')
@@ -1405,19 +2112,417 @@ async function carregarProfessores() {
       professoresMap.value = docSnap.data() || {}
     }
   } catch (err) {
-    // Silently ignore: pode não existir ainda
     console.warn('config_salip2/professores não encontrado.')
   }
 }
-
-async function salvarProfessoresFirestore() {
+ 
+// ─────────────────────────────────────────────────────
+// PRESENÇA — Real-time listener
+// ─────────────────────────────────────────────────────
+function iniciarListenerPresencas() {
+  // Ouvir documento único que contém o mapa de presenças
+  // Estrutura no Firestore: presencas_salip2/{ idUsuario: { eventoId: { confirmado, timestamp, adminId } } }
+  // Usamos onSnapshot na coleção inteira para updates em tempo real
   try {
-    await setDoc(doc(db, 'config_salip2', 'professores'), professoresMap.value)
+    const presencasRef = collection(db, 'presencas_salip2')
+    unsubscribePresencas = onSnapshot(presencasRef, (snapshot) => {
+      const novoMapa = {}
+      snapshot.forEach((docSnap) => {
+        novoMapa[docSnap.id] = docSnap.data()
+      })
+      presencasMap.value = novoMapa
+    }, (err) => {
+      console.warn('Erro no listener de presenças:', err)
+    })
   } catch (err) {
-    console.error('Erro ao salvar professores:', err)
+    console.warn('Não foi possível iniciar listener de presenças:', err)
   }
 }
+ 
+async function carregarPresencas() {
+  try {
+    const snapshot = await getDocs(collection(db, 'presencas_salip2'))
+    const novoMapa = {}
+    snapshot.forEach((docSnap) => {
+      novoMapa[docSnap.id] = docSnap.data()
+    })
+    presencasMap.value = novoMapa
+  } catch (err) {
+    console.warn('Erro ao carregar presenças:', err)
+  }
+}
+ 
+// ─────────────────────────────────────────────────────
+// PRESENÇA — Getters
+// ─────────────────────────────────────────────────────
+function normalizarEventoId(eventoId) {
+  const id = String(eventoId || '').trim()
+  if (!id || id === '__evento_geral__') return EVENTO_GERAL_ID
 
+  return id
+    .replace(/^__|__$/g, '')
+    .replace(/[.#$/\[\]]/g, '_')
+}
+ 
+function getPresencaUsuario(usuario, eventoId) {
+  if (!usuario) return false
+  const uid = usuario.idUsuario || usuario.id
+  const safeEventoId = normalizarEventoId(eventoId)
+  return presencasMap.value[uid]?.[safeEventoId]?.confirmado === true
+}
+ 
+function getPresencaTimestamp(usuario, eventoId) {
+  if (!usuario) return null
+  const uid = usuario.idUsuario || usuario.id
+  const safeEventoId = normalizarEventoId(eventoId)
+  const ts = presencasMap.value[uid]?.[safeEventoId]?.timestamp
+  if (!ts) return null
+  try {
+    const d = ts?.toDate ? ts.toDate() : new Date(ts)
+    return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+  } catch { return null }
+}
+ 
+// ─────────────────────────────────────────────────────
+// PRESENÇA — Ações
+// ─────────────────────────────────────────────────────
+async function confirmarPresenca(usuario, eventoIdOriginal) {
+  const uid = usuario.idUsuario || usuario.id
+  const eventoId = normalizarEventoId(eventoIdOriginal)
+  const loadKey = uid + '_' + eventoId
+  updatingPresenca.value = { ...updatingPresenca.value, [loadKey]: true }
+ 
+  try {
+    const presencaRef = doc(db, 'presencas_salip2', uid)
+    const docSnap = await getDoc(presencaRef)
+    const dadosAtuais = docSnap.exists() ? docSnap.data() : {}
+    const agora = new Date().toISOString()
+ 
+    dadosAtuais[eventoId] = {
+      confirmado: true,
+      timestamp: agora,
+      confirmedAt: serverTimestamp(),
+      nomeUsuario: usuario.nomeCompleto || '',
+      tipoUsuario: usuario.tipoParticipante || '',
+    }
+ 
+    await setDoc(presencaRef, dadosAtuais, { merge: true })
+ 
+    if (!presencasMap.value[uid]) presencasMap.value[uid] = {}
+    presencasMap.value[uid][eventoId] = {
+      confirmado: true,
+      timestamp: agora,
+    }
+    presencasMap.value = { ...presencasMap.value }
+ 
+    mostrarToast(`Presença de ${usuario.nomeCompleto || uid} confirmada!`, 'success')
+ 
+    if (eventoOutroSelecionado.value[uid]) {
+      eventoOutroSelecionado.value = { ...eventoOutroSelecionado.value, [uid]: '' }
+    }
+  } catch (err) {
+    console.error('Erro ao confirmar presença:', err)
+    mostrarToast('Erro ao confirmar presença. Tente novamente.', 'error')
+  } finally {
+    const updated = { ...updatingPresenca.value }
+    delete updated[loadKey]
+    updatingPresenca.value = updated
+  }
+}
+ 
+async function desfazerPresenca(usuario, eventoIdOriginal) {
+  const uid = usuario.idUsuario || usuario.id
+  const eventoId = normalizarEventoId(eventoIdOriginal)
+  const loadKey = uid + '_' + eventoId
+  updatingPresenca.value = { ...updatingPresenca.value, [loadKey]: true }
+ 
+  try {
+    const presencaRef = doc(db, 'presencas_salip2', uid)
+    const docSnap = await getDoc(presencaRef)
+    const dadosAtuais = docSnap.exists() ? docSnap.data() : {}
+ 
+    dadosAtuais[eventoId] = {
+      confirmado: false,
+      timestamp: null,
+      removedAt: serverTimestamp(),
+    }
+ 
+    await setDoc(presencaRef, dadosAtuais, { merge: true })
+ 
+    if (presencasMap.value[uid]) {
+      presencasMap.value[uid][eventoId] = { confirmado: false, timestamp: null }
+      presencasMap.value = { ...presencasMap.value }
+    }
+ 
+    mostrarToast(`Presença de ${usuario.nomeCompleto || uid} removida.`, 'success')
+  } catch (err) {
+    console.error('Erro ao desfazer presença:', err)
+    mostrarToast('Erro ao remover presença. Tente novamente.', 'error')
+  } finally {
+    const updated = { ...updatingPresenca.value }
+    delete updated[loadKey]
+    updatingPresenca.value = updated
+  }
+}
+ 
+async function confirmarPresencaOutro(usuario) {
+  const uid = usuario.idUsuario || usuario.id
+  const eventoId = eventoOutroSelecionado.value[uid]
+  if (!eventoId) return
+  await confirmarPresenca(usuario, eventoId)
+}
+ 
+// ─────────────────────────────────────────────────────
+// PRESENÇA — Computed
+// ─────────────────────────────────────────────────────
+const eventosDisponiveisParaPresenca = computed(() => {
+  const lista = [{ id: EVENTO_GERAL_ID, nome: 'Evento Geral', tipo: 'geral' }]
+
+  todasOficinasParsed.value.forEach((of) => {
+    lista.push({ id: 'oficina::' + of.key, nome: of.nome + ' · ' + of.data, tipo: 'oficina' })
+  })
+
+  palestrasPorTurno.value.forEach((grupo) => {
+    lista.push({
+      id: grupo.id,
+      nome: `${grupo.data} · ${grupo.turnoLabel} — ${grupo.palestras.length} palestra${grupo.palestras.length !== 1 ? 's' : ''}`,
+      tipo: 'palestra',
+    })
+  })
+
+  return lista
+})
+ 
+const totalPresencasConfirmadas = computed(() => {
+  let count = 0
+  Object.values(presencasMap.value).forEach((userPresencas) => {
+    Object.values(userPresencas).forEach((p) => {
+      if (p?.confirmado) count++
+    })
+  })
+  return count
+})
+ 
+const taxaPresencaGeral = computed(() => {
+  const total = usuariosOrdenados.value.length
+  if (!total) return 0
+  const confirmados = Object.keys(presencasMap.value).filter(
+    (uid) => presencasMap.value[uid]?.[EVENTO_GERAL_ID]?.confirmado
+  ).length
+  return Math.round((confirmados / total) * 100)
+})
+ 
+const presencasHoje = computed(() => {
+  const hoje = new Date().toISOString().slice(0, 10)
+  let count = 0
+  Object.values(presencasMap.value).forEach((userPresencas) => {
+    Object.values(userPresencas).forEach((p) => {
+      if (p?.confirmado && p?.timestamp?.startsWith(hoje)) count++
+    })
+  })
+  return count
+})
+ 
+const presencaEventoNome = computed(() => {
+  if (!eventoPresencaSelecionado.value) return ''
+  if (eventoPresencaSelecionado.value === EVENTO_GERAL_ID) return 'Evento Geral'
+
+  if (eventoPresencaSelecionado.value.startsWith('oficina::')) {
+    const key = eventoPresencaSelecionado.value.replace('oficina::', '')
+    const of = todasOficinasParsed.value.find((o) => o.key === key)
+    return of ? `${of.nome} · ${of.data}` : eventoPresencaSelecionado.value
+  }
+
+  if (eventoPresencaSelecionado.value.startsWith(PALESTRA_TURNO_PREFIX)) {
+    const grupo = palestrasPorTurno.value.find((g) => g.id === eventoPresencaSelecionado.value)
+    return grupo ? `${grupo.data} · ${grupo.turnoLabel} — Palestras do turno` : eventoPresencaSelecionado.value
+  }
+
+  return eventoPresencaSelecionado.value
+})
+ 
+const usuariosDoEventoSelecionado = computed(() => {
+  if (!eventoPresencaSelecionado.value) return []
+  if (eventoPresencaSelecionado.value === EVENTO_GERAL_ID) return usuariosOrdenados.value
+
+  if (eventoPresencaSelecionado.value.startsWith('oficina::')) {
+    const key = eventoPresencaSelecionado.value.replace('oficina::', '')
+    const of = todasOficinasParsed.value.find((o) => o.key === key)
+    return of ? of.alunos : []
+  }
+
+  if (eventoPresencaSelecionado.value.startsWith(PALESTRA_TURNO_PREFIX)) {
+    const grupo = palestrasPorTurno.value.find((g) => g.id === eventoPresencaSelecionado.value)
+    return grupo ? grupo.alunos : []
+  }
+
+  return []
+})
+ 
+const usuariosDoEventoFiltrados = computed(() => {
+  let data = usuariosDoEventoSelecionado.value
+  const busca = normalizarBusca(buscaPresenca.value)
+ 
+  if (busca) {
+    data = data.filter((u) =>
+      normalizarBusca([u.nomeCompleto, u.idUsuario, u.cidade, u.escola].join(' ')).includes(busca)
+    )
+  }
+ 
+  if (filtroPresencaStatus.value === 'confirmado') {
+    data = data.filter((u) => getPresencaUsuario(u, eventoPresencaSelecionado.value))
+  } else if (filtroPresencaStatus.value === 'ausente') {
+    data = data.filter((u) => !getPresencaUsuario(u, eventoPresencaSelecionado.value))
+  }
+ 
+  return data
+})
+ 
+const totalPaginasPresenca = computed(() => {
+  return Math.ceil(usuariosDoEventoFiltrados.value.length / itensPorPaginaPresenca.value)
+})
+
+const usuariosPresencaPaginados = computed(() => {
+  const inicio = (paginaPresenca.value - 1) * itensPorPaginaPresenca.value
+  return usuariosDoEventoFiltrados.value.slice(inicio, inicio + itensPorPaginaPresenca.value)
+})
+
+const paginasPresencaVisiveis = computed(() => {
+  const total = totalPaginasPresenca.value
+  const atual = paginaPresenca.value
+  const pages = []
+  for (let p = Math.max(1, atual - 2); p <= Math.min(total, atual + 2); p++) {
+    pages.push(p)
+  }
+  return pages
+})
+
+const presencasDoEventoSelecionado = computed(() => {
+  if (!eventoPresencaSelecionado.value) return { confirmados: 0, ausentes: 0, taxa: 0 }
+  const usuarios = usuariosDoEventoSelecionado.value
+  const confirmados = usuarios.filter((u) => getPresencaUsuario(u, eventoPresencaSelecionado.value)).length
+  const ausentes = usuarios.length - confirmados
+  const taxa = usuarios.length ? Math.round((confirmados / usuarios.length) * 100) : 0
+  return { confirmados, ausentes, taxa }
+})
+ 
+const resumoPresencaPorEvento = computed(() => {
+  const resultado = []
+ 
+  // Evento geral
+  const totalGeral = usuariosOrdenados.value.length
+  const confirmadosGeral = usuariosOrdenados.value.filter(
+    (u) => getPresencaUsuario(u, EVENTO_GERAL_ID)
+  ).length
+  resultado.push({
+    id: EVENTO_GERAL_ID,
+    nome: 'Evento Geral',
+    tipo: 'geral',
+    tipoLabel: 'Geral',
+    confirmados: confirmadosGeral,
+    total: totalGeral,
+    taxa: totalGeral ? Math.round((confirmadosGeral / totalGeral) * 100) : 0,
+  })
+ 
+  // Oficinas
+  todasOficinasParsed.value.forEach((of) => {
+    const evId = 'oficina::' + of.key
+    const confirmados = of.alunos.filter((u) => getPresencaUsuario(u, evId)).length
+    resultado.push({
+      id: evId,
+      nome: of.nome + ' · ' + of.data,
+      tipo: 'oficina',
+      tipoLabel: 'Oficina',
+      confirmados,
+      total: of.alunos.length,
+      taxa: of.alunos.length ? Math.round((confirmados / of.alunos.length) * 100) : 0,
+    })
+  })
+
+  // Palestras agrupadas por dia + turno
+  palestrasPorTurno.value.forEach((grupo) => {
+    const confirmados = grupo.alunos.filter((u) => getPresencaUsuario(u, grupo.id)).length
+    resultado.push({
+      id: grupo.id,
+      nome: `${grupo.data} · ${grupo.turnoLabel} — Palestras`,
+      tipo: 'palestra',
+      tipoLabel: 'Palestra',
+      confirmados,
+      total: grupo.alunos.length,
+      taxa: grupo.alunos.length ? Math.round((confirmados / grupo.alunos.length) * 100) : 0,
+    })
+  })
+ 
+  return resultado.filter((e) => e.total > 0)
+})
+ 
+// ─────────────────────────────────────────────────────
+// EXPORTAÇÃO — PRESENÇA
+// ─────────────────────────────────────────────────────
+function baixarExcelPresencas() {
+  const wb = XLSX.utils.book_new()
+ 
+  resumoPresencaPorEvento.value.forEach((ev) => {
+    const usuarios = ev.id === EVENTO_GERAL_ID
+      ? usuariosOrdenados.value
+      : (() => {
+          if (ev.id.startsWith('oficina::')) {
+            const key = ev.id.replace('oficina::', '')
+            const of = todasOficinasParsed.value.find((o) => o.key === key)
+            return of ? of.alunos : []
+          }
+          if (ev.id.startsWith(PALESTRA_TURNO_PREFIX)) {
+            const grupo = palestrasPorTurno.value.find((g) => g.id === ev.id)
+            return grupo ? grupo.alunos : []
+          }
+          return []
+        })()
+ 
+    const linhas = usuarios.map((u) => ({
+      ID: u.idUsuario,
+      Nome: u.nomeCompleto || '',
+      Tipo: formatarTipoUsuario(u.tipoParticipante),
+      Cidade: u.cidade || '',
+      UF: u.uf || '',
+      Escola: u.escola || u.localTrabalho || '',
+      Presenca: getPresencaUsuario(u, ev.id) ? 'Presente' : 'Ausente',
+      ConfirmadoEm: getPresencaTimestamp(u, ev.id) || '',
+    }))
+ 
+    const ws = XLSX.utils.json_to_sheet(linhas)
+    const nomeAba = ev.nome.substring(0, 31)
+    XLSX.utils.book_append_sheet(wb, ws, nomeAba)
+  })
+ 
+  const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+  saveAs(new Blob([out], { type: 'application/octet-stream' }), `presencas-salip2-${dataArquivo()}.xlsx`)
+}
+ 
+// ─────────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────────
+function mostrarToast(mensagem, tipo = 'success') {
+  if (toastTimer) clearTimeout(toastTimer)
+  toastMensagem.value = mensagem
+  toastTipo.value = tipo
+  toastAtivo.value = true
+  toastTimer = setTimeout(() => { toastAtivo.value = false }, 3500)
+}
+ 
+// ─────────────────────────────────────────────────────
+// MODAL USUÁRIO
+// ─────────────────────────────────────────────────────
+function fecharModalUsuario() {
+  modalUsuarioAberto.value = false
+  // Limpar selector de outro evento ao fechar
+  if (usuarioSelecionado.value) {
+    const uid = usuarioSelecionado.value.idUsuario
+    if (eventoOutroSelecionado.value[uid]) {
+      eventoOutroSelecionado.value = { ...eventoOutroSelecionado.value, [uid]: '' }
+    }
+  }
+}
+ 
 // ─────────────────────────────────────────────────────
 // NORMALIZAÇÃO
 // ─────────────────────────────────────────────────────
@@ -1426,14 +2531,12 @@ function normalizarUsuario(idDocumento, data) {
   const agenda = data.agenda || {}
   const consentimento = data.consentimento || {}
   const controle = data.controle || {}
-
+ 
   return {
     id: idDocumento,
     idUsuario: data.idUsuario || idDocumento,
-
     tipoParticipante: participante.tipo || data.tipoParticipante || 'visitante',
     tipoLabel: participante.tipoLabel || formatarTipoUsuario(participante.tipo || data.tipoParticipante),
-
     nomeCompleto: participante.nomeCompleto || data.nomeCompleto || '',
     primeiroNome: participante.primeiroNome || '',
     cidade: participante.cidade || data.cidade || '',
@@ -1443,44 +2546,36 @@ function normalizarUsuario(idDocumento, data) {
     escola: participante.escola || data.escola || '',
     localTrabalho: participante.localTrabalho || data.localTrabalho || '',
     telefone: participante.telefone || data.telefone || '',
-
     possuiAtividadesExtras: Boolean(agenda.possuiAtividadesExtras),
     categorias: Array.isArray(agenda.categorias) ? agenda.categorias : [],
     oficinas: Array.isArray(agenda.oficinas) ? agenda.oficinas : [],
     exposicoes: Array.isArray(agenda.exposicoes) ? agenda.exposicoes : [],
     palestras: Array.isArray(agenda.palestras) ? agenda.palestras : [],
-
     aceitouTermos: Boolean(consentimento.aceitouTermos),
     aceitoEm: consentimento.aceitoEm || null,
-
     status: controle.status || 'confirmada',
     origem: controle.origem || '',
     criadoEm: controle.criadoEm || data.criadoEm || null,
     atualizadoEm: controle.atualizadoEm || data.atualizadoEm || null,
-
-    // ← NOVO: status manual por oficina
     vagasOficinas: controle.vagasOficinas || {},
-
     raw: data,
   }
 }
-
+ 
 function normalizarAvaliacao(idDocumento, data) {
   const participante = data.participante || {}
   const avaliacao = data.avaliacao || {}
   const aspectos = data.aspectos || {}
   const controle = data.controle || {}
   const anonimo = Boolean(participante.anonimo)
-
+ 
   return {
     id: idDocumento,
     idAvaliacao: data.idAvaliacao || idDocumento,
-
     nome: anonimo ? '' : participante.nome || '',
     anonimo,
     modoIdentificacao: participante.modoIdentificacao || (anonimo ? 'anonima' : 'identificada'),
     modoIdentificacaoLabel: anonimo ? 'Anônima' : 'Identificada',
-
     tipo: avaliacao.tipo || '',
     tipoLabel: avaliacao.tipoLabel || formatarTipoAvaliacao(avaliacao.tipo),
     atividadeId: avaliacao.atividadeId || '',
@@ -1488,41 +2583,34 @@ function normalizarAvaliacao(idDocumento, data) {
     notaGeral: Number(avaliacao.notaGeral || 0),
     comentario: avaliacao.comentario || '',
     autorizouUso: Boolean(avaliacao.autorizouUso),
-
     aspectos: {
       organizacao: Number(aspectos.organizacao || 0),
       estrutura: Number(aspectos.estrutura || 0),
       conteudo: Number(aspectos.conteudo || 0),
       atendimento: Number(aspectos.atendimento || 0),
     },
-
     mediaAspectos: Number(aspectos.mediaAspectos || calcularMedia([
       aspectos.organizacao, aspectos.estrutura, aspectos.conteudo, aspectos.atendimento,
     ])),
-
     status: controle.status || 'recebida',
     origem: controle.origem || '',
     criadoEm: controle.criadoEm || null,
     criadoEmMs: getTimestampMs(controle.criadoEm),
     atualizadoEm: controle.atualizadoEm || null,
-
     raw: data,
   }
 }
-
+ 
 // ─────────────────────────────────────────────────────
 // PARSE DE OFICINAS
 // ─────────────────────────────────────────────────────
-// Formato: "08/05 • Sexta • 08h00 • Oficina de Pintura a Óleo • 3 vagas • Praça Domingos Mourão Filho"
 function parsearOficina(str) {
   const partes = str.split('•').map((p) => p.trim())
   const vagasParte = partes.find((p) => /vagas?/i.test(p)) || ''
   const vagasNum = parseInt(vagasParte.match(/\d+/)?.[0] || '0')
-
-  // Encontrar o índice da parte de vagas para pegar o local corretamente
   const idxVagas = partes.findIndex((p) => /vagas?/i.test(p))
   const local = idxVagas >= 0 && partes[idxVagas + 1] ? partes[idxVagas + 1] : (partes[5] || partes[4] || '')
-
+ 
   return {
     raw: str,
     key: str,
@@ -1534,6 +2622,137 @@ function parsearOficina(str) {
     vagas: vagasNum,
     local,
   }
+}
+ 
+
+function slugEvento(valor) {
+  return normalizarBusca(valor)
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '') || 'sem_info'
+}
+
+function detectarTurnoPalestra(str, horario = '') {
+  const texto = normalizarBusca([str, horario].join(' '))
+
+  if (texto.includes('manha')) return { value: 'manha', label: 'Manhã' }
+  if (texto.includes('tarde')) return { value: 'tarde', label: 'Tarde' }
+  if (texto.includes('noite')) return { value: 'noite', label: 'Noite' }
+
+  const match = String(horario || str || '').match(/(\d{1,2})\s*h/i)
+  const hora = match ? Number(match[1]) : null
+
+  if (hora !== null && !Number.isNaN(hora)) {
+    if (hora < 12) return { value: 'manha', label: 'Manhã' }
+    if (hora < 18) return { value: 'tarde', label: 'Tarde' }
+    return { value: 'noite', label: 'Noite' }
+  }
+
+  return { value: 'turno', label: 'Turno' }
+}
+
+function parsearPalestra(str) {
+  const raw = String(str || '').trim()
+  const partes = raw.split('•').map((p) => p.trim()).filter(Boolean)
+  const horarioParte = partes.find((p) => /\d{1,2}\s*h/i.test(p)) || ''
+  const turnoInfo = detectarTurnoPalestra(raw, horarioParte)
+
+  const data = partes[0] || ''
+  const diaSemana = partes[1] || ''
+  const horario = horarioParte || partes[2] || turnoInfo.label
+
+  let nome = partes[3] || partes[2] || raw
+  if (/^(manha|manhã|tarde|noite)$/i.test(nome)) nome = partes[3] || raw
+  if (/\d{1,2}\s*h/i.test(nome)) nome = partes[3] || raw
+
+  const local = partes[4] || partes[5] || ''
+  const grupoId = `${PALESTRA_TURNO_PREFIX}${slugEvento(data)}::${turnoInfo.value}`
+
+  return {
+    raw,
+    key: raw,
+    id: raw,
+    grupoId,
+    data,
+    diaSemana,
+    horario,
+    turno: turnoInfo.value,
+    turnoLabel: turnoInfo.label,
+    nome,
+    local,
+  }
+}
+
+// ─────────────────────────────────────────────────────
+// COMPUTED — Palestras agrupadas por turno
+// ─────────────────────────────────────────────────────
+const todasPalestrasParsed = computed(() => {
+  const map = {}
+
+  usuariosOrdenados.value.forEach((u) => {
+    ;(u.palestras || []).forEach((palestraStr) => {
+      const p = parsearPalestra(palestraStr)
+      if (!map[p.key]) map[p.key] = { ...p, alunos: [] }
+      map[p.key].alunos.push(u)
+    })
+  })
+
+  Object.values(map).forEach((p) => {
+    p.alunos.sort((a, b) => getTimestampMs(a.criadoEm) - getTimestampMs(b.criadoEm))
+  })
+
+  return Object.values(map).sort((a, b) => {
+    if (a.data !== b.data) return a.data.localeCompare(b.data)
+    return a.turno.localeCompare(b.turno)
+  })
+})
+
+const palestrasPorTurno = computed(() => {
+  const map = {}
+
+  todasPalestrasParsed.value.forEach((palestra) => {
+    if (!map[palestra.grupoId]) {
+      map[palestra.grupoId] = {
+        id: palestra.grupoId,
+        data: palestra.data,
+        diaSemana: palestra.diaSemana,
+        turno: palestra.turno,
+        turnoLabel: palestra.turnoLabel,
+        tipo: 'palestra',
+        tipoLabel: 'Palestra',
+        palestras: [],
+        alunos: [],
+        alunosMap: new Map(),
+      }
+    }
+
+    map[palestra.grupoId].palestras.push(palestra)
+
+    palestra.alunos.forEach((u) => {
+      const uid = u.idUsuario || u.id
+      if (!map[palestra.grupoId].alunosMap.has(uid)) {
+        map[palestra.grupoId].alunosMap.set(uid, true)
+        map[palestra.grupoId].alunos.push(u)
+      }
+    })
+  })
+
+  return Object.values(map).map((grupo) => {
+    const { alunosMap, ...limpo } = grupo
+    limpo.palestras.sort((a, b) => String(a.horario).localeCompare(String(b.horario)))
+    limpo.alunos.sort((a, b) => getTimestampMs(a.criadoEm) - getTimestampMs(b.criadoEm))
+    return limpo
+  }).sort((a, b) => {
+    if (a.data !== b.data) return a.data.localeCompare(b.data)
+    const ordem = { manha: 1, tarde: 2, noite: 3, turno: 4 }
+    return (ordem[a.turno] || 99) - (ordem[b.turno] || 99)
+  })
+})
+
+function getPalestrasTurnosDoUsuario(usuario) {
+  if (!usuario?.palestras?.length) return []
+
+  const ids = new Set(usuario.palestras.map((palestraStr) => parsearPalestra(palestraStr).grupoId))
+  return palestrasPorTurno.value.filter((grupo) => ids.has(grupo.id))
 }
 
 // ─────────────────────────────────────────────────────
@@ -1549,28 +2768,27 @@ const todasOficinasParsed = computed(() => {
       map[ofStr].alunos.push(u)
     })
   })
-
-  // Ordenar alunos pela data de inscrição (mais antigo primeiro = prioridade)
+ 
   Object.values(map).forEach((of) => {
     of.alunos.sort((a, b) => getTimestampMs(a.criadoEm) - getTimestampMs(b.criadoEm))
   })
-
+ 
   return Object.values(map).sort((a, b) => {
     if (a.data !== b.data) return a.data.localeCompare(b.data)
     return a.horario.localeCompare(b.horario)
   })
 })
-
+ 
 const oficinasFiltradasGestao = computed(() => {
   let data = todasOficinasParsed.value
   const busca = normalizarBusca(buscaOficinas.value)
-
+ 
   if (busca) {
     data = data.filter((of) =>
       normalizarBusca([of.nome, of.data, of.diaSemana, of.local, of.horario].join(' ')).includes(busca)
     )
   }
-
+ 
   if (filtroOficinaStatus.value === 'com_reserva') {
     data = data.filter((of) => getReserva(of) > 0)
   } else if (filtroOficinaStatus.value === 'vagas_disponiveis') {
@@ -1578,32 +2796,29 @@ const oficinasFiltradasGestao = computed(() => {
   } else if (filtroOficinaStatus.value === 'lotada') {
     data = data.filter((of) => getConfirmados(of) >= of.vagas)
   }
-
+ 
   return data
 })
-
-// KPIs Oficinas
+ 
 const totalInscricoesOficinas = computed(() =>
   todasOficinasParsed.value.reduce((acc, of) => acc + of.alunos.length, 0)
 )
-
+ 
 const totalConfirmadosOficinas = computed(() =>
   todasOficinasParsed.value.reduce((acc, of) => acc + getConfirmados(of), 0)
 )
-
+ 
 const totalReservaOficinas = computed(() =>
   todasOficinasParsed.value.reduce((acc, of) => acc + getReserva(of), 0)
 )
-
+ 
 const totalVagasOficinas = computed(() =>
   todasOficinasParsed.value.reduce((acc, of) => acc + of.vagas, 0)
 )
-
+ 
 // ─────────────────────────────────────────────────────
 // MÉTODOS — Oficinas: Status
 // ─────────────────────────────────────────────────────
-
-// Hash simples para gerar chave de loading sem caracteres problemáticos
 function hashStr(str) {
   let h = 0
   for (let i = 0; i < str.length; i++) {
@@ -1611,60 +2826,48 @@ function hashStr(str) {
   }
   return Math.abs(h).toString(36)
 }
-
+ 
 function getLoadingKey(usuario, oficina) {
   return `${usuario.idUsuario}_${hashStr(oficina.key)}`
 }
-
-// Retorna status de um usuário em uma oficina (objeto)
+ 
 function getStatusOficinaUsuario(usuario, oficina) {
-  // Override manual do admin tem prioridade
   const override = usuario.vagasOficinas?.[oficina.key]
   if (override) return override
-
-  // Automático: posição na fila vs vagas disponíveis
   const idx = oficina.alunos.findIndex((a) => a.idUsuario === usuario.idUsuario)
   if (idx === -1) return 'reserva'
   return idx < oficina.vagas ? 'confirmado' : 'reserva'
 }
-
-// Retorna status de um usuário dado o string da oficina (para modal de usuário)
+ 
 function getStatusOficinaUsuarioByStr(usuario, ofStr) {
   const override = usuario.vagasOficinas?.[ofStr]
   if (override) return override
-
-  // Buscar a oficina no computed
   const of = todasOficinasParsed.value.find((o) => o.key === ofStr)
   if (!of) return 'reserva'
-
   const idx = of.alunos.findIndex((a) => a.idUsuario === usuario.idUsuario)
   if (idx === -1) return 'reserva'
   return idx < of.vagas ? 'confirmado' : 'reserva'
 }
-
-// Conta confirmados em uma oficina
+ 
 function getConfirmados(oficina) {
   return oficina.alunos.filter((u) => getStatusOficinaUsuario(u, oficina) === 'confirmado').length
 }
-
-// Conta reserva em uma oficina
+ 
 function getReserva(oficina) {
   return oficina.alunos.filter((u) => getStatusOficinaUsuario(u, oficina) === 'reserva').length
 }
-
-// Altera status manualmente (persiste no Firestore)
+ 
 async function toggleStatusOficinaUsuario(usuario, oficina, novoStatus) {
   const key = getLoadingKey(usuario, oficina)
   updatingOficinaStatus.value = { ...updatingOficinaStatus.value, [key]: true }
-
+ 
   try {
     const userRef = doc(db, 'inscricoes_salip2', usuario.id)
     const currentVagas = { ...(usuario.vagasOficinas || {}) }
     currentVagas[oficina.key] = novoStatus
-
+ 
     await updateDoc(userRef, { 'controle.vagasOficinas': currentVagas })
-
-    // Atualizar local (reativo)
+ 
     const userInList = usuariosOrdenados.value.find((u) => u.id === usuario.id)
     if (userInList) userInList.vagasOficinas = { ...currentVagas }
     usuario.vagasOficinas = { ...currentVagas }
@@ -1676,19 +2879,18 @@ async function toggleStatusOficinaUsuario(usuario, oficina, novoStatus) {
     updatingOficinaStatus.value = updated
   }
 }
-
-// Remove override manual (volta ao automático)
+ 
 async function resetarStatusOficinaUsuario(usuario, oficina) {
   const key = getLoadingKey(usuario, oficina)
   updatingOficinaStatus.value = { ...updatingOficinaStatus.value, [key]: true }
-
+ 
   try {
     const userRef = doc(db, 'inscricoes_salip2', usuario.id)
     const currentVagas = { ...(usuario.vagasOficinas || {}) }
     delete currentVagas[oficina.key]
-
+ 
     await updateDoc(userRef, { 'controle.vagasOficinas': currentVagas })
-
+ 
     const userInList = usuariosOrdenados.value.find((u) => u.id === usuario.id)
     if (userInList) userInList.vagasOficinas = { ...currentVagas }
     usuario.vagasOficinas = { ...currentVagas }
@@ -1700,7 +2902,7 @@ async function resetarStatusOficinaUsuario(usuario, oficina) {
     updatingOficinaStatus.value = updated
   }
 }
-
+ 
 // ─────────────────────────────────────────────────────
 // MÉTODOS — Professores
 // ─────────────────────────────────────────────────────
@@ -1708,7 +2910,7 @@ function iniciarEdicaoProfessor(nomeOficina) {
   editandoProfessorOficina.value = nomeOficina
   novoProfessorNome.value = professoresMap.value[nomeOficina] || ''
 }
-
+ 
 async function salvarProfessor(nomeOficina) {
   const nome = novoProfessorNome.value.trim()
   if (nome) {
@@ -1722,7 +2924,15 @@ async function salvarProfessor(nomeOficina) {
   novoProfessorNome.value = ''
   await salvarProfessoresFirestore()
 }
-
+ 
+async function salvarProfessoresFirestore() {
+  try {
+    await setDoc(doc(db, 'config_salip2', 'professores'), professoresMap.value)
+  } catch (err) {
+    console.error('Erro ao salvar professores:', err)
+  }
+}
+ 
 // ─────────────────────────────────────────────────────
 // MÉTODOS — Modais
 // ─────────────────────────────────────────────────────
@@ -1730,24 +2940,24 @@ function abrirModalOficinaGestao(oficina) {
   oficinaSelecionadaGestao.value = oficina
   modalOficinaGestaoAberto.value = true
 }
-
+ 
 function abrirModalUsuario(usuario) {
   usuarioSelecionado.value = usuario
   modalUsuarioAberto.value = true
 }
-
+ 
 function abrirModalAvaliacao(avaliacao) {
   avaliacaoSelecionada.value = avaliacao
   modalAvaliacaoAberto.value = true
 }
-
+ 
 // ─────────────────────────────────────────────────────
 // COMPUTED — USUÁRIOS
 // ─────────────────────────────────────────────────────
 const totalAlunos = computed(() => usuariosOrdenados.value.filter((u) => u.tipoParticipante === 'aluno').length)
 const totalFuncionarios = computed(() => usuariosOrdenados.value.filter((u) => u.tipoParticipante === 'funcionario').length)
 const totalVisitantes = computed(() => usuariosOrdenados.value.filter((u) => u.tipoParticipante === 'visitante').length)
-
+ 
 const kpiCards = computed(() => {
   const total = usuariosOrdenados.value.length || 1
   return [
@@ -1772,12 +2982,12 @@ const kpiCards = computed(() => {
     },
   ]
 })
-
+ 
 const usuariosFiltrados = computed(() => {
   let data = filtroUsuarioTipo.value === 'todos'
     ? usuariosOrdenados.value
     : usuariosOrdenados.value.filter((u) => u.tipoParticipante === filtroUsuarioTipo.value)
-
+ 
   const busca = normalizarBusca(buscaUsuarios.value)
   if (busca) {
     data = data.filter((u) => {
@@ -1788,14 +2998,14 @@ const usuariosFiltrados = computed(() => {
       return texto.includes(busca)
     })
   }
-
+ 
   return [...data].sort((a, b) => {
     const va = normalizarBusca(a[sortUsuarioCol.value] || '')
     const vb = normalizarBusca(b[sortUsuarioCol.value] || '')
     return sortUsuarioDir.value * va.localeCompare(vb)
   })
 })
-
+ 
 const totalPaginasUsuarios = computed(() => Math.ceil(usuariosFiltrados.value.length / itensPorPaginaUsuarios.value))
 const usuariosPaginados = computed(() => {
   const start = (paginaUsuarios.value - 1) * itensPorPaginaUsuarios.value
@@ -1808,7 +3018,7 @@ const paginasUsuariosVisiveis = computed(() => {
   for (let p = Math.max(1, atual - 2); p <= Math.min(total, atual + 2); p++) pages.push(p)
   return pages
 })
-
+ 
 const statsPorUF = computed(() => {
   const entries = countBy(usuariosOrdenados.value, 'uf')
   const max = entries[0]?.[1] || 1
@@ -1819,7 +3029,7 @@ const statsPorUF = computed(() => {
     barPct: Math.round((count / max) * 100),
   }))
 })
-
+ 
 const statsEventos = computed(() => {
   const map = {}
   usuariosOrdenados.value.forEach((u) => {
@@ -1836,7 +3046,7 @@ const statsEventos = computed(() => {
     barPct: Math.round((count / max) * 100),
   }))
 })
-
+ 
 const statsInstituicoes = computed(() => {
   const map = {}
   usuariosOrdenados.value.forEach((u) => {
@@ -1852,19 +3062,19 @@ const statsInstituicoes = computed(() => {
     barPct: Math.round((count / max) * 100),
   }))
 })
-
+ 
 // ─────────────────────────────────────────────────────
 // COMPUTED — AVALIAÇÕES
 // ─────────────────────────────────────────────────────
 const avaliacoesFiltradas = computed(() => {
   let data = [...avaliacoesOrdenadas.value]
-
+ 
   if (filtroAvaliacaoTipo.value !== 'todos') data = data.filter((a) => a.tipo === filtroAvaliacaoTipo.value)
   if (filtroAvaliacaoIdentificacao.value !== 'todos') data = data.filter((a) => a.modoIdentificacao === filtroAvaliacaoIdentificacao.value)
   if (filtroAvaliacaoNota.value === 'baixas') data = data.filter((a) => a.notaGeral >= 1 && a.notaGeral <= 6)
   if (filtroAvaliacaoNota.value === 'boas') data = data.filter((a) => a.notaGeral >= 7 && a.notaGeral <= 8)
   if (filtroAvaliacaoNota.value === 'excelentes') data = data.filter((a) => a.notaGeral >= 9)
-
+ 
   const busca = normalizarBusca(buscaAvaliacoes.value)
   if (busca) {
     data = data.filter((a) => {
@@ -1872,17 +3082,17 @@ const avaliacoesFiltradas = computed(() => {
       return texto.includes(busca)
     })
   }
-
+ 
   data.sort((a, b) => {
     const va = a[sortAvaliacaoCol.value]
     const vb = b[sortAvaliacaoCol.value]
     if (typeof va === 'number' && typeof vb === 'number') return sortAvaliacaoDir.value * (va - vb)
     return sortAvaliacaoDir.value * String(va || '').localeCompare(String(vb || ''))
   })
-
+ 
   return data
 })
-
+ 
 const totalPaginasAvaliacoes = computed(() => Math.ceil(avaliacoesFiltradas.value.length / itensPorPaginaAvaliacoes.value))
 const avaliacoesPaginadas = computed(() => {
   const start = (paginaAvaliacoes.value - 1) * itensPorPaginaAvaliacoes.value
@@ -1895,13 +3105,13 @@ const paginasAvaliacoesVisiveis = computed(() => {
   for (let p = Math.max(1, atual - 2); p <= Math.min(total, atual + 2); p++) pages.push(p)
   return pages
 })
-
+ 
 const mediaGeralAvaliacoes = computed(() => {
   const notas = avaliacoesOrdenadas.value.map((a) => Number(a.notaGeral || 0)).filter((n) => n > 0)
   if (!notas.length) return '0.0'
   return (notas.reduce((acc, n) => acc + n, 0) / notas.length).toFixed(1)
 })
-
+ 
 const totalAvaliacoesAnonimas = computed(() => avaliacoesOrdenadas.value.filter((a) => a.anonimo).length)
 const totalAvaliacoesComComentario = computed(() => avaliacoesOrdenadas.value.filter((a) => a.comentario).length)
 const pctAvaliacoesAnonimas = computed(() => {
@@ -1912,14 +3122,17 @@ const pctAvaliacoesComComentario = computed(() => {
   if (!avaliacoesOrdenadas.value.length) return 0
   return Math.round((totalAvaliacoesComComentario.value / avaliacoesOrdenadas.value.length) * 100)
 })
-
+ 
 // ─────────────────────────────────────────────────────
 // WATCHERS
 // ─────────────────────────────────────────────────────
 watch([filtroUsuarioTipo, buscaUsuarios, itensPorPaginaUsuarios], () => { paginaUsuarios.value = 1 })
 watch([filtroAvaliacaoTipo, filtroAvaliacaoIdentificacao, filtroAvaliacaoNota, buscaAvaliacoes, itensPorPaginaAvaliacoes], () => { paginaAvaliacoes.value = 1 })
-watch([buscaOficinas, filtroOficinaStatus], () => {})
-
+watch([eventoPresencaSelecionado, buscaPresenca, filtroPresencaStatus, itensPorPaginaPresenca], () => { paginaPresenca.value = 1 })
+watch(totalPaginasPresenca, (total) => {
+  if (total > 0 && paginaPresenca.value > total) paginaPresenca.value = total
+})
+ 
 // ─────────────────────────────────────────────────────
 // SORT
 // ─────────────────────────────────────────────────────
@@ -1927,12 +3140,12 @@ function toggleSortUsuario(col) {
   if (sortUsuarioCol.value === col) sortUsuarioDir.value *= -1
   else { sortUsuarioCol.value = col; sortUsuarioDir.value = 1 }
 }
-
+ 
 function toggleSortAvaliacao(col) {
   if (sortAvaliacaoCol.value === col) sortAvaliacaoDir.value *= -1
   else { sortAvaliacaoCol.value = col; sortAvaliacaoDir.value = 1 }
 }
-
+ 
 // ─────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────
@@ -1941,13 +3154,13 @@ function countBy(arr, key) {
   arr.forEach((item) => { const v = item[key]; if (v) map[v] = (map[v] || 0) + 1 })
   return Object.entries(map).sort((a, b) => b[1] - a[1])
 }
-
+ 
 function getColor(tipo) { return COLORS[tipo] || COLORS.outro }
-
+ 
 function getInitials(name) {
   return String(name || '').split(' ').filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?'
 }
-
+ 
 function calcIdade(dob) {
   if (!dob) return ''
   const d = new Date(dob)
@@ -1956,11 +3169,11 @@ function calcIdade(dob) {
   if (now.getMonth() < d.getMonth() || (now.getMonth() === d.getMonth() && now.getDate() < d.getDate())) age--
   return age
 }
-
+ 
 function temAtividades(u) {
   return Boolean(u?.categorias?.length || u?.oficinas?.length || u?.exposicoes?.length || u?.palestras?.length)
 }
-
+ 
 function resumoAtividades(u) {
   const items = []
   if (u.oficinas?.length) items.push(`${u.oficinas.length} oficina(s)`)
@@ -1968,27 +3181,27 @@ function resumoAtividades(u) {
   if (u.palestras?.length) items.push(`${u.palestras.length} palestra(s)`)
   return items.length ? items.join(' · ') : 'Acesso geral'
 }
-
+ 
 function formatarTipoUsuario(tipo) {
   return { aluno: 'Aluno', funcionario: 'Funcionário', visitante: 'Visitante', todos: 'Todos' }[tipo] || 'Outro'
 }
-
+ 
 function formatarTipoAvaliacao(tipo) {
   return { evento_geral: 'Evento geral', oficina: 'Oficina', palestra: 'Palestra', exposicao: 'Exposição' }[tipo] || 'Avaliação'
 }
-
+ 
 function getScoreClass(score) {
   if (score <= 6) return 'score-low'
   if (score <= 8) return 'score-good'
   return 'score-high'
 }
-
+ 
 function calcularMedia(valores) {
   const nums = valores.map(Number).filter((v) => v > 0)
   if (!nums.length) return 0
   return Number((nums.reduce((acc, v) => acc + v, 0) / nums.length).toFixed(1))
 }
-
+ 
 function formatarData(data) {
   if (!data) return ''
   if (typeof data === 'string' && data.includes('-')) {
@@ -1997,7 +3210,7 @@ function formatarData(data) {
   }
   return data
 }
-
+ 
 function formatarDataHora(valor) {
   if (!valor) return ''
   try {
@@ -2009,7 +3222,7 @@ function formatarDataHora(valor) {
     return data.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   } catch { return '' }
 }
-
+ 
 function getTimestampMs(valor) {
   if (!valor) return 0
   if (valor?.toMillis) return valor.toMillis()
@@ -2018,11 +3231,11 @@ function getTimestampMs(valor) {
   const data = new Date(valor)
   return Number.isNaN(data.getTime()) ? 0 : data.getTime()
 }
-
+ 
 function normalizarBusca(valor) {
   return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
 }
-
+ 
 // ─────────────────────────────────────────────────────
 // EXPORTAÇÕES — USUÁRIOS
 // ─────────────────────────────────────────────────────
@@ -2043,21 +3256,22 @@ function montarLinhasUsuarios() {
     Exposicoes: u.exposicoes.join(', '),
     Palestras: u.palestras.join(', '),
     AtividadesResumo: resumoAtividades(u),
+    PresencaEventoGeral: getPresencaUsuario(u, EVENTO_GERAL_ID) ? 'Presente' : 'Ausente',
     Status: u.status || 'confirmada',
     Origem: u.origem || '',
     AceitouTermos: u.aceitouTermos ? 'Sim' : 'Não',
     CriadoEm: formatarDataHora(u.criadoEm),
   }))
 }
-
+ 
 function baixarExcelUsuarios() {
   baixarExcelGenerico(montarLinhasUsuarios(), 'Inscritos SALIP2', `inscritos-salip2-${dataArquivo()}.xlsx`)
 }
-
+ 
 function baixarCSVUsuarios() {
   baixarCSVGenerico(montarLinhasUsuarios(), `inscritos-salip2-${dataArquivo()}.csv`)
 }
-
+ 
 // ─────────────────────────────────────────────────────
 // EXPORTAÇÕES — AVALIAÇÕES
 // ─────────────────────────────────────────────────────
@@ -2081,15 +3295,15 @@ function montarLinhasAvaliacoes() {
     Origem: a.origem,
   }))
 }
-
+ 
 function baixarExcelAvaliacoes() {
   baixarExcelGenerico(montarLinhasAvaliacoes(), 'Avaliacoes SALIP2', `avaliacoes-salip2-${dataArquivo()}.xlsx`)
 }
-
+ 
 function baixarCSVAvaliacoes() {
   baixarCSVGenerico(montarLinhasAvaliacoes(), `avaliacoes-salip2-${dataArquivo()}.csv`)
 }
-
+ 
 // ─────────────────────────────────────────────────────
 // EXPORTAÇÕES — OFICINAS
 // ─────────────────────────────────────────────────────
@@ -2102,16 +3316,20 @@ function montarLinhasOficina(oficina) {
       Status: status === 'confirmado' ? 'Confirmado' : 'Reserva',
       StatusManual: manual ? 'Sim (alterado pelo admin)' : 'Não (automático)',
       Nome: u.nomeCompleto || '',
+      dataNascimento: u.dataNascimento,
+      idade: u.idade,
+      ID: u.idUsuario,
       Tipo: formatarTipoUsuario(u.tipoParticipante),
       Escola: u.escola || u.localTrabalho || '',
       Cidade: u.cidade || '',
       UF: u.uf || '',
       Telefone: u.telefone || '',
       CriadoEm: formatarDataHora(u.criadoEm),
+      PresencaNaOficina: getPresencaUsuario(u, 'oficina::' + oficina.key) ? 'Presente' : 'Ausente',
     }
   })
 }
-
+ 
 function baixarExcelOficina(oficina) {
   if (!oficina) return
   const nomeArq = normalizarBusca(oficina.nome).replace(/\s+/g, '-').substring(0, 30)
@@ -2121,7 +3339,7 @@ function baixarExcelOficina(oficina) {
     `oficina-${nomeArq}-${oficina.data.replace('/', '-')}-${dataArquivo()}.xlsx`
   )
 }
-
+ 
 function baixarCSVOficina(oficina) {
   if (!oficina) return
   const nomeArq = normalizarBusca(oficina.nome).replace(/\s+/g, '-').substring(0, 30)
@@ -2130,7 +3348,7 @@ function baixarCSVOficina(oficina) {
     `oficina-${nomeArq}-${oficina.data.replace('/', '-')}-${dataArquivo()}.csv`
   )
 }
-
+ 
 function baixarExcelTodasOficinas() {
   const wb = XLSX.utils.book_new()
   todasOficinasParsed.value.forEach((of) => {
@@ -2141,7 +3359,7 @@ function baixarExcelTodasOficinas() {
   const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
   saveAs(new Blob([out], { type: 'application/octet-stream' }), `todas-oficinas-salip2-${dataArquivo()}.xlsx`)
 }
-
+ 
 // ─────────────────────────────────────────────────────
 // EXPORTAÇÕES — Genérico
 // ─────────────────────────────────────────────────────
@@ -2152,7 +3370,7 @@ function baixarExcelGenerico(dados, nomeAba, nomeArquivo) {
   const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
   saveAs(new Blob([out], { type: 'application/octet-stream' }), nomeArquivo)
 }
-
+ 
 function baixarCSVGenerico(dados, nomeArquivo) {
   const headers = Object.keys(dados[0] || {})
   const rows = dados.map((row) =>
@@ -2161,11 +3379,11 @@ function baixarCSVGenerico(dados, nomeArquivo) {
   const csv = [headers.join(','), ...rows].join('\n')
   saveAs(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }), nomeArquivo)
 }
-
+ 
 function dataArquivo() {
   return new Date().toISOString().slice(0, 10)
 }
-
+ 
 async function logout() {
   try {
     await signOut(auth)
@@ -2175,6 +3393,1280 @@ async function logout() {
   }
 }
 </script>
+
+<style scoped>
+/* ══════════════════════════════════════════════
+   PRESENÇA — Seção principal
+══════════════════════════════════════════════ */
+.presenca-section {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+/* ══════════════════════════════════════════════
+   PRESENÇA — Seção principal
+══════════════════════════════════════════════ */
+.presenca-section {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+ 
+.kicker-presenca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+ 
+/* KPIs de Presença */
+.presenca-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+ 
+.pkpi-card {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  position: relative;
+  overflow: hidden;
+}
+ 
+.pkpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #10b981;
+  border-radius: 10px 10px 0 0;
+}
+ 
+.pkpi-total::before { background: #3b82f6; }
+.pkpi-eventos::before { background: #8b5cf6; }
+.pkpi-taxa::before { background: #10b981; }
+.pkpi-hoje::before { background: #f59e0b; }
+ 
+.pkpi-icon {
+  color: var(--text-muted, #6b7280);
+  margin-bottom: 0.25rem;
+}
+ 
+.pkpi-info {
+  display: flex;
+  flex-direction: column;
+}
+ 
+.pkpi-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text, #111827);
+  line-height: 1;
+}
+ 
+.pkpi-label {
+  font-size: 0.78rem;
+  color: var(--text-muted, #6b7280);
+  margin-top: 0.2rem;
+}
+ 
+.pkpi-sublabel {
+  font-size: 0.72rem;
+  color: var(--text-muted, #9ca3af);
+  margin-top: 0.15rem;
+}
+ 
+.pkpi-progress-mini {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+ 
+.pkpi-progress-fill {
+  height: 100%;
+  background: #10b981;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}
+ 
+/* Painel principal de presença */
+.presenca-painel {
+  background: var(--bg-surface, #f9fafb);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+ 
+.presenca-evento-selector {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  background: var(--bg-card, #fff);
+}
+ 
+.selector-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+}
+ 
+.selector-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+ 
+.evento-select-big {
+  flex: 1;
+  min-width: 280px;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background: var(--bg-card, #fff);
+  color: var(--text, #111827);
+  cursor: pointer;
+}
+ 
+.evento-select-big:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+ 
+.evento-stats-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+}
+ 
+.esi-confirmados {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #059669;
+  font-weight: 600;
+}
+ 
+.esi-ausentes {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #dc2626;
+}
+ 
+.esi-taxa {
+  color: var(--text-muted, #6b7280);
+  font-weight: 600;
+  background: #f3f4f6;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+}
+ 
+/* Lista de presença */
+.presenca-lista-wrap {
+  padding: 0;
+}
+ 
+.presenca-lista-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  flex-wrap: wrap;
+}
+ 
+.presenca-lista-titulo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text, #111827);
+  margin: 0;
+}
+ 
+/* Empty state */
+.presenca-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 2rem;
+  color: var(--text-muted, #9ca3af);
+  text-align: center;
+}
+ 
+.pes-icon {
+  width: 72px;
+  height: 72px;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d1d5db;
+}
+ 
+/* Status pills de presença */
+.presenca-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+ 
+.psp-presente {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+ 
+.psp-ausente {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+ 
+/* Botões de presença */
+.btn-presenca-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+ 
+.btn-presenca-confirm:hover {
+  background: #059669;
+}
+ 
+.btn-presenca-desfazer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+ 
+.btn-presenca-desfazer:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+ 
+/* Linhas coloridas na tabela */
+.presenca-row.row-presente {
+  background: rgba(16, 185, 129, 0.03);
+}
+ 
+.presenca-row.row-ausente {
+  background: transparent;
+}
+ 
+/* Resumo por evento */
+.presenca-resumo-eventos {
+  margin-top: 1.5rem;
+}
+ 
+.resumo-titulo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+ 
+.resumo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+ 
+.resumo-card {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+ 
+.resumo-card:hover {
+  border-color: #10b981;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+}
+ 
+.resumo-card-active {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+ 
+.resumo-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+ 
+.resumo-tipo-badge {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+ 
+.rtb-geral {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+ 
+.rtb-oficina {
+  background: #fef3c7;
+  color: #92400e;
+}
+ 
+.resumo-taxa {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+ 
+.taxa-alta { color: #15803d; }
+.taxa-media { color: #b45309; }
+.taxa-baixa { color: #dc2626; }
+ 
+.resumo-nome {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text, #111827);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.5rem;
+}
+ 
+.resumo-progress {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+ 
+.resumo-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}
+ 
+.resumo-nums {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+}
+ 
+.rn-confirmados {
+  font-weight: 600;
+  color: var(--text, #374151);
+}
+ 
+.rn-total {
+  color: var(--text-muted, #9ca3af);
+}
+ 
+/* ══════════════════════════════════════════════
+   MODAL USUÁRIO — Bloco de presença
+══════════════════════════════════════════════ */
+.modal-usuario-presenca {
+  max-width: 660px;
+}
+ 
+.presenca-modal-block {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border-top: 1px solid #bbf7d0;
+  border-bottom: 1px solid #bbf7d0;
+  padding: 1.25rem 1.5rem;
+}
+ 
+.pmb-header {
+  margin-bottom: 1rem;
+}
+ 
+.pmb-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 0.2rem;
+}
+ 
+.pmb-desc {
+  font-size: 0.76rem;
+  color: #6b7280;
+}
+ 
+.pmb-events-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+ 
+.pmb-event-item {
+  background: white;
+  border: 1px solid #d1fae5;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all 0.15s;
+}
+ 
+.pmb-event-item.pmb-event-confirmado {
+  border-color: #6ee7b7;
+  background: #f0fdf4;
+}
+ 
+.pmb-event-outro {
+  border-style: dashed;
+  border-color: #d1d5db;
+  background: #fafafa;
+}
+ 
+.pmb-event-info {
+  flex: 1;
+  min-width: 0;
+}
+ 
+.pmb-event-tipo {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  margin-bottom: 0.2rem;
+}
+ 
+.pmb-status-ofic {
+  font-weight: 600;
+}
+ 
+.sof-ok { color: #059669; }
+.sof-reserva { color: #d97706; }
+ 
+.pmb-event-nome {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+ 
+.pmb-event-sub {
+  font-size: 0.73rem;
+  color: #6b7280;
+  margin-top: 0.1rem;
+}
+ 
+.pmb-event-ts {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  color: #059669;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+ 
+.pmb-event-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+ 
+.pmb-confirmed-state {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+ 
+.pmb-confirmed-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #059669;
+}
+ 
+.pmb-btn {
+  font-size: 0.76rem !important;
+  padding: 0.3rem 0.7rem !important;
+}
+ 
+.pmb-btn-desfazer {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.5rem;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+ 
+.pmb-btn-desfazer:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+ 
+.pmb-outro-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: flex-end;
+}
+ 
+.pmb-select {
+  font-size: 0.75rem !important;
+  padding: 0.3rem 0.6rem !important;
+  min-width: 180px;
+}
+ 
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+.toast-notification {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 360px;
+}
+ 
+.toast-success {
+  background: #059669;
+  color: white;
+}
+ 
+.toast-error {
+  background: #dc2626;
+  color: white;
+}
+ 
+.toast-slide-enter-active,
+.toast-slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+ 
+.toast-slide-enter-from,
+.toast-slide-leave-to {
+  transform: translateY(1rem) scale(0.95);
+  opacity: 0;
+}
+ 
+/* Loader small */
+.loader-small {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+ 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.kicker-presenca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+/* KPIs de Presença */
+.presenca-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pkpi-card {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.pkpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #10b981;
+  border-radius: 10px 10px 0 0;
+}
+
+.pkpi-total::before { background: #3b82f6; }
+.pkpi-eventos::before { background: #8b5cf6; }
+.pkpi-taxa::before { background: #10b981; }
+.pkpi-hoje::before { background: #f59e0b; }
+
+.pkpi-icon {
+  color: var(--text-muted, #6b7280);
+  margin-bottom: 0.25rem;
+}
+
+.pkpi-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.pkpi-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text, #111827);
+  line-height: 1;
+}
+
+.pkpi-label {
+  font-size: 0.78rem;
+  color: var(--text-muted, #6b7280);
+  margin-top: 0.2rem;
+}
+
+.pkpi-sublabel {
+  font-size: 0.72rem;
+  color: var(--text-muted, #9ca3af);
+  margin-top: 0.15rem;
+}
+
+.pkpi-progress-mini {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.pkpi-progress-fill {
+  height: 100%;
+  background: #10b981;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}
+
+/* Painel principal de presença */
+.presenca-painel {
+  background: var(--bg-surface, #f9fafb);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.presenca-evento-selector {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  background: var(--bg-card, #fff);
+}
+
+.selector-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+}
+
+.selector-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.evento-select-big {
+  flex: 1;
+  min-width: 280px;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background: var(--bg-card, #fff);
+  color: var(--text, #111827);
+  cursor: pointer;
+}
+
+.evento-select-big:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.evento-stats-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+}
+
+.esi-confirmados {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #059669;
+  font-weight: 600;
+}
+
+.esi-ausentes {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #dc2626;
+}
+
+.esi-taxa {
+  color: var(--text-muted, #6b7280);
+  font-weight: 600;
+  background: #f3f4f6;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+}
+
+/* Lista de presença */
+.presenca-lista-wrap {
+  padding: 0;
+}
+
+.presenca-lista-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  flex-wrap: wrap;
+}
+
+.presenca-lista-titulo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text, #111827);
+  margin: 0;
+}
+
+/* Empty state */
+.presenca-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 2rem;
+  color: var(--text-muted, #9ca3af);
+  text-align: center;
+}
+
+.pes-icon {
+  width: 72px;
+  height: 72px;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d1d5db;
+}
+
+/* Status pills de presença */
+.presenca-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.psp-presente {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.psp-ausente {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* Botões de presença */
+.btn-presenca-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.btn-presenca-confirm:hover {
+  background: #059669;
+}
+
+.btn-presenca-desfazer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn-presenca-desfazer:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+/* Linhas coloridas na tabela */
+.presenca-row.row-presente {
+  background: rgba(16, 185, 129, 0.03);
+}
+
+.presenca-row.row-ausente {
+  background: transparent;
+}
+
+/* Resumo por evento */
+.presenca-resumo-eventos {
+  margin-top: 1.5rem;
+}
+
+.resumo-titulo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.resumo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.resumo-card {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.resumo-card:hover {
+  border-color: #10b981;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+}
+
+.resumo-card-active {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.resumo-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.resumo-tipo-badge {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.rtb-geral {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.rtb-oficina {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.resumo-taxa {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.taxa-alta { color: #15803d; }
+.taxa-media { color: #b45309; }
+.taxa-baixa { color: #dc2626; }
+
+.resumo-nome {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text, #111827);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.5rem;
+}
+
+.resumo-progress {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+
+.resumo-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}
+
+.resumo-nums {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+}
+
+.rn-confirmados {
+  font-weight: 600;
+  color: var(--text, #374151);
+}
+
+.rn-total {
+  color: var(--text-muted, #9ca3af);
+}
+
+/* ══════════════════════════════════════════════
+   MODAL USUÁRIO — Bloco de presença
+══════════════════════════════════════════════ */
+.modal-usuario-presenca {
+  max-width: 660px;
+}
+
+.presenca-modal-block {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border-top: 1px solid #bbf7d0;
+  border-bottom: 1px solid #bbf7d0;
+  padding: 1.25rem 1.5rem;
+}
+
+.pmb-header {
+  margin-bottom: 1rem;
+}
+
+.pmb-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 0.2rem;
+}
+
+.pmb-desc {
+  font-size: 0.76rem;
+  color: #6b7280;
+}
+
+.pmb-events-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pmb-event-item {
+  background: white;
+  border: 1px solid #d1fae5;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all 0.15s;
+}
+
+.pmb-event-item.pmb-event-confirmado {
+  border-color: #6ee7b7;
+  background: #f0fdf4;
+}
+
+.pmb-event-outro {
+  border-style: dashed;
+  border-color: #d1d5db;
+  background: #fafafa;
+}
+
+.pmb-event-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pmb-event-tipo {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  margin-bottom: 0.2rem;
+}
+
+.pmb-status-ofic {
+  font-weight: 600;
+}
+
+.sof-ok { color: #059669; }
+.sof-reserva { color: #d97706; }
+
+.pmb-event-nome {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pmb-event-sub {
+  font-size: 0.73rem;
+  color: #6b7280;
+  margin-top: 0.1rem;
+}
+
+.pmb-event-ts {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  color: #059669;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.pmb-event-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pmb-confirmed-state {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pmb-confirmed-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.pmb-btn {
+  font-size: 0.76rem !important;
+  padding: 0.3rem 0.7rem !important;
+}
+
+.pmb-btn-desfazer {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.5rem;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pmb-btn-desfazer:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.pmb-outro-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: flex-end;
+}
+
+.pmb-select {
+  font-size: 0.75rem !important;
+  padding: 0.3rem 0.6rem !important;
+  min-width: 180px;
+}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+.toast-notification {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 360px;
+}
+
+.toast-success {
+  background: #059669;
+  color: white;
+}
+
+.toast-error {
+  background: #dc2626;
+  color: white;
+}
+
+.toast-slide-enter-active,
+.toast-slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.toast-slide-enter-from,
+.toast-slide-leave-to {
+  transform: translateY(1rem) scale(0.95);
+  opacity: 0;
+}
+
+/* Loader small */
+.loader-small {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
